@@ -1,0 +1,6 @@
+{
+  "name": "LinkPulse: URL Shortener & Analytics Platform",
+  "description": "A modern, high-performance link management, shortener, and analytics platform with QR generation, link-in-bio builder, and abuse protection.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
