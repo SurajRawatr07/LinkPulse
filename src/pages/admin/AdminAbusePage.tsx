@@ -72,7 +72,7 @@ export function AdminAbusePage() {
           </div>
         ) : reports.length === 0 ? (
           <div className="p-12 text-center text-xs text-slate-400 space-y-2">
-            <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto" />
+            <CheckCircle2 className="w-8 h-8 text-neutral-900 dark:text-neutral-100 mx-auto" />
             <p>Queue is empty! No open abuse reports or pending flags.</p>
           </div>
         ) : (
@@ -106,7 +106,7 @@ export function AdminAbusePage() {
                       </Badge>
                     </td>
 
-                    <td className="py-3 px-4 font-mono font-bold text-teal-600 dark:text-teal-400">
+                    <td className="py-3 px-4 font-mono font-bold text-neutral-900 dark:text-neutral-100">
                       /{report.shortCode}
                     </td>
 

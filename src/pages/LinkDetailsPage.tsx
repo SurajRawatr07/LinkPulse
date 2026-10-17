@@ -48,7 +48,7 @@ export function LinkDetailsPage() {
   const [activeTab, setActiveTab] = useState('overview');
 
   // QR Customizer state
-  const [qrFgColor, setQrFgColor] = useState('#0f9d8a');
+  const [qrFgColor, setQrFgColor] = useState('#171717');
   const [qrBgColor, setQrBgColor] = useState('#ffffff');
   const [qrSize, setQrSize] = useState(200);
 
@@ -161,7 +161,7 @@ export function LinkDetailsPage() {
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-mono text-xl font-bold text-teal-600 dark:text-teal-400">
+              <span className="font-mono text-xl font-bold text-neutral-900 dark:text-white">
                 /{link.shortCode}
               </span>
               {!link.isActive ? (
@@ -170,7 +170,7 @@ export function LinkDetailsPage() {
                 <Badge variant="success" size="sm">Active</Badge>
               )}
             </div>
-            <h1 className="text-sm font-semibold text-slate-800 dark:text-slate-200 truncate mt-0.5">
+            <h1 className="text-sm font-semibold text-neutral-900 dark:text-white truncate mt-0.5">
               {link.title}
             </h1>
           </div>
@@ -178,7 +178,7 @@ export function LinkDetailsPage() {
 
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={handleCopy} className="text-xs">
-            {copied ? <Check className="w-3.5 h-3.5 mr-1 text-emerald-500" /> : <Copy className="w-3.5 h-3.5 mr-1" />}
+            {copied ? <Check className="w-3.5 h-3.5 mr-1 text-neutral-900 dark:text-white" /> : <Copy className="w-3.5 h-3.5 mr-1" />}
             <span>{copied ? 'Copied' : 'Copy URL'}</span>
           </Button>
 
@@ -211,12 +211,12 @@ export function LinkDetailsPage() {
       </div>
 
       {/* Target Destination URL Card */}
-      <Card className="p-4 bg-slate-50 dark:bg-slate-900/60 flex items-center justify-between text-xs font-mono">
+      <Card className="p-4 bg-neutral-50 dark:bg-neutral-900/60 flex items-center justify-between text-xs font-mono">
         <div className="flex items-center gap-2 truncate mr-4">
-          <span className="text-slate-400 font-sans font-medium shrink-0">Destination:</span>
-          <span className="text-slate-700 dark:text-slate-300 truncate">{link.originalUrl}</span>
+          <span className="text-neutral-400 font-sans font-medium shrink-0">Destination:</span>
+          <span className="text-neutral-700 dark:text-neutral-300 truncate">{link.originalUrl}</span>
         </div>
-        <span className="text-slate-400 text-[11px] shrink-0 font-sans">
+        <span className="text-neutral-400 text-[11px] shrink-0 font-sans">
           Created {new Date(link.createdAt).toLocaleDateString()}
         </span>
       </Card>
@@ -224,41 +224,41 @@ export function LinkDetailsPage() {
       {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="p-4 space-y-1">
-          <span className="text-xs text-slate-500">Total Visits</span>
-          <p className="text-2xl font-bold font-mono tabular-nums text-slate-900 dark:text-white">
+          <span className="text-xs text-neutral-500">Total Visits</span>
+          <p className="text-2xl font-bold font-mono tabular-nums text-neutral-900 dark:text-white">
             {formatCompactNumber(link.clicksCount)}
           </p>
-          <span className="text-[11px] text-teal-600 font-mono">
+          <span className="text-[11px] text-neutral-700 dark:text-neutral-300 font-mono">
             {link.uniqueClicksCount} unique visitors
           </span>
         </Card>
 
         <Card className="p-4 space-y-1">
-          <span className="text-xs text-slate-500">QR Code Scans</span>
-          <p className="text-2xl font-bold font-mono tabular-nums text-sky-600">
+          <span className="text-xs text-neutral-500">QR Code Scans</span>
+          <p className="text-2xl font-bold font-mono tabular-nums text-neutral-900 dark:text-white">
             {link.qrScansCount}
           </p>
-          <span className="text-[11px] text-slate-500">
+          <span className="text-[11px] text-neutral-500">
             {Math.round((link.qrScansCount / (link.clicksCount || 1)) * 100)}% of total volume
           </span>
         </Card>
 
         <Card className="p-4 space-y-1">
-          <span className="text-xs text-slate-500">Security Invariant</span>
-          <p className="text-2xl font-bold text-slate-900 dark:text-white">
+          <span className="text-xs text-neutral-500">Security Invariant</span>
+          <p className="text-2xl font-bold text-neutral-900 dark:text-white">
             {link.rules.password ? 'Protected' : 'Open'}
           </p>
-          <span className="text-[11px] text-slate-500">
+          <span className="text-[11px] text-neutral-500">
             {link.rules.clickLimit ? `Limit: ${link.rules.clickLimit} cap` : 'Uncapped clicks'}
           </span>
         </Card>
 
         <Card className="p-4 space-y-1">
-          <span className="text-xs text-slate-500">Safety Status</span>
-          <p className="text-2xl font-bold text-emerald-600">
+          <span className="text-xs text-neutral-500">Safety Status</span>
+          <p className="text-2xl font-bold text-neutral-900 dark:text-white">
             {link.abuseStatus === 'clean' ? 'Verified' : 'Flagged'}
           </p>
-          <span className="text-[11px] text-slate-500">Domain blocklist checked</span>
+          <span className="text-[11px] text-neutral-500">Domain blocklist checked</span>
         </Card>
       </div>
 
@@ -286,21 +286,21 @@ export function LinkDetailsPage() {
                 <AreaChart data={analytics.clicksOverTime} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="linkDetailGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#0f9d8a" stopOpacity={0.4} />
-                      <stop offset="95%" stopColor="#0f9d8a" stopOpacity={0.0} />
+                      <stop offset="5%" stopColor="#171717" stopOpacity={0.25} />
+                      <stop offset="95%" stopColor="#171717" stopOpacity={0.0} />
                     </linearGradient>
                   </defs>
-                  <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="#94a3b8" />
-                  <YAxis tick={{ fontSize: 10 }} stroke="#94a3b8" allowDecimals={false} />
+                  <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="#737373" />
+                  <YAxis tick={{ fontSize: 10 }} stroke="#737373" allowDecimals={false} />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: '#0f172a',
+                      backgroundColor: '#171717',
                       borderRadius: '8px',
                       fontSize: '12px',
                       color: '#fff',
                     }}
                   />
-                  <Area type="monotone" dataKey="clicks" stroke="#0f9d8a" strokeWidth={2} fill="url(#linkDetailGrad)" />
+                  <Area type="monotone" dataKey="clicks" stroke="#171717" strokeWidth={2} fill="url(#linkDetailGrad)" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -455,12 +455,12 @@ export function LinkDetailsPage() {
                     step="10"
                     value={qrSize}
                     onChange={(e) => setQrSize(Number(e.target.value))}
-                    className="w-full accent-teal-600"
+                    className="w-full accent-neutral-900"
                   />
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center gap-3">
+              <div className="pt-4 border-t border-neutral-100 dark:border-neutral-800 flex items-center gap-3">
                 <Button variant="primary" size="sm" onClick={handleDownloadSvg}>
                   <Download className="w-3.5 h-3.5 mr-1.5" />
                   <span>Download SVG</span>
@@ -476,7 +476,7 @@ export function LinkDetailsPage() {
         <Card className="p-0 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 dark:bg-slate-800/80 text-slate-500 font-semibold uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+              <thead className="bg-neutral-50 dark:bg-neutral-800/80 text-neutral-500 font-semibold uppercase tracking-wider border-b border-neutral-200 dark:border-neutral-800">
                 <tr>
                   <th className="py-3 px-4">Timestamp</th>
                   <th className="py-3 px-4">Referrer</th>
@@ -486,13 +486,13 @@ export function LinkDetailsPage() {
                   <th className="py-3 px-4 text-right">Bot Flag</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+              <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
                 {clickLog.map((event) => (
-                  <tr key={event.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
-                    <td className="py-3 px-4 font-mono text-[11px] text-slate-500">
+                  <tr key={event.id} className="hover:bg-neutral-50/50 dark:hover:bg-neutral-800/40">
+                    <td className="py-3 px-4 font-mono text-[11px] text-neutral-500">
                       {new Date(event.timestamp).toLocaleString()}
                     </td>
-                    <td className="py-3 px-4 truncate max-w-xs text-slate-700 dark:text-slate-300">
+                    <td className="py-3 px-4 truncate max-w-xs text-neutral-700 dark:text-neutral-300">
                       {event.referrer}
                     </td>
                     <td className="py-3 px-4 capitalize">
@@ -508,7 +508,7 @@ export function LinkDetailsPage() {
                       {event.isBot ? (
                         <Badge variant="warning" size="sm">Bot Crawler</Badge>
                       ) : (
-                        <span className="text-emerald-600 text-[11px]">Human</span>
+                        <span className="text-neutral-900 dark:text-white font-medium text-[11px]">Human</span>
                       )}
                     </td>
                   </tr>

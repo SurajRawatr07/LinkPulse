@@ -637,7 +637,7 @@ class MockDb {
       userId: data.userId,
       name: data.name.trim(),
       description: data.description?.trim(),
-      color: data.color || '#0f9d8a',
+      color: data.color || '#18181b',
       createdAt: new Date().toISOString(),
     };
     this.campaigns.push(newCamp);
@@ -674,7 +674,7 @@ class MockDb {
     await delay(50);
     let userId = 'user_admin';
     let name = '';
-    let color = '#0f9d8a';
+    let color = '#18181b';
 
     if (arg3 !== undefined) {
       if (arg1.startsWith('usr_') || arg1.startsWith('user_')) {
@@ -683,7 +683,7 @@ class MockDb {
         color = arg3;
       } else {
         name = arg1;
-        color = arg2 || '#0f9d8a';
+        color = arg2 || '#18181b';
         userId = arg3;
       }
     } else if (arg2 !== undefined) {
@@ -887,7 +887,7 @@ class MockDb {
         title: user?.name || 'My LinkPulse Bio',
         bio: 'Product builder, tech enthusiast & writer. Welcome to my curated links!',
         avatarUrl: user?.avatar || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format&fit=crop&q=80',
-        theme: 'teal',
+        theme: 'pearl',
         socials: [
           { platform: 'twitter', url: 'https://twitter.com' },
           { platform: 'github', url: 'https://github.com' },
@@ -925,7 +925,7 @@ class MockDb {
         title: data.title || 'My Bio Page',
         bio: data.bio || '',
         avatarUrl: data.avatarUrl || '',
-        theme: data.theme || 'teal',
+        theme: data.theme || 'pearl',
         socials: data.socials || [],
         links: data.links || [],
         updatedAt: new Date().toISOString(),

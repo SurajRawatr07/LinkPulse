@@ -41,7 +41,7 @@ export const folders = pgTable('folders', {
     .references(() => users.id, { onDelete: 'cascade' })
     .notNull(),
   name: text('name').notNull(),
-  color: text('color').default('#0F9D8A'),
+  color: text('color').default('#18181B'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
@@ -52,7 +52,7 @@ export const tags = pgTable('tags', {
     .references(() => users.id, { onDelete: 'cascade' })
     .notNull(),
   name: text('name').notNull(),
-  color: text('color').default('#0F9D8A'),
+  color: text('color').default('#18181B'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
@@ -123,7 +123,7 @@ export const qrCodes = pgTable('qr_codes', {
   linkId: integer('link_id')
     .references(() => links.id, { onDelete: 'cascade' })
     .notNull(),
-  foregroundColor: text('foreground_color').default('#0F9D8A').notNull(),
+  foregroundColor: text('foreground_color').default('#171717').notNull(),
   backgroundColor: text('background_color').default('#FFFFFF').notNull(),
   style: text('style').default('squares').notNull(),
   scansCount: integer('scans_count').default(0).notNull(),

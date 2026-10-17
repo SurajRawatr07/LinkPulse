@@ -423,7 +423,7 @@ export const campaignsApi = {
         userId: String(c.userId),
         name: c.name,
         description: c.description || undefined,
-        color: '#0F9D8A',
+        color: '#18181B',
         createdAt: c.createdAt ? new Date(c.createdAt).toISOString() : new Date().toISOString(),
         linksCount: c.linkCount || 0,
         totalClicks: c.totalClicks || 0,
@@ -450,7 +450,7 @@ export const campaignsApi = {
         userId: String(c.userId),
         name: c.name,
         description: c.description || undefined,
-        color: data.color || '#0F9D8A',
+        color: data.color || '#18181B',
         createdAt: c.createdAt ? new Date(c.createdAt).toISOString() : new Date().toISOString(),
         linksCount: 0,
         clicksCount: 0,
@@ -473,7 +473,7 @@ export const campaignsApi = {
         userId: String(c.userId),
         name: c.name,
         description: c.description || undefined,
-        color: updates.color || '#0F9D8A',
+        color: updates.color || '#18181B',
         createdAt: c.createdAt ? new Date(c.createdAt).toISOString() : new Date().toISOString(),
       };
     }
@@ -497,7 +497,7 @@ export const tagsApi = {
         id: String(t.id),
         userId: String(t.userId),
         name: t.name,
-        color: t.color || '#0F9D8A',
+        color: t.color || '#18181B',
         createdAt: t.createdAt ? new Date(t.createdAt).toISOString() : new Date().toISOString(),
         linksCount: t.linkCount || 0,
       }));
@@ -507,7 +507,7 @@ export const tagsApi = {
 
   createTag: async (arg1: string, arg2?: string, arg3?: string): Promise<Tag> => {
     let name = arg1;
-    let color = '#0F9D8A';
+    let color = '#18181B';
     if (arg2 && arg3) {
       name = arg2;
       color = arg3;

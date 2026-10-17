@@ -36,7 +36,7 @@ import { Badge } from '../components/ui/Badge';
 import { Skeleton } from '../components/ui/Skeleton';
 import { EmptyState } from '../components/ui/EmptyState';
 
-const DEVICE_COLORS = ['#0f9d8a', '#0284c7', '#f59e0b'];
+const DEVICE_COLORS = ['#171717', '#737373', '#b45309'];
 
 export function DashboardPage() {
   const { user } = useAuthStore();
@@ -136,10 +136,10 @@ export function DashboardPage() {
               <button
                 key={r}
                 onClick={() => setRange(r)}
-                className={`px-3 py-1.5 rounded-md font-medium transition-colors cursor-pointer ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                   range === r
-                    ? 'bg-teal-600 text-white font-semibold shadow-xs'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    ? 'pearl-btn-dark'
+                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
                 }`}
               >
                 {r}
@@ -195,37 +195,37 @@ export function DashboardPage() {
           {/* 4 KPI Cards: Total links, Total clicks, Unique visitors, Active links */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <Card className="p-4 space-y-1">
-              <span className="text-xs text-slate-500">Total Links</span>
-              <p className="text-2xl font-bold font-mono text-slate-900 dark:text-white tabular-nums">
+              <span className="text-xs text-neutral-500">Total Links</span>
+              <p className="text-2xl font-bold font-mono text-neutral-900 dark:text-white tabular-nums">
                 {formatCompactNumber(analytics.totalLinks)}
               </p>
-              <span className="text-[11px] text-slate-400">Created in workspace</span>
+              <span className="text-[11px] text-neutral-400">Created in workspace</span>
             </Card>
 
             <Card className="p-4 space-y-1">
-              <span className="text-xs text-slate-500">Total Clicks</span>
-              <p className="text-2xl font-bold font-mono text-teal-600 dark:text-teal-400 tabular-nums">
+              <span className="text-xs text-neutral-500">Total Clicks</span>
+              <p className="text-2xl font-bold font-mono text-neutral-900 dark:text-white tabular-nums">
                 {formatCompactNumber(analytics.totalClicks)}
               </p>
-              <span className="text-[11px] text-slate-400">In selected period</span>
+              <span className="text-[11px] text-neutral-400">In selected period</span>
             </Card>
 
             <Card className="p-4 space-y-1">
-              <span className="text-xs text-slate-500">Unique Visitors</span>
-              <p className="text-2xl font-bold font-mono text-sky-600 dark:text-sky-400 tabular-nums">
+              <span className="text-xs text-neutral-500">Unique Visitors</span>
+              <p className="text-2xl font-bold font-mono text-neutral-700 dark:text-neutral-300 tabular-nums">
                 {formatCompactNumber(analytics.uniqueVisitors)}
               </p>
-              <span className="text-[11px] text-slate-400">
+              <span className="text-[11px] text-neutral-400">
                 {Math.round((analytics.uniqueVisitors / (analytics.totalClicks || 1)) * 100)}% unique ratio
               </span>
             </Card>
 
             <Card className="p-4 space-y-1">
-              <span className="text-xs text-slate-500">Active Links</span>
-              <p className="text-2xl font-bold font-mono text-slate-900 dark:text-white tabular-nums">
+              <span className="text-xs text-neutral-500">Active Links</span>
+              <p className="text-2xl font-bold font-mono text-neutral-900 dark:text-white tabular-nums">
                 {analytics.activeLinks}
               </p>
-              <span className="text-[11px] text-emerald-600">Routing traffic</span>
+              <span className="text-[11px] text-neutral-600 font-medium">Routing traffic</span>
             </Card>
           </div>
 
@@ -270,7 +270,7 @@ export function DashboardPage() {
                   <Line
                     type="monotone"
                     dataKey="clicks"
-                    stroke="#0f9d8a"
+                    stroke="#171717"
                     strokeWidth={2.5}
                     dot={false}
                     activeDot={{ r: 5 }}
@@ -355,12 +355,12 @@ export function DashboardPage() {
                         color: '#fff',
                       }}
                     />
-                    <Bar dataKey="count" fill="#0f9d8a" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="count" fill="#171717" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
 
-              <div className="text-xs text-slate-400 font-mono text-center">
+              <div className="text-xs text-neutral-400 font-mono text-center">
                 Top visitor acquisition channels
               </div>
             </Card>
@@ -372,10 +372,10 @@ export function DashboardPage() {
             <Card className="p-5 space-y-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
+                  <h3 className="text-sm font-semibold text-neutral-900 dark:text-white">
                     Top Performing Links
                   </h3>
-                  <p className="text-xs text-slate-500">Most clicked short links</p>
+                  <p className="text-xs text-neutral-500">Most clicked short links</p>
                 </div>
                 <Link to="/app/links">
                   <Button variant="ghost" size="sm" className="text-xs">
@@ -384,30 +384,30 @@ export function DashboardPage() {
                 </Link>
               </div>
 
-              <div className="divide-y divide-slate-100 dark:divide-slate-800">
+              <div className="divide-y divide-neutral-100 dark:divide-neutral-800">
                 {topLinks.map((link) => (
                   <div key={link.id} className="py-2.5 flex items-center justify-between gap-3 text-xs">
                     <div className="min-w-0">
                       <Link
                         to={`/app/links/${link.id}`}
-                        className="font-mono font-semibold text-teal-600 dark:text-teal-400 hover:underline"
+                        className="font-mono font-medium text-neutral-900 dark:text-neutral-100 underline decoration-neutral-300 hover:decoration-neutral-900"
                       >
                         /{link.shortCode}
                       </Link>
-                      <p className="text-slate-700 dark:text-slate-300 truncate max-w-xs">{link.title}</p>
+                      <p className="text-neutral-700 dark:text-neutral-300 truncate max-w-xs">{link.title}</p>
                     </div>
 
                     <div className="flex items-center gap-3 shrink-0">
-                      <span className="font-mono font-bold tabular-nums">
+                      <span className="font-mono font-bold tabular-nums text-neutral-900 dark:text-white">
                         {formatCompactNumber(link.clicksCount)} clicks
                       </span>
                       <button
                         onClick={() => handleCopy(link.id, link.shortCode)}
-                        className="p-1 text-slate-400 hover:text-slate-600 cursor-pointer"
+                        className="p-1 text-neutral-400 hover:text-neutral-700 cursor-pointer"
                         title="Copy link"
                       >
                         {copiedId === link.id ? (
-                          <Check className="w-3.5 h-3.5 text-emerald-500" />
+                          <Check className="w-3.5 h-3.5 text-neutral-900 dark:text-white" />
                         ) : (
                           <Copy className="w-3.5 h-3.5" />
                         )}
@@ -443,7 +443,7 @@ export function DashboardPage() {
                         <div className="min-w-0">
                           <Link
                             to={`/app/links/${link.id}`}
-                            className="font-mono font-semibold text-teal-600 dark:text-teal-400 hover:underline"
+                            className="font-mono font-medium text-neutral-900 dark:text-neutral-100 underline decoration-neutral-300 hover:decoration-neutral-900"
                           >
                             /{link.shortCode}
                           </Link>

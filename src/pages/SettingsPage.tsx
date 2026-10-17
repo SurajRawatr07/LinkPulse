@@ -83,7 +83,7 @@ export function SettingsPage() {
       {/* Profile & Workspace */}
       <Card className="p-6 space-y-4">
         <h3 className="text-sm font-semibold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-2">
-          <User className="w-4 h-4 text-teal-600" />
+          <User className="w-4 h-4 text-neutral-900 dark:text-white" />
           <span>User Profile & Workspace</span>
         </h3>
 
@@ -131,7 +131,7 @@ export function SettingsPage() {
                   onClick={() => setTheme(item.id as 'light' | 'dark' | 'system')}
                   className={`flex flex-col items-center justify-center p-3.5 rounded-xl border text-xs font-medium transition-colors cursor-pointer ${
                     isActive
-                      ? 'border-teal-600 bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 shadow-xs'
+                      ? 'border-neutral-900 bg-neutral-900 text-white shadow-xs dark:border-white dark:bg-white dark:text-neutral-900'
                       : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
                   }`}
                 >
@@ -147,7 +147,7 @@ export function SettingsPage() {
       {/* API Key Placeholder */}
       <Card className="p-6 space-y-4">
         <h3 className="text-sm font-semibold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-2">
-          <Key className="w-4 h-4 text-teal-600" />
+          <Key className="w-4 h-4 text-neutral-900 dark:text-white" />
           <span>Developer API Token</span>
         </h3>
 
@@ -155,7 +155,7 @@ export function SettingsPage() {
           <div className="flex items-center gap-2">
             <Input value={apiKey} readOnly isMono className="text-xs" />
             <Button variant="outline" size="md" onClick={handleCopyApiKey} className="shrink-0 text-xs">
-              {copiedKey ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+              {copiedKey ? <Check className="w-4 h-4 text-neutral-900 dark:text-white" /> : <Copy className="w-4 h-4" />}
             </Button>
             <Button variant="outline" size="md" onClick={handleRegenerateApiKey} className="shrink-0 text-xs">
               Roll Key

@@ -141,7 +141,7 @@ export function BioBuilderPage() {
 
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={handleCopyBioUrl} className="text-xs">
-            {copied ? <Check className="w-3.5 h-3.5 mr-1 text-emerald-500" /> : <Copy className="w-3.5 h-3.5 mr-1" />}
+            {copied ? <Check className="w-3.5 h-3.5 mr-1 text-neutral-900 dark:text-neutral-100" /> : <Copy className="w-3.5 h-3.5 mr-1" />}
             <span>Copy Bio URL</span>
           </Button>
 
@@ -207,7 +207,7 @@ export function BioBuilderPage() {
                 rows={2}
                 value={bioPage.bio}
                 onChange={(e) => setBioPage({ ...bioPage, bio: e.target.value })}
-                className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-neutral-400"
               />
             </div>
 
@@ -217,14 +217,14 @@ export function BioBuilderPage() {
                 Palette & Theme
               </label>
               <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 text-xs">
-                {(['teal', 'slate', 'minimal', 'dark', 'gradient'] as const).map((t) => (
+                {(['pearl', 'slate', 'minimal', 'dark', 'gradient'] as const).map((t) => (
                   <button
                     key={t}
                     type="button"
                     onClick={() => setBioPage({ ...bioPage, theme: t })}
                     className={`py-2 px-3 rounded-lg border capitalize font-medium transition-all ${
                       bioPage.theme === t
-                        ? 'border-teal-600 bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300 shadow-xs'
+                        ? 'border-neutral-900 bg-neutral-900 text-white shadow-xs'
                         : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800'
                     }`}
                   >
@@ -288,7 +288,7 @@ export function BioBuilderPage() {
                       onClick={() => handleToggleLink(item.id)}
                       className={`text-[10px] px-2 py-0.5 rounded font-medium ${
                         item.active
-                          ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300'
+                          ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900'
                           : 'bg-slate-200 text-slate-600'
                       }`}
                     >
@@ -319,15 +319,15 @@ export function BioBuilderPage() {
               {/* Inside Screen Content */}
               <div
                 className={`min-h-[500px] rounded-[24px] p-5 flex flex-col items-center justify-between transition-colors ${
-                  bioPage.theme === 'teal'
-                    ? 'bg-gradient-to-b from-teal-950 via-slate-950 to-black text-white'
+                  bioPage.theme === 'pearl'
+                    ? 'bg-[#faf9f6] text-neutral-900'
                     : bioPage.theme === 'slate'
-                    ? 'bg-slate-950 text-white'
+                    ? 'bg-neutral-900 text-white'
                     : bioPage.theme === 'minimal'
                     ? 'bg-white text-slate-900'
                     : bioPage.theme === 'dark'
                     ? 'bg-black text-white'
-                    : 'bg-gradient-to-tr from-slate-950 via-teal-950 to-slate-900 text-white'
+                    : 'bg-gradient-to-tr from-neutral-950 via-neutral-900 to-neutral-800 text-white'
                 }`}
               >
                 <div className="w-full text-center space-y-3">
@@ -335,11 +335,11 @@ export function BioBuilderPage() {
                     src={bioPage.avatarUrl}
                     alt={bioPage.title}
                     referrerPolicy="no-referrer"
-                    className="w-16 h-16 rounded-full mx-auto object-cover ring-2 ring-teal-500/40 shadow-xs"
+                    className="w-16 h-16 rounded-full mx-auto object-cover ring-2 ring-neutral-400/40 shadow-xs"
                   />
                   <div>
                     <h4 className="text-xs font-bold truncate">{bioPage.title}</h4>
-                    <p className="text-[10px] text-teal-400 font-mono">@{bioPage.slug}</p>
+                    <p className="text-[10px] text-neutral-500 font-mono">@{bioPage.slug}</p>
                   </div>
                   {bioPage.bio && (
                     <p className="text-[10px] opacity-80 leading-relaxed max-w-[220px] mx-auto line-clamp-3">

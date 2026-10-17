@@ -240,24 +240,24 @@ export function CreateLinkPage() {
           <div className="flex items-center gap-2 text-xs">
             <button
               onClick={() => setStep(1)}
-              className={`px-3 py-1.5 rounded-md font-medium transition-colors ${
+              className={`px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer ${
                 step === 1
-                  ? 'bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300 font-semibold'
-                  : 'text-slate-500'
+                  ? 'pearl-btn-dark'
+                  : 'text-neutral-500 hover:text-neutral-800'
               }`}
             >
               1. Destination
             </button>
-            <span className="text-slate-300 dark:text-slate-700">/</span>
+            <span className="text-neutral-300 dark:text-neutral-700">/</span>
             <button
               onClick={() => {
                 if (urlCheck.valid && aliasAvailability.available) setStep(2);
               }}
               disabled={!urlCheck.valid || !aliasAvailability.available}
-              className={`px-3 py-1.5 rounded-md font-medium transition-colors disabled:opacity-40 ${
+              className={`px-3 py-1.5 rounded-lg font-medium transition-colors disabled:opacity-40 cursor-pointer ${
                 step === 2
-                  ? 'bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300 font-semibold'
-                  : 'text-slate-500'
+                  ? 'pearl-btn-dark'
+                  : 'text-neutral-500 hover:text-neutral-800'
               }`}
             >
               2. Options & Review
@@ -310,14 +310,14 @@ export function CreateLinkPage() {
 
             <div className="text-xs">
               {aliasAvailability.checking ? (
-                <span className="text-slate-400">Checking availability...</span>
+                <span className="text-neutral-400">Checking availability...</span>
               ) : aliasAvailability.available ? (
-                <span className="text-emerald-600 flex items-center gap-1 font-medium">
+                <span className="text-neutral-900 dark:text-white flex items-center gap-1 font-medium">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span>Alias available</span>
                 </span>
               ) : (
-                <span className="text-rose-600 flex items-center gap-1 font-medium">
+                <span className="text-red-600 flex items-center gap-1 font-medium">
                   <AlertCircle className="w-3.5 h-3.5" />
                   <span>{aliasAvailability.error || 'Unavailable'}</span>
                 </span>
@@ -344,7 +344,7 @@ export function CreateLinkPage() {
 
           {/* Tags */}
           <div className="space-y-2">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-700 dark:text-neutral-300">
               Tags
             </label>
             <div className="flex flex-wrap gap-1.5 mb-2">
@@ -361,10 +361,10 @@ export function CreateLinkPage() {
                         setSelectedTags([...selectedTags, t.name]);
                       }
                     }}
-                    className={`text-xs px-2.5 py-1 min-h-[36px] rounded-md border transition-colors cursor-pointer ${
+                    className={`text-xs px-2.5 py-1 min-h-[36px] rounded-lg border transition-colors cursor-pointer ${
                       isSelected
-                        ? 'bg-teal-600 text-white border-teal-700 font-medium'
-                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700'
+                        ? 'bg-neutral-900 text-white border-neutral-900 font-medium'
+                        : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-neutral-700 hover:bg-neutral-200'
                     }`}
                   >
                     {t.name}
@@ -420,7 +420,7 @@ export function CreateLinkPage() {
                   type="checkbox"
                   checked={enableExpiry}
                   onChange={(e) => setEnableExpiry(e.target.checked)}
-                  className="w-4 h-4 text-teal-600 rounded cursor-pointer"
+                  className="w-4 h-4 accent-neutral-900 rounded cursor-pointer"
                 />
               </div>
               {enableExpiry && (
@@ -433,16 +433,16 @@ export function CreateLinkPage() {
             </div>
 
             {/* Click limit */}
-            <div className="space-y-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+            <div className="space-y-2 pt-3 border-t border-neutral-100 dark:border-neutral-800">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
+                <span className="text-xs font-semibold text-neutral-800 dark:text-neutral-200">
                   Click Limit Cap
                 </span>
                 <input
                   type="checkbox"
                   checked={enableLimit}
                   onChange={(e) => setEnableLimit(e.target.checked)}
-                  className="w-4 h-4 text-teal-600 rounded cursor-pointer"
+                  className="w-4 h-4 accent-neutral-900 rounded cursor-pointer"
                 />
               </div>
               {enableLimit && (
@@ -457,16 +457,16 @@ export function CreateLinkPage() {
             </div>
 
             {/* Password protection with live rules checklist */}
-            <div className="space-y-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+            <div className="space-y-2 pt-3 border-t border-neutral-100 dark:border-neutral-800">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
+                <span className="text-xs font-semibold text-neutral-800 dark:text-neutral-200">
                   Password Protection
                 </span>
                 <input
                   type="checkbox"
                   checked={enablePassword}
                   onChange={(e) => setEnablePassword(e.target.checked)}
-                  className="w-4 h-4 text-teal-600 rounded cursor-pointer"
+                  className="w-4 h-4 accent-neutral-900 rounded cursor-pointer"
                 />
               </div>
               {enablePassword && (
@@ -479,18 +479,18 @@ export function CreateLinkPage() {
                   />
 
                   {/* Password rules checklist */}
-                  <div className="p-3 bg-slate-50 dark:bg-slate-900/60 rounded-lg border border-slate-200 dark:border-slate-800 space-y-1 text-[11px]">
+                  <div className="p-3 bg-neutral-50 dark:bg-neutral-900/60 rounded-xl border border-neutral-200 dark:border-neutral-800 space-y-1 text-[11px]">
                     {passwordAnalysis.rules.map((r) => (
                       <div
                         key={r.id}
                         className={`flex items-center gap-1.5 ${
-                          r.valid ? 'text-emerald-600' : 'text-slate-400'
+                          r.valid ? 'text-neutral-900 dark:text-white font-medium' : 'text-neutral-400'
                         }`}
                       >
                         {r.valid ? (
                           <Check className="w-3.5 h-3.5 stroke-[2.5]" />
                         ) : (
-                          <span className="w-3.5 h-3.5 rounded-full border border-slate-300 dark:border-slate-700" />
+                          <span className="w-3.5 h-3.5 rounded-full border border-neutral-300 dark:border-neutral-700" />
                         )}
                         <span>{r.label}</span>
                       </div>
@@ -501,16 +501,16 @@ export function CreateLinkPage() {
             </div>
 
             {/* Mobile Destination URL */}
-            <div className="space-y-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+            <div className="space-y-2 pt-3 border-t border-neutral-100 dark:border-neutral-800">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
+                <span className="text-xs font-semibold text-neutral-800 dark:text-neutral-200">
                   Mobile Device Destination
                 </span>
                 <input
                   type="checkbox"
                   checked={enableMobileUrl}
                   onChange={(e) => setEnableMobileUrl(e.target.checked)}
-                  className="w-4 h-4 text-teal-600 rounded cursor-pointer"
+                  className="w-4 h-4 accent-neutral-900 rounded cursor-pointer"
                 />
               </div>
               {enableMobileUrl && (
@@ -525,13 +525,13 @@ export function CreateLinkPage() {
 
           {/* Check before publishing box */}
           <Card className="p-6 space-y-4">
-            <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
+            <h3 className="text-sm font-semibold text-neutral-900 dark:text-white">
               Check before publishing
             </h3>
 
             {errors.length === 0 && warnings.length === 0 && (
-              <div className="p-3 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 rounded-lg text-xs text-emerald-800 dark:text-emerald-300 flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <div className="p-3 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-xl text-xs text-neutral-800 dark:text-neutral-200 flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-neutral-900 dark:text-white shrink-0" />
                 <span>All checks passed. Ready to publish.</span>
               </div>
             )}
@@ -592,21 +592,21 @@ export function CreateLinkPage() {
       {/* STEP 3: Success Screen */}
       {step === 3 && createdLink && (
         <Card className="p-8 text-center space-y-6">
-          <div className="w-12 h-12 rounded-xl bg-teal-50 dark:bg-teal-950 text-teal-600 flex items-center justify-center mx-auto">
+          <div className="w-12 h-12 rounded-xl bg-neutral-900 text-white flex items-center justify-center mx-auto shadow-xs">
             <CheckCircle2 className="w-6 h-6 stroke-[2.2]" />
           </div>
 
           <div>
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+            <h2 className="font-display text-xl sm:text-2xl font-normal text-neutral-900 dark:text-white">
               Link Published!
             </h2>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-neutral-500 mt-1">
               Your link is active and ready to share.
             </p>
           </div>
 
-          <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 max-w-md mx-auto">
-            <span className="font-mono text-sm font-bold text-teal-600 dark:text-teal-400 truncate">
+          <div className="p-3 bg-neutral-50 dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800 flex items-center justify-between gap-3 max-w-md mx-auto">
+            <span className="font-mono text-sm font-medium text-neutral-900 dark:text-neutral-100 underline decoration-neutral-300 truncate">
               {createdLink.fullUrl}
             </span>
             <Button variant="primary" size="sm" onClick={handleCopy} className="shrink-0 min-h-[38px]">

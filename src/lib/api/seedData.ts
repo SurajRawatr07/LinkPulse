@@ -36,7 +36,7 @@ export function createInitialSeedData(targetUserId: string): {
       userId: targetUserId,
       name: 'Product Launch Q4',
       description: 'Global launch and rollout assets.',
-      color: '#0f9d8a',
+      color: '#18181b',
       createdAt: '2026-09-15T10:00:00Z',
     },
     {

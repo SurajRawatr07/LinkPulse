@@ -242,10 +242,10 @@ export function BulkImportPage() {
         }}
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleFileDrop}
-        className={`p-8 sm:p-12 text-center border-2 border-dashed transition-colors cursor-pointer ${
+        className={`p-8 sm:p-12 text-center border-2 border-dashed transition-colors cursor-pointer rounded-2xl ${
           isDragging
-            ? 'border-teal-500 bg-teal-50/50 dark:bg-teal-950/20'
-            : 'border-slate-300 dark:border-slate-800 hover:border-slate-400'
+            ? 'border-neutral-900 bg-neutral-100 dark:bg-neutral-800/40'
+            : 'border-neutral-300 dark:border-neutral-800 hover:border-neutral-400'
         }`}
         onClick={() => fileInputRef.current?.click()}
       >
@@ -334,7 +334,7 @@ export function BulkImportPage() {
                   >
                     <td className="py-2.5 px-4">
                       {row.status === 'valid' ? (
-                        <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">
+                        <span className="inline-flex items-center gap-1 text-neutral-900 dark:text-neutral-100 font-medium">
                           <CheckCircle2 className="w-3.5 h-3.5" />
                           <span>Valid</span>
                         </span>
@@ -348,7 +348,7 @@ export function BulkImportPage() {
                     <td className="py-2.5 px-4 font-mono text-slate-600 dark:text-slate-300 truncate max-w-xs">
                       {row.url}
                     </td>
-                    <td className="py-2.5 px-4 font-mono font-semibold text-teal-600 dark:text-teal-400">
+                    <td className="py-2.5 px-4 font-mono font-semibold text-neutral-900 dark:text-neutral-100">
                       /{row.alias}
                     </td>
                     <td className="py-2.5 px-4 truncate max-w-xs text-slate-800 dark:text-slate-200">
@@ -368,7 +368,7 @@ export function BulkImportPage() {
       {/* Import Summary Report */}
       {importSummary && (
         <Card className="p-6 text-center space-y-4 animate-in fade-in duration-200">
-          <div className="w-12 h-12 rounded-xl bg-teal-50 dark:bg-teal-950 text-teal-600 flex items-center justify-center mx-auto">
+          <div className="w-12 h-12 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white flex items-center justify-center mx-auto">
             <CheckCircle2 className="w-6 h-6" />
           </div>
           <div>

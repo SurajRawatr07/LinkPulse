@@ -32,7 +32,7 @@ export function QrCenterPage() {
   const [mode, setMode] = useState<'existing' | 'custom'>('existing');
 
   // Customizer styling
-  const [fgColor, setFgColor] = useState('#0f9d8a');
+  const [fgColor, setFgColor] = useState('#171717');
   const [bgColor, setBgColor] = useState('#ffffff');
   const [size, setSize] = useState(220);
   const [includeMargin, setIncludeMargin] = useState(true);
@@ -125,8 +125,8 @@ export function QrCenterPage() {
         {/* Left Side: Controls (7 cols) */}
         <div className="lg:col-span-7 space-y-6">
           <Card className="p-6 space-y-5">
-            <h3 className="text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-              <QrCode className="w-4 h-4 text-teal-600" />
+            <h3 className="text-sm font-semibold text-neutral-900 dark:text-white flex items-center gap-2">
+              <QrCode className="w-4 h-4 text-neutral-900 dark:text-white" />
               <span>Target & Source Configuration</span>
             </h3>
 
@@ -176,7 +176,7 @@ export function QrCenterPage() {
                     <p className="text-slate-500 font-mono text-[11px] truncate">
                       {window.location.origin}/r/{activeLink.shortCode}?src=qr
                     </p>
-                    <p className="text-teal-600 dark:text-teal-400 font-mono text-[11px] pt-1">
+                    <p className="text-neutral-900 dark:text-white font-mono text-[11px] pt-1 font-semibold">
                       Current QR scans: {formatCompactNumber(activeLink.qrScansCount)}
                     </p>
                   </div>
@@ -195,8 +195,8 @@ export function QrCenterPage() {
 
           {/* Color & Size Customization */}
           <Card className="p-6 space-y-5">
-            <h3 className="text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-              <Palette className="w-4 h-4 text-teal-600" />
+            <h3 className="text-sm font-semibold text-neutral-900 dark:text-white flex items-center gap-2">
+              <Palette className="w-4 h-4 text-neutral-900 dark:text-white" />
               <span>Color & Styling Parameters</span>
             </h3>
 
@@ -254,7 +254,7 @@ export function QrCenterPage() {
                 step="20"
                 value={size}
                 onChange={(e) => setSize(Number(e.target.value))}
-                className="w-full accent-teal-600"
+                className="w-full accent-neutral-900"
               />
             </div>
 
@@ -264,7 +264,7 @@ export function QrCenterPage() {
                 id="margin-toggle"
                 checked={includeMargin}
                 onChange={(e) => setIncludeMargin(e.target.checked)}
-                className="w-4 h-4 text-teal-600 rounded cursor-pointer"
+                className="w-4 h-4 accent-neutral-900 rounded cursor-pointer"
               />
               <label htmlFor="margin-toggle" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">
                 Include quiet safety margin around code

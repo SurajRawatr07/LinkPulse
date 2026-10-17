@@ -73,7 +73,7 @@ export async function seedDatabase() {
       .values({
         userId: activeUserId,
         name: 'Social Media',
-        color: '#0F9D8A',
+        color: '#18181B',
       })
       .returning();
 
@@ -83,7 +83,7 @@ export async function seedDatabase() {
       .values({
         userId: activeUserId,
         name: 'Featured',
-        color: '#0F9D8A',
+        color: '#18181B',
       })
       .returning();
 
@@ -158,7 +158,7 @@ export async function seedDatabase() {
           .insert(qrCodes)
           .values({
             linkId: newLink.id,
-            foregroundColor: '#0F9D8A',
+            foregroundColor: '#171717',
             backgroundColor: '#FFFFFF',
             style: 'squares',
             scansCount: Math.round(l.clicksCount * 0.2),

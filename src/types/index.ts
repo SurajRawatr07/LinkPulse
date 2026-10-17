@@ -32,7 +32,7 @@ export interface BioPage {
   title: string;
   bio?: string;
   avatarUrl?: string;
-  theme: 'teal' | 'slate' | 'minimal' | 'dark' | 'gradient';
+  theme: 'pearl' | 'slate' | 'minimal' | 'dark' | 'gradient' | 'teal';
   socials: BioSocialLink[];
   links: BioLinkItem[];
   updatedAt: string;

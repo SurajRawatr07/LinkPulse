@@ -15,7 +15,7 @@ export function TagsPage() {
 
   const [tags, setTags] = useState<Tag[]>([]);
   const [newTagName, setNewTagName] = useState('');
-  const [newTagColor, setNewTagColor] = useState('#0f9d8a');
+  const [newTagColor, setNewTagColor] = useState('#18181b');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

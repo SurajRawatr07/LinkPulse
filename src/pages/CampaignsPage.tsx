@@ -35,7 +35,7 @@ export function CampaignsPage() {
   const [editingCamp, setEditingCamp] = useState<Campaign | null>(null);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [color, setColor] = useState('#0f9d8a');
+  const [color, setColor] = useState('#171717');
 
   // Delete
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
@@ -60,7 +60,7 @@ export function CampaignsPage() {
     setEditingCamp(null);
     setName('');
     setDescription('');
-    setColor('#0f9d8a');
+    setColor('#171717');
     setModalOpen(true);
   }
 
@@ -190,17 +190,17 @@ export function CampaignsPage() {
 
               {/* Stats Footer */}
               <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
-                <div className="flex items-center gap-4 text-slate-500">
+                <div className="flex items-center gap-4 text-neutral-500">
                   <span className="flex items-center gap-1">
-                    <Link2 className="w-3.5 h-3.5 text-teal-600" />
-                    <span className="font-mono font-bold text-slate-900 dark:text-white tabular-nums">
+                    <Link2 className="w-3.5 h-3.5 text-neutral-900 dark:text-white" />
+                    <span className="font-mono font-bold text-neutral-900 dark:text-white tabular-nums">
                       {camp.linksCount || 0}
                     </span>{' '}
                     links
                   </span>
                   <span className="flex items-center gap-1">
-                    <MousePointerClick className="w-3.5 h-3.5 text-sky-600" />
-                    <span className="font-mono font-bold text-slate-900 dark:text-white tabular-nums">
+                    <MousePointerClick className="w-3.5 h-3.5 text-neutral-600 dark:text-neutral-400" />
+                    <span className="font-mono font-bold text-neutral-900 dark:text-white tabular-nums">
                       {formatCompactNumber(camp.clicksCount || 0)}
                     </span>{' '}
                     clicks
@@ -209,7 +209,7 @@ export function CampaignsPage() {
 
                 <Link
                   to={`/app/links?campaign=${camp.id}`}
-                  className="text-xs font-semibold text-teal-600 dark:text-teal-400 hover:underline flex items-center gap-1"
+                  className="text-xs font-medium text-neutral-900 dark:text-neutral-100 underline decoration-neutral-300 hover:decoration-neutral-900 flex items-center gap-1"
                 >
                   <span>Filter links</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -248,7 +248,7 @@ export function CampaignsPage() {
             />
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-700 dark:text-neutral-300 mb-1.5">
                 Description (Optional)
               </label>
               <textarea
@@ -256,7 +256,7 @@ export function CampaignsPage() {
                 placeholder="Briefly describe the objective or channels used in this campaign..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 p-3 text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                className="w-full rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 p-3 text-xs placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/15 focus:border-neutral-900"
               />
             </div>
 

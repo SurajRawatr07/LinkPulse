@@ -349,7 +349,7 @@ linksRouter.post('/', requireAuth, async (req: AuthRequest, res: Response) => {
     // Create default QR Code record
     await db.insert(qrCodes).values({
       linkId: newLink.id,
-      foregroundColor: '#0F9D8A',
+      foregroundColor: '#171717',
       backgroundColor: '#FFFFFF',
       style: 'squares',
     });

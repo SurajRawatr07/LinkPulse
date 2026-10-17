@@ -140,7 +140,7 @@ export function AdminLinksPage() {
                     <td className="py-3 px-4 font-mono font-medium">
                       <Link
                         to={`/app/links/${link.id}`}
-                        className="text-teal-600 dark:text-teal-400 font-semibold hover:underline"
+                        className="text-neutral-900 dark:text-white font-semibold hover:underline"
                       >
                         /{link.shortCode}
                       </Link>

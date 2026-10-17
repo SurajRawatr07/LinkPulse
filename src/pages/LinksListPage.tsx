@@ -328,8 +328,8 @@ export function LinksListPage() {
 
         {/* Bulk Action Strip when rows selected */}
         {selectedIds.length > 0 && (
-          <div className="flex flex-wrap items-center justify-between gap-3 p-2.5 bg-teal-50 dark:bg-teal-950/60 border border-teal-200 dark:border-teal-800 rounded-lg text-xs animate-in fade-in duration-150">
-            <span className="font-semibold text-teal-800 dark:text-teal-300">
+          <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-xl text-xs animate-in fade-in duration-150">
+            <span className="font-semibold text-neutral-900 dark:text-neutral-100">
               {selectedIds.length} link{selectedIds.length > 1 ? 's' : ''} selected
             </span>
             <div className="flex items-center gap-2">
@@ -394,7 +394,7 @@ export function LinksListPage() {
                       aria-label="Select all"
                     >
                       {selectedIds.length === paginatedLinks.length && paginatedLinks.length > 0 ? (
-                        <CheckSquare className="w-4 h-4 text-teal-600" />
+                        <CheckSquare className="w-4 h-4 text-neutral-900 dark:text-white" />
                       ) : (
                         <Square className="w-4 h-4" />
                       )}
@@ -408,7 +408,7 @@ export function LinksListPage() {
                   <th className="py-3 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+              <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800 text-neutral-700 dark:text-neutral-300">
                 {paginatedLinks.map((link) => {
                   const isSelected = selectedIds.includes(link.id);
                   const isExpired = link.rules.expiresAt && new Date(link.rules.expiresAt) <= new Date();
@@ -417,8 +417,8 @@ export function LinksListPage() {
                     <tr
                       key={link.id}
                       className={cn(
-                        'hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors',
-                        isSelected && 'bg-teal-50/50 dark:bg-teal-950/30'
+                        'hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors',
+                        isSelected && 'bg-neutral-100/70 dark:bg-neutral-800/60'
                       )}
                     >
                       <td className="py-3 px-4">
@@ -430,11 +430,11 @@ export function LinksListPage() {
                               setSelectedIds([...selectedIds, link.id]);
                             }
                           }}
-                          className="cursor-pointer text-slate-400"
+                          className="cursor-pointer text-neutral-400"
                           aria-label={`Select ${link.shortCode}`}
                         >
                           {isSelected ? (
-                            <CheckSquare className="w-4 h-4 text-teal-600" />
+                            <CheckSquare className="w-4 h-4 text-neutral-900 dark:text-white" />
                           ) : (
                             <Square className="w-4 h-4" />
                           )}
@@ -445,7 +445,7 @@ export function LinksListPage() {
                         <div className="flex items-center gap-1.5">
                           <Link
                             to={`/app/links/${link.id}`}
-                            className="text-teal-600 dark:text-teal-400 hover:underline font-semibold"
+                            className="text-neutral-900 dark:text-neutral-100 underline decoration-neutral-300 hover:decoration-neutral-900 font-medium"
                           >
                             /{link.shortCode}
                           </Link>
@@ -492,7 +492,7 @@ export function LinksListPage() {
                             title="Copy short link"
                           >
                             {copiedId === link.id ? (
-                              <Check className="w-4 h-4 text-emerald-500" />
+                              <Check className="w-4 h-4 text-neutral-900 dark:text-white" />
                             ) : (
                               <Copy className="w-4 h-4" />
                             )}
@@ -500,7 +500,7 @@ export function LinksListPage() {
 
                           <button
                             onClick={() => setQrModalLink(link)}
-                            className="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-500 cursor-pointer"
+                            className="p-1.5 rounded hover:bg-neutral-200 dark:hover:bg-neutral-800 text-neutral-500 cursor-pointer"
                             title="Quick QR Preview"
                           >
                             <QrCode className="w-4 h-4" />
@@ -508,7 +508,7 @@ export function LinksListPage() {
 
                           <button
                             onClick={() => handleOpenEdit(link)}
-                            className="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-500 cursor-pointer"
+                            className="p-1.5 rounded hover:bg-neutral-200 dark:hover:bg-neutral-800 text-neutral-500 cursor-pointer"
                             title="Edit link title/URL"
                           >
                             <Edit className="w-4 h-4" />
@@ -517,8 +517,8 @@ export function LinksListPage() {
                           <button
                             onClick={() => handleToggleStatus(link)}
                             className={cn(
-                              'p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-800 cursor-pointer',
-                              link.isActive ? 'text-teal-600' : 'text-slate-400'
+                              'p-1.5 rounded hover:bg-neutral-200 dark:hover:bg-neutral-800 cursor-pointer',
+                              link.isActive ? 'text-neutral-900 dark:text-white' : 'text-neutral-400'
                             )}
                             title={link.isActive ? 'Disable link' : 'Enable link'}
                           >
@@ -527,7 +527,7 @@ export function LinksListPage() {
 
                           <button
                             onClick={() => setDeleteConfirmId(link.id)}
-                            className="p-1.5 rounded hover:bg-rose-100 dark:hover:bg-rose-950/40 text-slate-400 hover:text-rose-600 cursor-pointer"
+                            className="p-1.5 rounded hover:bg-red-100 dark:hover:bg-red-950/40 text-neutral-400 hover:text-red-600 cursor-pointer"
                             title="Delete link"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -542,14 +542,14 @@ export function LinksListPage() {
           </div>
 
           {/* Mobile Stacked Cards View */}
-          <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800">
+          <div className="md:hidden divide-y divide-neutral-100 dark:divide-neutral-800">
             {paginatedLinks.map((link) => (
               <div key={link.id} className="p-4 space-y-3">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
                     <Link
                       to={`/app/links/${link.id}`}
-                      className="font-mono text-sm font-semibold text-teal-600 dark:text-teal-400"
+                      className="font-mono text-sm font-medium text-neutral-900 dark:text-neutral-100 underline decoration-neutral-300 hover:decoration-neutral-900"
                     >
                       /{link.shortCode}
                     </Link>

@@ -123,7 +123,7 @@ export function AdminOverviewPage() {
           <p className="text-2xl font-bold font-mono text-slate-900 dark:text-white">
             {stats.totalUsers}
           </p>
-          <span className="text-[11px] text-teal-600 font-medium">Enterprise & Creator</span>
+          <span className="text-[11px] text-neutral-900 dark:text-neutral-100 font-semibold">Enterprise & Creator</span>
         </Card>
 
         <Card className="p-4 space-y-1">
@@ -131,7 +131,7 @@ export function AdminOverviewPage() {
           <p className="text-2xl font-bold font-mono text-slate-900 dark:text-white">
             {stats.totalLinks}
           </p>
-          <span className="text-[11px] text-emerald-600 font-medium">
+          <span className="text-[11px] text-neutral-900 dark:text-neutral-100 font-semibold">
             {stats.activeLinks} active ({Math.round((stats.activeLinks / stats.totalLinks) * 100)}%)
           </span>
         </Card>

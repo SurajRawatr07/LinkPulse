@@ -127,26 +127,26 @@ export function SignupPage() {
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4 sm:p-6 lg:p-8">
       <Card className="max-w-md w-full p-6 sm:p-8 space-y-6">
         <div>
-          <Link to="/" className="inline-flex items-center gap-2 mb-4">
-            <div className="w-7 h-7 rounded-lg bg-teal-600 flex items-center justify-center text-white shadow-xs">
-              <Link2 className="w-4 h-4 stroke-[2.2]" />
+          <Link to="/" className="inline-flex items-center gap-2 mb-4 group">
+            <div className="w-8 h-8 rounded-xl bg-neutral-900 text-white flex items-center justify-center shadow-xs group-hover:bg-black transition-colors">
+              <Link2 className="w-4.5 h-4.5 stroke-[2.2]" />
             </div>
-            <span className="text-base font-bold text-slate-900 dark:text-white">
+            <span className="font-display text-lg font-bold text-neutral-900 dark:text-white">
               LinkPulse
             </span>
           </Link>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Create your account
+          <h1 className="font-display text-2xl sm:text-3xl font-normal tracking-tight text-neutral-900 dark:text-white">
+            Create Your Account
           </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 mt-1 font-body">
             Start shortening links and streaming analytics in seconds.
           </p>
         </div>
 
         {/* Note shown only for the first user */}
         {isFirstUser && (
-          <div className="p-3 bg-teal-50 dark:bg-teal-950/60 border border-teal-200 dark:border-teal-800 rounded-lg text-xs text-teal-800 dark:text-teal-300 flex items-start gap-2">
-            <ShieldCheck className="w-4 h-4 text-teal-600 shrink-0 mt-0.5" />
+          <div className="p-3 bg-neutral-100 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 rounded-xl text-xs text-neutral-800 dark:text-neutral-200 flex items-start gap-2">
+            <ShieldCheck className="w-4 h-4 text-neutral-900 dark:text-white shrink-0 mt-0.5" />
             <div>
               <span className="font-semibold">Administrator Notice:</span> The first registered account automatically receives full Administrator privileges and pre-seeded sample data.
             </div>
@@ -209,7 +209,7 @@ export function SignupPage() {
                   <span
                     className={`font-semibold ${
                       passwordAnalysis.strength === 'Strong'
-                        ? 'text-emerald-600'
+                        ? 'text-neutral-900 dark:text-neutral-100'
                         : passwordAnalysis.strength === 'Medium'
                         ? 'text-amber-600'
                         : 'text-rose-600'
@@ -231,7 +231,7 @@ export function SignupPage() {
                   />
                   <div
                     className={`h-full transition-all duration-200 ${
-                      passwordAnalysis.score === 6 ? 'bg-emerald-500 w-1/3' : 'bg-transparent'
+                      passwordAnalysis.score === 6 ? 'bg-neutral-900 dark:bg-white w-1/3' : 'bg-transparent'
                     }`}
                   />
                 </div>
@@ -242,7 +242,7 @@ export function SignupPage() {
                     <div
                       key={rule.id}
                       className={`flex items-center gap-1.5 ${
-                        rule.valid ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'
+                        rule.valid ? 'text-neutral-900 dark:text-neutral-100 font-semibold' : 'text-slate-400'
                       }`}
                     >
                       {rule.valid ? (
@@ -352,9 +352,9 @@ export function SignupPage() {
           <span>Continue with Google</span>
         </button>
 
-        <p className="text-center text-xs text-slate-500">
+        <p className="text-center text-xs text-neutral-600">
           Already have an account?{' '}
-          <Link to="/login" className="text-teal-600 dark:text-teal-400 font-semibold hover:underline">
+          <Link to="/login" className="text-neutral-900 dark:text-white font-semibold underline decoration-neutral-300 hover:decoration-neutral-900">
             Log in
           </Link>
         </p>

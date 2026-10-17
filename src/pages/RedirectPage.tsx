@@ -125,10 +125,10 @@ export function RedirectPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-[#faf9f6] dark:bg-[#0a0a0a] p-4">
         <div className="text-center space-y-3">
-          <div className="w-8 h-8 border-2 border-teal-600 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-xs text-slate-500 font-mono">Resolving link...</p>
+          <div className="w-8 h-8 border-2 border-neutral-900 dark:border-white border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-xs text-neutral-600 font-mono">Resolving link...</p>
         </div>
       </div>
     );
@@ -259,16 +259,16 @@ export function RedirectPage() {
   // 6. Password protected
   if (evalResult?.status === 'password_required' || evalResult?.status === 'password_invalid') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-[#faf9f6] dark:bg-[#0a0a0a] p-4">
         <Card className="max-w-md w-full p-8 space-y-6">
           <div className="text-center space-y-2">
-            <div className="w-12 h-12 rounded-xl bg-teal-50 dark:bg-teal-950 text-teal-600 flex items-center justify-center mx-auto">
+            <div className="w-12 h-12 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white flex items-center justify-center mx-auto">
               <Lock className="w-6 h-6 stroke-[1.8]" />
             </div>
-            <h1 className="text-xl font-bold text-slate-900 dark:text-white">
+            <h1 className="text-xl font-bold text-neutral-900 dark:text-white">
               Password Protected Link
             </h1>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-neutral-500">
               Please enter the access password to proceed to the destination.
             </p>
           </div>
@@ -294,30 +294,30 @@ export function RedirectPage() {
   // 7 & 8. Redirect with short countdown
   if (evalResult?.status === 'success') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-[#faf9f6] dark:bg-[#0a0a0a] p-4">
         <Card className="max-w-md w-full text-center p-8 space-y-5">
-          <div className="w-12 h-12 rounded-xl bg-teal-50 dark:bg-teal-950 text-teal-600 flex items-center justify-center mx-auto">
+          <div className="w-12 h-12 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white flex items-center justify-center mx-auto">
             <CheckCircle2 className="w-6 h-6 stroke-[1.8]" />
           </div>
 
           <div>
-            <h1 className="text-lg font-bold text-slate-900 dark:text-white">
+            <h1 className="text-lg font-bold text-neutral-900 dark:text-white">
               Redirecting...
             </h1>
-            <p className="text-xs text-slate-500 font-mono break-all mt-1">
+            <p className="text-xs text-neutral-500 font-mono break-all mt-1">
               {evalResult.destinationUrl}
             </p>
           </div>
 
           <div className="py-1">
-            <span className="font-mono text-xs font-semibold px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400">
+            <span className="font-mono text-xs font-semibold px-3 py-1 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100">
               Redirecting in {countdown}s
             </span>
           </div>
 
           <a
             href={evalResult.destinationUrl}
-            className="text-xs text-teal-600 hover:underline inline-flex items-center gap-1 font-medium"
+            className="text-xs text-neutral-900 dark:text-neutral-100 hover:underline inline-flex items-center gap-1 font-semibold"
           >
             <span>Click here if not redirected</span>
             <ExternalLink className="w-3.5 h-3.5" />

@@ -47,7 +47,7 @@ foldersTagsRouter.get('/folders', requireAuth, async (req: AuthRequest, res: Res
 
 foldersTagsRouter.post('/folders', requireAuth, async (req: AuthRequest, res: Response) => {
   const userId = req.user!.id;
-  const { name, color = '#0F9D8A' } = req.body;
+  const { name, color = '#18181B' } = req.body;
 
   if (!name || !name.trim()) {
     return res.status(400).json({ error: 'Folder name is required' });
@@ -137,7 +137,7 @@ foldersTagsRouter.get('/tags', requireAuth, async (req: AuthRequest, res: Respon
 
 foldersTagsRouter.post('/tags', requireAuth, async (req: AuthRequest, res: Response) => {
   const userId = req.user!.id;
-  const { name, color = '#0F9D8A' } = req.body;
+  const { name, color = '#18181B' } = req.body;
 
   if (!name || !name.trim()) {
     return res.status(400).json({ error: 'Tag name is required' });
