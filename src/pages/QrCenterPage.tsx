@@ -19,7 +19,7 @@ import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Select } from '../components/ui/Select';
-import { formatCompactNumber } from '../lib/utils';
+import { formatCompactNumber, getBaseShortUrl } from '../lib/utils';
 
 export function QrCenterPage() {
   const { user } = useAuthStore();
@@ -62,8 +62,8 @@ export function QrCenterPage() {
 
   const finalQrValue =
     mode === 'existing' && activeLink
-      ? `${window.location.origin}/r/${activeLink.shortCode}?src=qr`
-      : customUrl || `${window.location.origin}`;
+      ? `${getBaseShortUrl()}/r/${activeLink.shortCode}?src=qr`
+      : customUrl || `${getBaseShortUrl()}`;
 
   function handleDownloadSvg() {
     const svgEl = document.getElementById('qr-center-svg');
@@ -174,7 +174,7 @@ export function QrCenterPage() {
                       Telemetry Tracking:
                     </p>
                     <p className="text-slate-500 font-mono text-[11px] truncate">
-                      {window.location.origin}/r/{activeLink.shortCode}?src=qr
+                      {getBaseShortUrl()}/r/{activeLink.shortCode}?src=qr
                     </p>
                     <p className="text-neutral-900 dark:text-white font-mono text-[11px] pt-1 font-semibold">
                       Current QR scans: {formatCompactNumber(activeLink.qrScansCount)}

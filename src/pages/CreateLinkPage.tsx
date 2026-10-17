@@ -23,6 +23,7 @@ import { useToastStore } from '../store/useToastStore';
 import { linksApi, campaignsApi, tagsApi, adminApi } from '../lib/api';
 import { generateShortCode, checkRateLimit } from '../lib/utils';
 import { validateUrl, validateAlias, checkPasswordRules } from '../lib/validators';
+import { getBaseShortUrl } from '../lib/utils';
 import { Campaign, Tag } from '../types';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
@@ -204,7 +205,7 @@ export function CreateLinkPage() {
         },
       });
 
-      const fullUrl = `${window.location.origin}/r/${created.shortCode}`;
+      const fullUrl = `${getBaseShortUrl()}/r/${created.shortCode}`;
       setCreatedLink({ id: created.id, shortCode: created.shortCode, fullUrl });
       setStep(3);
       success('Link published successfully!');
@@ -285,7 +286,7 @@ export function CreateLinkPage() {
             <div className="flex items-center gap-2">
               <div className="flex items-center flex-1 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm min-h-[44px]">
                 <span className="font-mono text-xs text-slate-400 select-none mr-1.5">
-                  linkpulse.io/r/
+                  {getBaseShortUrl().replace(/^https?:\/\//, '')}/r/
                 </span>
                 <input
                   type="text"

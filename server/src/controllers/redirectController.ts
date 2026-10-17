@@ -7,6 +7,33 @@ import { RedirectService } from '../services/redirectService.ts';
 const verifiedTokens = new Set<string>();
 
 export class RedirectController {
+  public static async resolveMetadata(req: Request, res: Response) {
+    const { code } = req.params;
+    try {
+      const link = await Link.findOne({ shortCode: code.toLowerCase() });
+      if (!link) {
+        return res.status(404).json({ error: 'Link not found' });
+      }
+
+      return res.json({
+        id: String(link._id),
+        shortCode: link.shortCode,
+        title: link.title || link.shortCode,
+        destinationUrl: link.destinationUrl,
+        originalUrl: link.destinationUrl,
+        hasPassword: !!link.passwordHash,
+        isActive: link.isActive,
+        status: link.status,
+        expiresAt: link.expiresAt ? new Date(link.expiresAt).toISOString() : undefined,
+        clickLimit: link.clickLimit,
+        clicksCount: link.clicksCount,
+      });
+    } catch (error) {
+      console.error('Resolve link error:', error);
+      return res.status(500).json({ error: 'Failed to resolve link' });
+    }
+  }
+
   public static async verifyPassword(req: Request, res: Response) {
     const { code } = req.params;
     const { password } = req.body;

@@ -23,7 +23,7 @@ import { useAuthStore } from '../store/useAuthStore';
 import { useToastStore } from '../store/useToastStore';
 import { linksApi, campaignsApi, tagsApi } from '../lib/api';
 import { Link as LinkType, Campaign, Tag } from '../types';
-import { formatCompactNumber, cn } from '../lib/utils';
+import { formatCompactNumber, cn, getBaseShortUrl } from '../lib/utils';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
@@ -149,7 +149,7 @@ export function LinksListPage() {
   }, [filteredLinks, page]);
 
   function handleCopy(id: string, code: string) {
-    const full = `${window.location.origin}/r/${code}`;
+    const full = `${getBaseShortUrl()}/r/${code}`;
     navigator.clipboard.writeText(full);
     setCopiedId(id);
     success('Copied short URL to clipboard!');
@@ -649,7 +649,7 @@ export function LinksListPage() {
           <div className="flex flex-col items-center justify-center p-6 space-y-4">
             <div className="p-4 bg-white rounded-xl shadow-xs border border-slate-200">
               <QRCodeSVG
-                value={`${window.location.origin}/r/${qrModalLink.shortCode}?src=qr`}
+                value={`${getBaseShortUrl()}/r/${qrModalLink.shortCode}?src=qr`}
                 size={180}
               />
             </div>

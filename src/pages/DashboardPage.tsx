@@ -28,7 +28,7 @@ import { useAuthStore } from '../store/useAuthStore';
 import { useToastStore } from '../store/useToastStore';
 import { clicksApi, linksApi, campaignsApi } from '../lib/api';
 import { DashboardAnalytics, TimeRange, Campaign, Link as LinkType } from '../types';
-import { formatCompactNumber } from '../lib/utils';
+import { formatCompactNumber, getBaseShortUrl } from '../lib/utils';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Select } from '../components/ui/Select';
@@ -107,7 +107,7 @@ export function DashboardPage() {
   }, [user, range, campaignId]);
 
   function handleCopy(id: string, shortCode: string) {
-    const full = `${window.location.origin}/r/${shortCode}`;
+    const full = `${getBaseShortUrl()}/r/${shortCode}`;
     navigator.clipboard.writeText(full);
     setCopiedId(id);
     success('Copied to clipboard');

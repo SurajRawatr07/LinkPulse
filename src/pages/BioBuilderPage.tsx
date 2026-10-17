@@ -23,6 +23,7 @@ import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Skeleton } from '../components/ui/Skeleton';
+import { getBaseShortUrl } from '../lib/utils';
 
 export function BioBuilderPage() {
   const { user } = useAuthStore();
@@ -109,7 +110,7 @@ export function BioBuilderPage() {
 
   function handleCopyBioUrl() {
     if (!bioPage) return;
-    const url = `${window.location.origin}/bio/${bioPage.slug}`;
+    const url = `${getBaseShortUrl()}/bio/${bioPage.slug}`;
     navigator.clipboard.writeText(url);
     setCopied(true);
     success('Copied Bio URL to clipboard');
@@ -125,7 +126,7 @@ export function BioBuilderPage() {
     );
   }
 
-  const publicBioUrl = `${window.location.origin}/bio/${bioPage.slug}`;
+  const publicBioUrl = `${getBaseShortUrl()}/bio/${bioPage.slug}`;
 
   return (
     <div className="space-y-6">

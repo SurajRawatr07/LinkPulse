@@ -12,21 +12,29 @@ import { LandingPage } from './pages/LandingPage';
 import { LoginPage } from './pages/LoginPage';
 import { SignupPage } from './pages/SignupPage';
 import { RedirectPage } from './pages/RedirectPage';
+import { PublicBioPage } from './pages/PublicBioPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
-// User App Pages (only specified in Section 6)
+// User App Pages
 import { DashboardPage } from './pages/DashboardPage';
 import { LinksListPage } from './pages/LinksListPage';
 import { CreateLinkPage } from './pages/CreateLinkPage';
 import { LinkDetailsPage } from './pages/LinkDetailsPage';
 import { BulkImportPage } from './pages/BulkImportPage';
+import { QrCenterPage } from './pages/QrCenterPage';
+import { BioBuilderPage } from './pages/BioBuilderPage';
+import { PolicyLabPage } from './pages/PolicyLabPage';
+import { LifecyclePage } from './pages/LifecyclePage';
+import { TrustCenterPage } from './pages/TrustCenterPage';
 import { CampaignsPage } from './pages/CampaignsPage';
 import { TagsPage } from './pages/TagsPage';
 import { SettingsPage } from './pages/SettingsPage';
 
-// Admin Pages (only specified in Section 6)
+// Admin Pages
+import { AdminOverviewPage } from './pages/admin/AdminOverviewPage';
 import { AdminLinksPage } from './pages/admin/AdminLinksPage';
 import { AdminUsersPage } from './pages/admin/AdminUsersPage';
+import { AdminAbusePage } from './pages/admin/AdminAbusePage';
 import { AdminBlocklistPage } from './pages/admin/AdminBlocklistPage';
 
 export default function App() {
@@ -68,8 +76,10 @@ export default function App() {
         />
         <Route path="/signup" element={<Navigate to="/register" replace />} />
 
-        {/* Redirect Engine */}
+        {/* Public Redirect & Bio Pages */}
         <Route path="/r/:code" element={<RedirectPage />} />
+        <Route path="/bio/:slug" element={<PublicBioPage />} />
+        <Route path="/b/:slug" element={<PublicBioPage />} />
 
         {/* User App Routes */}
         <Route path="/app" element={<Navigate to="/app/dashboard" replace />} />
@@ -114,6 +124,46 @@ export default function App() {
           }
         />
         <Route
+          path="/app/qr"
+          element={
+            <AppLayout>
+              <QrCenterPage />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/app/bio"
+          element={
+            <AppLayout>
+              <BioBuilderPage />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/app/policy-lab"
+          element={
+            <AppLayout>
+              <PolicyLabPage />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/app/lifecycle"
+          element={
+            <AppLayout>
+              <LifecyclePage />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/app/trust-center"
+          element={
+            <AppLayout>
+              <TrustCenterPage />
+            </AppLayout>
+          }
+        />
+        <Route
           path="/app/campaigns"
           element={
             <AppLayout>
@@ -139,7 +189,15 @@ export default function App() {
         />
 
         {/* Admin Routes */}
-        <Route path="/admin" element={<Navigate to="/admin/links" replace />} />
+        <Route path="/admin" element={<Navigate to="/admin/overview" replace />} />
+        <Route
+          path="/admin/overview"
+          element={
+            <AppLayout>
+              <AdminOverviewPage />
+            </AppLayout>
+          }
+        />
         <Route
           path="/admin/links"
           element={
@@ -153,6 +211,14 @@ export default function App() {
           element={
             <AppLayout>
               <AdminUsersPage />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/admin/abuse"
+          element={
+            <AppLayout>
+              <AdminAbusePage />
             </AppLayout>
           }
         />

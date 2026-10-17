@@ -40,4 +40,32 @@ export class AnalyticsController {
       return res.status(500).json({ error: 'Failed to export CSV.' });
     }
   }
+
+  public static async getLinkAnalytics(req: AuthRequest, res: Response) {
+    const { id } = req.params;
+
+    try {
+      const summary = await AnalyticsService.getLinkAnalytics(id, String(req.user!._id));
+      if (!summary) {
+        return res.status(404).json({ error: 'Link not found' });
+      }
+      return res.json({ analytics: summary });
+    } catch (error) {
+      console.error('Link analytics error:', error);
+      return res.status(500).json({ error: 'Failed to fetch link analytics.' });
+    }
+  }
+
+  public static async getLinkClicks(req: AuthRequest, res: Response) {
+    const { id } = req.params;
+    const limit = Math.min(100, parseInt(String(req.query.limit || 50), 10));
+
+    try {
+      const clicks = await AnalyticsService.getLinkClicks(id, limit);
+      return res.json({ clicks });
+    } catch (error) {
+      console.error('Link clicks error:', error);
+      return res.status(500).json({ error: 'Failed to fetch click logs.' });
+    }
+  }
 }

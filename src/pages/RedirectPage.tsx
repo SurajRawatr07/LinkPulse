@@ -39,10 +39,7 @@ export function RedirectPage() {
       }
 
       try {
-        const [link, blocklist] = await Promise.all([
-          linksApi.getLinkByCode(code),
-          adminApi.getBlocklist(),
-        ]);
+        const link = await linksApi.getLinkByCode(code);
 
         if (!link) {
           setEvalResult({ status: 'not_found', message: 'Link code not found.' });
@@ -52,25 +49,39 @@ export function RedirectPage() {
 
         setLinkObj(link);
 
-        const res = evaluateRedirectRules(link, {
-          passwordEntered: undefined,
-          userAgent: navigator.userAgent,
-          blocklist: blocklist.map((b) => b.domain),
-        });
-
-        setEvalResult(res);
-
-        // Fire-and-forget click logging (does not delay redirect)
-        if (res.status === 'success' && !clickLoggedRef.current) {
-          clickLoggedRef.current = true;
-          const src = searchParams.get('src') === 'qr' ? 'qr' : 'direct';
-          clicksApi.recordClick({
-            linkId: link.id,
-            referrer: document.referrer || 'Direct',
-            userAgent: navigator.userAgent,
-            source: src,
-          });
+        if (link.isDeleted || !link.isActive) {
+          setEvalResult({ status: 'disabled', message: 'This short link has been disabled by its owner or an administrator.' });
+          setIsLoading(false);
+          return;
         }
+
+        if (link.abuseFlag) {
+          setEvalResult({ status: 'blocklisted', domain: link.domain, message: 'This destination has been restricted for safety.' });
+          setIsLoading(false);
+          return;
+        }
+
+        if (link.rules?.expiresAt && new Date() > new Date(link.rules.expiresAt)) {
+          setEvalResult({ status: 'expired', message: 'This link has expired.' });
+          setIsLoading(false);
+          return;
+        }
+
+        if (link.rules?.clickLimit && link.clicksCount >= link.rules.clickLimit) {
+          setEvalResult({ status: 'limit_reached', message: 'This link has reached its maximum visit limit.' });
+          setIsLoading(false);
+          return;
+        }
+
+        if (link.rules?.password) {
+          setEvalResult({ status: 'password_required', message: 'Password required' });
+          setIsLoading(false);
+          return;
+        }
+
+        // Direct server-side redirect is preferred
+        const dest = link.originalUrl;
+        setEvalResult({ status: 'success', destinationUrl: dest });
       } catch {
         setEvalResult({ status: 'not_found', message: 'Unable to resolve link.' });
       } finally {
@@ -100,27 +111,27 @@ export function RedirectPage() {
 
   async function handlePasswordSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!linkObj) return;
+    if (!code) return;
 
-    const blocklist = await adminApi.getBlocklist();
-    const res = evaluateRedirectRules(linkObj, {
-      passwordEntered: passwordInput,
-      userAgent: navigator.userAgent,
-      blocklist: blocklist.map((b) => b.domain),
-    });
-
-    if (res.status === 'success' && !clickLoggedRef.current) {
-      clickLoggedRef.current = true;
-      const src = searchParams.get('src') === 'qr' ? 'qr' : 'direct';
-      clicksApi.recordClick({
-        linkId: linkObj.id,
-        referrer: document.referrer || 'Direct',
-        userAgent: navigator.userAgent,
-        source: src,
+    try {
+      const res = await fetch(`/api/v1/redirect/${encodeURIComponent(code)}/verify-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: passwordInput }),
       });
+      const data = await res.json();
+      if (res.ok && data.verified) {
+        if (linkObj) {
+          setEvalResult({ status: 'success', destinationUrl: linkObj.originalUrl });
+        } else {
+          window.location.href = data.redirectUrl || `/r/${code}`;
+        }
+      } else {
+        setEvalResult({ status: 'password_invalid', message: data.error || 'Incorrect password' });
+      }
+    } catch {
+      setEvalResult({ status: 'password_invalid', message: 'Verification network error' });
     }
-
-    setEvalResult(res);
   }
 
   if (isLoading) {

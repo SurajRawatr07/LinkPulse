@@ -208,3 +208,21 @@ export function formatCompactNumber(num: number): string {
 export function cn(...classes: unknown[]): string {
   return classes.filter(Boolean).join(' ');
 }
+
+export function getBaseShortUrl(): string {
+  const envDomain = import.meta.env.VITE_PUBLIC_SHORT_DOMAIN;
+  if (envDomain) {
+    return envDomain.replace(/\/$/, '');
+  }
+
+  // In local development on localhost, keep localhost:3000 for local redirect testing
+  if (typeof window !== 'undefined') {
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      return window.location.origin;
+    }
+  }
+
+  // Official validated production domain
+  return 'https://linkpulse2026.vercel.app';
+}
+

@@ -360,3 +360,65 @@ const AuditLogSchema = new Schema<IAuditLog>({
 
 export const AuditLog: Model<IAuditLog> =
   mongoose.models.AuditLog || mongoose.model<IAuditLog>('AuditLog', AuditLogSchema);
+
+// ==========================================
+// 12. BioPage Model
+// ==========================================
+export interface IBioLinkItem {
+  id: string;
+  title: string;
+  url: string;
+  isActive: boolean;
+  clicksCount: number;
+}
+
+export interface IBioSocialLink {
+  platform: 'twitter' | 'github' | 'linkedin' | 'instagram' | 'youtube' | 'website';
+  url: string;
+}
+
+export interface IBioPage extends Document {
+  userId: mongoose.Types.ObjectId;
+  slug: string;
+  title: string;
+  bio?: string;
+  avatar?: string;
+  theme: string;
+  socialLinks: IBioSocialLink[];
+  links: IBioLinkItem[];
+  clicksCount: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const BioPageSchema = new Schema<IBioPage>(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, unique: true, index: true },
+    slug: { type: String, required: true, unique: true, lowercase: true, trim: true, index: true },
+    title: { type: String, required: true, trim: true },
+    bio: { type: String, trim: true },
+    avatar: { type: String },
+    theme: { type: String, default: 'default' },
+    socialLinks: [
+      {
+        platform: { type: String, required: true },
+        url: { type: String, required: true },
+      },
+    ],
+    links: [
+      {
+        id: { type: String, required: true },
+        title: { type: String, required: true },
+        url: { type: String, required: true },
+        isActive: { type: Boolean, default: true },
+        clicksCount: { type: Number, default: 0 },
+      },
+    ],
+    clicksCount: { type: Number, default: 0 },
+  },
+  { timestamps: true }
+);
+
+export const BioPage: Model<IBioPage> =
+  mongoose.models.BioPage || mongoose.model<IBioPage>('BioPage', BioPageSchema);
+

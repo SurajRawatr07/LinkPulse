@@ -8,3 +8,5 @@ analyticsRoutes.use(requireAuth);
 
 analyticsRoutes.get('/overview', AnalyticsController.getOverview);
 analyticsRoutes.get('/export', AnalyticsController.exportCsv);
+analyticsRoutes.get('/link/:id', AnalyticsController.getLinkAnalytics);
+analyticsRoutes.get('/clicks/:id', AnalyticsController.getLinkClicks);

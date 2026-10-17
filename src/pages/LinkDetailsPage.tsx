@@ -22,10 +22,10 @@ import {
 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { linksApi, clicksApi } from '../lib/api';
+import { linksApi, clicksApi, policyLabApi } from '../lib/api';
 import { useToastStore } from '../store/useToastStore';
 import { Link as LinkType, ClickEvent, AnalyticsSummary } from '../types';
-import { formatCompactNumber, cn } from '../lib/utils';
+import { formatCompactNumber, cn, getBaseShortUrl } from '../lib/utils';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
@@ -88,7 +88,7 @@ export function LinkDetailsPage() {
 
   function handleCopy() {
     if (!link) return;
-    const full = `${window.location.origin}/r/${link.shortCode}`;
+    const full = `${getBaseShortUrl()}/r/${link.shortCode}`;
     navigator.clipboard.writeText(full);
     setCopied(true);
     success('Copied to clipboard');
@@ -146,7 +146,7 @@ export function LinkDetailsPage() {
     );
   }
 
-  const fullShortUrl = `${window.location.origin}/r/${link.shortCode}`;
+  const fullShortUrl = `${getBaseShortUrl()}/r/${link.shortCode}`;
 
   return (
     <div className="space-y-6">

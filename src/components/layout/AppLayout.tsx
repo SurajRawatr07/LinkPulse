@@ -17,6 +17,11 @@ import {
   Moon,
   Menu,
   ChevronRight,
+  QrCode,
+  Sparkles,
+  Sliders,
+  Clock,
+  ShieldAlert,
 } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useThemeStore } from '../../store/useThemeStore';
@@ -54,15 +59,22 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     { label: 'Dashboard', path: '/app/dashboard', icon: BarChart3 },
     { label: 'Links', path: '/app/links', icon: LinkIcon },
     { label: 'Create Link', path: '/app/links/new', icon: PlusCircle },
-    { label: 'Bulk Import', path: '/app/links/import', icon: FileSpreadsheet },
+    { label: 'QR Studio', path: '/app/qr', icon: QrCode },
+    { label: 'Link-in-Bio', path: '/app/bio', icon: Sparkles },
+    { label: 'Policy Lab', path: '/app/policy-lab', icon: Sliders },
+    { label: 'Lifecycle', path: '/app/lifecycle', icon: Clock },
     { label: 'Campaigns', path: '/app/campaigns', icon: FolderKanban },
     { label: 'Tags', path: '/app/tags', icon: Tags },
+    { label: 'Bulk Import', path: '/app/links/import', icon: FileSpreadsheet },
+    { label: 'Trust & Safety', path: '/app/trust-center', icon: Shield },
     { label: 'Settings', path: '/app/settings', icon: Settings },
   ];
 
   const adminNav = [
+    { label: 'Platform Overview', path: '/admin/overview', icon: BarChart3 },
     { label: 'All Links', path: '/admin/links', icon: LinkIcon },
-    { label: 'Users', path: '/admin/users', icon: Users },
+    { label: 'Users Directory', path: '/admin/users', icon: Users },
+    { label: 'Abuse Reports', path: '/admin/abuse', icon: ShieldAlert },
     { label: 'Domain Blocklist', path: '/admin/blocklist', icon: Ban },
   ];
 

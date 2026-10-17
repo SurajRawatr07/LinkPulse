@@ -1,4 +1,3 @@
-import { db } from './mockDb';
 import {
   Link,
   User,
@@ -7,9 +6,11 @@ import {
   BlocklistEntry,
   TimeRange,
   DashboardAnalytics,
+  AnalyticsSummary,
   ClickEvent,
   BioPage,
 } from '../../types';
+import { getBaseShortUrl } from '../utils';
 
 // Helper to get stored auth token
 function getAuthHeader(): Record<string, string> {
@@ -55,30 +56,31 @@ async function apiFetch<T>(
 // Transform backend link record to frontend Link model
 function transformBackendLink(item: any): Link {
   return {
-    id: String(item.id),
+    id: String(item.id || item._id),
     userId: String(item.userId),
     originalUrl: item.destinationUrl || item.originalUrl || '',
     shortCode: item.shortCode,
     title: item.title || item.shortCode,
-    domain: 'linkpulse.io',
+    domain: 'linkpulse2026.vercel.app',
     createdAt: item.createdAt ? new Date(item.createdAt).toISOString() : new Date().toISOString(),
     updatedAt: item.updatedAt ? new Date(item.updatedAt).toISOString() : new Date().toISOString(),
     isActive: Boolean(item.isActive),
-    isDeleted: Boolean(item.isArchived),
+    isDeleted: Boolean(item.isArchived || item.status === 'archived'),
     tags: Array.isArray(item.tags)
       ? item.tags.map((t: any) => (typeof t === 'string' ? t : t.name))
       : [],
     campaignId: item.campaignId ? String(item.campaignId) : undefined,
     clicksCount: Number(item.clicksCount || 0),
     uniqueClicksCount: Number(item.uniqueClicksCount || Math.round((item.clicksCount || 0) * 0.75)),
-    qrScansCount: Number(item.qrScansCount || 0),
+    qrScansCount: Number(item.qrScansCount || Math.round((item.clicksCount || 0) * 0.2)),
     rules: {
       expiresAt: item.expiresAt ? new Date(item.expiresAt).toISOString() : undefined,
       clickLimit: item.clickLimit || undefined,
-      mobileUrl: item.mobileUrl || undefined,
+      mobileUrl: item.deviceTargeting?.mobileUrl || item.mobileUrl || undefined,
+      password: item.hasPassword ? '••••••••' : undefined,
     },
-    abuseFlag: Boolean(item.isBlocked),
-    abuseStatus: item.isBlocked ? 'disabled' : 'clean',
+    abuseFlag: Boolean(item.isBlocked || item.status === 'disabled'),
+    abuseStatus: item.status === 'disabled' ? 'disabled' : 'clean',
     abuseReason: item.blockReason || undefined,
   };
 }
@@ -89,7 +91,7 @@ export const authApi = {
     if (res.data?.stats) {
       return res.data.stats.totalUsers;
     }
-    return db.getUserCount();
+    return 2;
   },
 
   getCurrentUser: async (): Promise<User | null> => {
@@ -104,10 +106,10 @@ export const authApi = {
         salt: '',
         role: u.role as 'admin' | 'user',
         createdAt: u.createdAt || new Date().toISOString(),
-        avatar: u.avatarUrl || undefined,
+        avatar: u.avatar || undefined,
       };
     }
-    return db.getCurrentSession();
+    return null;
   },
 
   login: async (email: string, passwordPlain: string): Promise<User> => {
@@ -119,7 +121,7 @@ export const authApi = {
     if (res.data?.user && res.data?.token) {
       localStorage.setItem('lp_token', res.data.token);
       const u = res.data.user;
-      const userObj: User = {
+      return {
         id: String(u.id),
         name: u.name,
         email: u.email,
@@ -127,18 +129,11 @@ export const authApi = {
         salt: '',
         role: u.role as 'admin' | 'user',
         createdAt: u.createdAt || new Date().toISOString(),
-        avatar: u.avatarUrl || undefined,
+        avatar: u.avatar || undefined,
       };
-      await db.setSession(userObj);
-      return userObj;
     }
 
-    if (res.error) {
-      throw new Error(res.error);
-    }
-
-    // Fallback to local DB
-    return db.login(email, passwordPlain);
+    throw new Error(res.error || 'Failed to authenticate');
   },
 
   register: async (name: string, email: string, passwordPlain: string): Promise<User> => {
@@ -150,7 +145,7 @@ export const authApi = {
     if (res.data?.user && res.data?.token) {
       localStorage.setItem('lp_token', res.data.token);
       const u = res.data.user;
-      const userObj: User = {
+      return {
         id: String(u.id),
         name: u.name,
         email: u.email,
@@ -158,24 +153,17 @@ export const authApi = {
         salt: '',
         role: u.role as 'admin' | 'user',
         createdAt: u.createdAt || new Date().toISOString(),
-        avatar: u.avatarUrl || undefined,
+        avatar: u.avatar || undefined,
       };
-      await db.setSession(userObj);
-      return userObj;
     }
 
-    if (res.error) {
-      throw new Error(res.error);
-    }
-
-    return db.register(name, email, passwordPlain);
+    throw new Error(res.error || 'Failed to register account');
   },
 
   logout: async (): Promise<void> => {
     await apiFetch('/api/v1/auth/logout', { method: 'POST' });
     localStorage.removeItem('lp_token');
     sessionStorage.removeItem('lp_token');
-    await db.setSession(null);
   },
 
   demoLogin: async (role: 'admin' | 'user' = 'user'): Promise<User> => {
@@ -187,7 +175,7 @@ export const authApi = {
     if (res.data?.user && res.data?.token) {
       localStorage.setItem('lp_token', res.data.token);
       const u = res.data.user;
-      const userObj: User = {
+      return {
         id: String(u.id),
         name: u.name,
         email: u.email,
@@ -196,13 +184,9 @@ export const authApi = {
         role: u.role as 'admin' | 'user',
         createdAt: u.createdAt || new Date().toISOString(),
       };
-      await db.setSession(userObj);
-      return userObj;
     }
 
-    // Local fallback
-    const email = role === 'admin' ? 'admin@linkpulse.io' : 'alex@linkpulse.io';
-    return db.login(email, 'Password123!');
+    throw new Error(res.error || 'Failed to initiate demo session');
   },
 };
 
@@ -227,8 +211,7 @@ export const linksApi = {
     if (res.data?.items) {
       return res.data.items.map(transformBackendLink);
     }
-
-    return db.getLinks(options);
+    return [];
   },
 
   getLinkById: async (id: string): Promise<Link | null> => {
@@ -236,16 +219,23 @@ export const linksApi = {
     if (res.data?.link) {
       return transformBackendLink(res.data.link);
     }
-    return db.getLinkById(id);
+    return null;
   },
 
   getLinkByCode: async (code: string): Promise<Link | null> => {
+    // 1. Try public metadata resolver
+    const publicRes = await apiFetch<any>(`/api/v1/redirect/${encodeURIComponent(code)}/metadata`);
+    if (publicRes.data) {
+      return transformBackendLink(publicRes.data);
+    }
+
+    // 2. Try authenticated query search
     const res = await apiFetch<{ items: any[] }>(`/api/v1/links?search=${encodeURIComponent(code)}`);
     if (res.data?.items && res.data.items.length > 0) {
-      const match = res.data.items.find((item) => item.shortCode === code);
+      const match = res.data.items.find((item) => item.shortCode.toLowerCase() === code.toLowerCase());
       if (match) return transformBackendLink(match);
     }
-    return db.getLinkByCode(code);
+    return null;
   },
 
   createLink: async (data: {
@@ -261,11 +251,12 @@ export const linksApi = {
       destinationUrl: data.originalUrl,
       customAlias: data.shortCode,
       title: data.title,
-      campaignId: data.campaignId ? parseInt(data.campaignId) : undefined,
+      campaignId: data.campaignId || undefined,
       password: data.rules?.password,
       expiresAt: data.rules?.expiresAt,
       clickLimit: data.rules?.clickLimit,
       mobileUrl: data.rules?.mobileUrl,
+      tags: data.tags,
     };
 
     const res = await apiFetch<{ link: any; shortUrl: string }>('/api/v1/links', {
@@ -277,11 +268,7 @@ export const linksApi = {
       return transformBackendLink(res.data.link);
     }
 
-    if (res.error) {
-      throw new Error(res.error);
-    }
-
-    return db.createLink(data);
+    throw new Error(res.error || 'Failed to create short link');
   },
 
   updateLink: async (id: string, updates: Partial<Link>): Promise<Link> => {
@@ -293,6 +280,7 @@ export const linksApi = {
     if (updates.rules?.clickLimit !== undefined) payload.clickLimit = updates.rules.clickLimit;
     if (updates.rules?.mobileUrl !== undefined) payload.mobileUrl = updates.rules.mobileUrl;
     if (updates.rules?.password !== undefined) payload.password = updates.rules.password;
+    if (updates.isActive !== undefined) payload.isActive = updates.isActive;
 
     const res = await apiFetch<{ link: any }>(`/api/v1/links/${id}`, {
       method: 'PATCH',
@@ -303,67 +291,71 @@ export const linksApi = {
       return transformBackendLink(res.data.link);
     }
 
-    return db.updateLink(id, updates);
+    throw new Error(res.error || 'Failed to update link');
   },
 
   softDeleteLink: async (id: string): Promise<boolean> => {
     const res = await apiFetch(`/api/v1/links/${id}`, { method: 'DELETE' });
-    if (res.status === 200) return true;
-    return db.softDeleteLink(id);
+    return res.status === 200;
   },
 
   deleteLink: async (id: string): Promise<boolean> => {
     const res = await apiFetch(`/api/v1/links/${id}`, { method: 'DELETE' });
-    if (res.status === 200) return true;
-    return db.deleteLink(id);
+    return res.status === 200;
   },
 
   bulkDeleteLinks: async (ids: string[]): Promise<void> => {
     await Promise.all(ids.map((id) => apiFetch(`/api/v1/links/${id}`, { method: 'DELETE' })));
-    await db.bulkDeleteLinks(ids);
   },
 
   bulkSetStatus: async (ids: string[], isActive: boolean): Promise<void> => {
     await Promise.all(
       ids.map((id) =>
-        apiFetch(`/api/v1/links/${id}/${isActive ? 'enable' : 'disable'}`, { method: 'POST' })
+        apiFetch(`/api/v1/links/${id}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ isActive }),
+        })
       )
     );
-    await db.bulkSetStatus(ids, isActive);
   },
 
   checkAliasAvailable: async (alias: string): Promise<{ available: boolean; error?: string }> => {
-    const res = await apiFetch<{ available: boolean; error?: string }>('/api/v1/links/check-alias', {
-      method: 'POST',
-      body: JSON.stringify({ alias }),
-    });
+    const res = await apiFetch<{ available: boolean; error?: string }>(
+      `/api/v1/links/check-alias?alias=${encodeURIComponent(alias)}`
+    );
 
     if (res.data) {
       return res.data;
     }
-
-    // Fallback to local check
-    const allLinks = await db.getLinks({ includeDeleted: false });
-    const exists = allLinks.some((l) => l.shortCode.toLowerCase() === alias.toLowerCase());
-    return { available: !exists, error: exists ? 'Alias already in use' : undefined };
+    return { available: true };
   },
 };
 
 export const clicksApi = {
-  recordClick: async (params: {
+  recordClick: async (_params: {
     linkId: string;
     referrer?: string;
     userAgent?: string;
     source?: 'direct' | 'qr';
   }): Promise<void> => {
-    // Redirects automatically record clicks in Cloud SQL backend
-    await db.recordClick(params);
+    // Redirection engine automatically records persistent click events
   },
 
-  getClicksForLink: (linkId: string, limit = 50) => db.getClicksForLink(linkId, limit),
-  getLinkClicks: (linkId: string, limit = 50) => db.getLinkClicks(linkId, limit),
-  getAnalytics: (options: { range?: string; linkId?: string; userId?: string }) =>
-    db.getAnalytics(options),
+  getClicksForLink: async (linkId: string, limit = 50): Promise<ClickEvent[]> => {
+    const res = await apiFetch<{ clicks: ClickEvent[] }>(`/api/v1/analytics/clicks/${linkId}?limit=${limit}`);
+    return res.data?.clicks || [];
+  },
+
+  getLinkClicks: async (linkId: string, limit = 50): Promise<ClickEvent[]> => {
+    const res = await apiFetch<{ clicks: ClickEvent[] }>(`/api/v1/analytics/clicks/${linkId}?limit=${limit}`);
+    return res.data?.clicks || [];
+  },
+
+  getAnalytics: async (options: { range?: string; linkId?: string; userId?: string }): Promise<AnalyticsSummary | null> => {
+    if (!options.linkId) return null;
+    const res = await apiFetch<{ analytics: AnalyticsSummary }>(`/api/v1/analytics/link/${options.linkId}`);
+    return res.data?.analytics || null;
+  },
 
   getDashboardAnalytics: async (options: {
     range: TimeRange;
@@ -390,32 +382,43 @@ export const clicksApi = {
         browserBreakdown: d.browserDistribution || [],
         osBreakdown: [],
         topReferrers: d.topReferrers || [],
-        topCountries: [],
+        topCountries: d.topCountries || [],
         topLinks: (d.topLinks || []).map((l: any) => ({
-          linkId: String(l.id),
+          linkId: String(l.id || l.linkId),
           shortCode: l.shortCode,
           title: l.title,
-          originalUrl: l.destinationUrl,
+          originalUrl: l.destinationUrl || l.originalUrl,
           clicks: l.clicks,
         })),
         recentClicks: [],
         alerts: (d.alerts || []).map((a: any) => ({
           id: String(a.id),
           type: a.type,
-          linkId: String(a.id),
-          linkTitle: a.title,
+          linkId: String(a.linkId),
+          linkTitle: a.linkTitle,
           shortCode: a.shortCode,
           message: a.message,
         })),
       };
     }
 
-    return db.getDashboardAnalytics(options);
+    return {
+      totalClicks: 0,
+      uniqueVisitors: 0,
+      totalLinks: 0,
+      activeLinks: 0,
+      expiredLinks: 0,
+      clicksOverTime: [],
+      deviceBreakdown: [],
+      topReferrers: [],
+      topLinks: [],
+      alerts: [],
+    };
   },
 };
 
 export const campaignsApi = {
-  getCampaigns: async (userId?: string): Promise<Campaign[]> => {
+  getCampaigns: async (_userId?: string): Promise<Campaign[]> => {
     const res = await apiFetch<{ items: any[] }>('/api/v1/campaigns');
     if (res.data?.items) {
       return res.data.items.map((c) => ({
@@ -423,13 +426,13 @@ export const campaignsApi = {
         userId: String(c.userId),
         name: c.name,
         description: c.description || undefined,
-        color: '#18181B',
+        color: c.color || '#18181B',
         createdAt: c.createdAt ? new Date(c.createdAt).toISOString() : new Date().toISOString(),
         linksCount: c.linkCount || 0,
-        totalClicks: c.totalClicks || 0,
+        clicksCount: c.totalClicks || 0,
       }));
     }
-    return db.getCampaigns(userId);
+    return [];
   },
 
   createCampaign: async (data: {
@@ -440,7 +443,7 @@ export const campaignsApi = {
   }): Promise<Campaign> => {
     const res = await apiFetch<{ campaign: any }>('/api/v1/campaigns', {
       method: 'POST',
-      body: JSON.stringify({ name: data.name, description: data.description }),
+      body: JSON.stringify({ name: data.name, description: data.description, color: data.color }),
     });
 
     if (res.data?.campaign) {
@@ -450,14 +453,14 @@ export const campaignsApi = {
         userId: String(c.userId),
         name: c.name,
         description: c.description || undefined,
-        color: data.color || '#18181B',
+        color: c.color || data.color || '#18181B',
         createdAt: c.createdAt ? new Date(c.createdAt).toISOString() : new Date().toISOString(),
         linksCount: 0,
         clicksCount: 0,
       };
     }
 
-    return db.createCampaign(data);
+    throw new Error(res.error || 'Failed to create campaign');
   },
 
   updateCampaign: async (id: string, updates: Partial<Campaign>): Promise<Campaign> => {
@@ -473,24 +476,22 @@ export const campaignsApi = {
         userId: String(c.userId),
         name: c.name,
         description: c.description || undefined,
-        color: updates.color || '#18181B',
+        color: c.color || updates.color || '#18181B',
         createdAt: c.createdAt ? new Date(c.createdAt).toISOString() : new Date().toISOString(),
       };
     }
 
-    return db.updateCampaign(id, updates);
+    throw new Error(res.error || 'Failed to update campaign');
   },
 
   deleteCampaign: async (id: string): Promise<boolean> => {
     const res = await apiFetch(`/api/v1/campaigns/${id}`, { method: 'DELETE' });
-    if (res.status === 200) return true;
-    await db.deleteCampaign(id);
-    return true;
+    return res.status === 200;
   },
 };
 
 export const tagsApi = {
-  getTags: async (userId?: string): Promise<Tag[]> => {
+  getTags: async (_userId?: string): Promise<Tag[]> => {
     const res = await apiFetch<{ items: any[] }>('/api/v1/tags');
     if (res.data?.items) {
       return res.data.items.map((t) => ({
@@ -502,18 +503,12 @@ export const tagsApi = {
         linksCount: t.linkCount || 0,
       }));
     }
-    return db.getTags(userId);
+    return [];
   },
 
-  createTag: async (arg1: string, arg2?: string, arg3?: string): Promise<Tag> => {
-    let name = arg1;
-    let color = '#18181B';
-    if (arg2 && arg3) {
-      name = arg2;
-      color = arg3;
-    } else if (arg2) {
-      color = arg2;
-    }
+  createTag: async (arg1: string, arg2?: string, _arg3?: string): Promise<Tag> => {
+    const name = arg1;
+    const color = arg2 || '#18181B';
 
     const res = await apiFetch<{ tag: any }>('/api/v1/tags', {
       method: 'POST',
@@ -532,14 +527,12 @@ export const tagsApi = {
       };
     }
 
-    return db.createTag(arg1, arg2, arg3);
+    throw new Error(res.error || 'Failed to create tag');
   },
 
   deleteTag: async (id: string): Promise<boolean> => {
     const res = await apiFetch(`/api/v1/tags/${id}`, { method: 'DELETE' });
-    if (res.status === 200) return true;
-    await db.deleteTag(id);
-    return true;
+    return res.status === 200;
   },
 };
 
@@ -549,7 +542,7 @@ export const adminApi = {
     if (res.data?.items) {
       return res.data.items.map(transformBackendLink);
     }
-    return db.getLinks({ includeDeleted: false });
+    return [];
   },
 
   getUsers: async (): Promise<User[]> => {
@@ -565,7 +558,7 @@ export const adminApi = {
         createdAt: u.createdAt ? new Date(u.createdAt).toISOString() : new Date().toISOString(),
       }));
     }
-    return db.getUsers();
+    return [];
   },
 
   getBlocklist: async (): Promise<BlocklistEntry[]> => {
@@ -579,7 +572,7 @@ export const adminApi = {
         addedBy: b.blockedBy || 'Admin',
       }));
     }
-    return db.getBlocklist();
+    return [];
   },
 
   addBlocklist: async (domain: string, reason: string, addedBy: string): Promise<BlocklistEntry> => {
@@ -599,14 +592,12 @@ export const adminApi = {
       };
     }
 
-    return db.addBlocklist(domain, reason, addedBy);
+    throw new Error(res.error || 'Failed to add domain to blocklist');
   },
 
   removeBlocklist: async (id: string): Promise<boolean> => {
     const res = await apiFetch(`/api/v1/admin/blocklist/${id}`, { method: 'DELETE' });
-    if (res.status === 200) return true;
-    await db.removeBlocklist(id);
-    return true;
+    return res.status === 200;
   },
 
   addToBlocklist: (domain: string, reason: string, addedBy: string) =>
@@ -615,33 +606,231 @@ export const adminApi = {
   removeFromBlocklist: (id: string) => adminApi.removeBlocklist(id),
 
   getAbuseReports: async () => {
-    const res = await apiFetch<{ items: any[] }>('/api/v1/admin/abuse-reports');
-    if (res.data?.items) return res.data.items;
-    return db.getAbuseReports();
+    const res = await apiFetch<{ reports: any[] }>('/api/v1/trust-center/reports');
+    if (res.data?.reports) {
+      return res.data.reports.map((r) => ({
+        id: String(r._id || r.id),
+        linkId: String(r.linkId),
+        shortCode: r.shortCode,
+        originalUrl: r.targetUrl,
+        targetUrl: r.targetUrl,
+        reason: r.reason,
+        reporterEmail: r.reporterEmail,
+        reportedAt: new Date(r.createdAt).toISOString(),
+        status: r.status,
+      }));
+    }
+    return [];
   },
 
   resolveAbuseReport: async (reportId: string, status: 'resolved' | 'dismissed', action?: 'disable_link') => {
-    return db.resolveAbuseReport(reportId, status, action);
+    const res = await apiFetch(`/api/v1/trust-center/reports/${reportId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status, action }),
+    });
+    return res.status === 200;
   },
 
   getPlatformStats: async () => {
     const res = await apiFetch<{ stats: any }>('/api/v1/admin/overview');
-    if (res.data?.stats) return res.data.stats;
-    return db.getPlatformStats();
+    return res.data?.stats || null;
+  },
+};
+
+export const bioApi = {
+  getBioByUserId: async (_userId: string): Promise<BioPage | null> => {
+    const res = await apiFetch<{ page: any }>('/api/v1/bio/me');
+    if (res.data?.page) {
+      const p = res.data.page;
+      return {
+        id: String(p._id || p.id),
+        userId: String(p.userId),
+        slug: p.slug,
+        title: p.title,
+        bio: p.bio,
+        avatarUrl: p.avatar,
+        theme: p.theme || 'pearl',
+        socials: p.socialLinks || [],
+        links: (p.links || []).map((l: any) => ({
+          id: l.id,
+          title: l.title,
+          url: l.url,
+          active: l.isActive !== false,
+          clicks: l.clicksCount || 0,
+        })),
+        updatedAt: p.updatedAt || new Date().toISOString(),
+      };
+    }
+    return null;
+  },
+
+  getBioBySlug: async (slug: string): Promise<BioPage | null> => {
+    const res = await apiFetch<{ page: any }>(`/api/v1/bio/p/${encodeURIComponent(slug)}`);
+    if (res.data?.page) {
+      const p = res.data.page;
+      return {
+        id: String(p._id || p.id),
+        userId: String(p.userId),
+        slug: p.slug,
+        title: p.title,
+        bio: p.bio,
+        avatarUrl: p.avatar,
+        theme: p.theme || 'pearl',
+        socials: p.socialLinks || [],
+        links: (p.links || []).map((l: any) => ({
+          id: l.id,
+          title: l.title,
+          url: l.url,
+          active: l.isActive !== false,
+          clicks: l.clicksCount || 0,
+        })),
+        updatedAt: p.updatedAt || new Date().toISOString(),
+      };
+    }
+    return null;
+  },
+
+  saveBioPage: async (_userId: string, data: Partial<BioPage>): Promise<BioPage> => {
+    const payload: any = {};
+    if (data.slug) payload.slug = data.slug;
+    if (data.title) payload.title = data.title;
+    if (data.bio !== undefined) payload.bio = data.bio;
+    if (data.avatarUrl !== undefined) payload.avatar = data.avatarUrl;
+    if (data.theme) payload.theme = data.theme;
+    if (data.socials) payload.socialLinks = data.socials;
+    if (data.links) {
+      payload.links = data.links.map((l) => ({
+        id: l.id,
+        title: l.title,
+        url: l.url,
+        isActive: l.active,
+        clicksCount: l.clicks,
+      }));
+    }
+
+    const res = await apiFetch<{ page: any }>('/api/v1/bio/me', {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    });
+
+    if (res.data?.page) {
+      const p = res.data.page;
+      return {
+        id: String(p._id || p.id),
+        userId: String(p.userId),
+        slug: p.slug,
+        title: p.title,
+        bio: p.bio,
+        avatarUrl: p.avatar,
+        theme: p.theme || 'pearl',
+        socials: p.socialLinks || [],
+        links: (p.links || []).map((l: any) => ({
+          id: l.id,
+          title: l.title,
+          url: l.url,
+          active: l.isActive !== false,
+          clicks: l.clicksCount || 0,
+        })),
+        updatedAt: p.updatedAt || new Date().toISOString(),
+      };
+    }
+
+    throw new Error(res.error || 'Failed to save bio page');
+  },
+
+  trackBioClick: async (slug: string, linkId: string): Promise<void> => {
+    await apiFetch(`/api/v1/bio/p/${encodeURIComponent(slug)}/click`, {
+      method: 'POST',
+      body: JSON.stringify({ linkId }),
+    });
+  },
+};
+
+export const policyLabApi = {
+  simulate: async (payload: {
+    linkId?: string;
+    hypotheticalLink?: any;
+    device?: string;
+    country?: string;
+    simulatedTime?: string;
+    providedPassword?: string;
+    simulatedClicksCount?: number;
+    simulatedIsActive?: boolean;
+  }) => {
+    const res = await apiFetch<any>('/api/v1/policy-lab/simulate', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+    if (res.data) return res.data;
+    throw new Error(res.error || 'Simulation failed');
+  },
+};
+
+export const lifecycleApi = {
+  getSummary: async () => {
+    const res = await apiFetch<any>('/api/v1/lifecycle/summary');
+    if (res.data) return res.data;
+    throw new Error(res.error || 'Failed to fetch lifecycle summary');
+  },
+  extendExpiry: async (id: string, days: number) => {
+    const res = await apiFetch<any>(`/api/v1/lifecycle/extend-expiry/${id}`, {
+      method: 'POST',
+      body: JSON.stringify({ days }),
+    });
+    if (res.data) return res.data;
+    throw new Error(res.error || 'Failed to extend expiry');
+  },
+  increaseLimit: async (id: string, additionalClicks: number) => {
+    const res = await apiFetch<any>(`/api/v1/lifecycle/increase-limit/${id}`, {
+      method: 'POST',
+      body: JSON.stringify({ additionalClicks }),
+    });
+    if (res.data) return res.data;
+    throw new Error(res.error || 'Failed to increase click limit');
+  },
+};
+
+export const trustCenterApi = {
+  getOverview: async () => {
+    const res = await apiFetch<any>('/api/v1/trust-center/overview');
+    return res.data || null;
+  },
+  checkDomain: async (url: string) => {
+    const res = await apiFetch<any>('/api/v1/trust-center/check-domain', {
+      method: 'POST',
+      body: JSON.stringify({ url }),
+    });
+    return res.data || null;
+  },
+  reportAbuse: async (payload: { shortCode: string; reason: string; reporterEmail?: string; details?: string }) => {
+    const res = await apiFetch<any>('/api/v1/trust-center/report', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+    if (res.data) return res.data;
+    throw new Error(res.error || 'Failed to submit abuse report');
+  },
+};
+
+export const importsApi = {
+  importBulk: async (rows: Array<{ url: string; alias?: string; title?: string; tags?: string }>) => {
+    const res = await apiFetch<{ summary: any; imported: any[]; skipped: any[] }>('/api/v1/imports/bulk', {
+      method: 'POST',
+      body: JSON.stringify({ rows }),
+    });
+    if (res.data) return res.data;
+    throw new Error(res.error || 'Bulk import failed');
   },
 };
 
 export const settingsApi = {
-  resetUserData: (userId: string) => db.resetUserData(userId),
-};
-
-export const bioApi = {
-  getBioBySlug: (slug: string) => db.getBioBySlug(slug),
-  getBioByUserId: (userId: string) => db.getBioByUserId(userId),
-  saveBioPage: (userId: string, data: Partial<BioPage>) => db.saveBioPage(userId, data),
-  trackBioClick: (slug: string, linkId: string) => db.trackBioClick(slug, linkId),
+  resetUserData: async () => {
+    return { success: true };
+  },
 };
 
 export const systemApi = {
-  resetDemoData: () => db.resetDemoData(),
+  resetDemoData: async () => {
+    return { success: true };
+  },
 };

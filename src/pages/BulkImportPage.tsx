@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 import { useToastStore } from '../store/useToastStore';
-import { linksApi, adminApi } from '../lib/api';
+import { linksApi, adminApi, importsApi } from '../lib/api';
 import { validateUrl, validateAlias } from '../lib/validators';
 import { generateShortCode } from '../lib/utils';
 import { Card } from '../components/ui/Card';
@@ -173,27 +173,25 @@ export function BulkImportPage() {
     }
 
     setIsImporting(true);
-    let count = 0;
     try {
-      for (const row of validRows) {
-        await linksApi.createLink({
-          userId: user.id,
-          originalUrl: row.url,
-          shortCode: row.alias,
-          title: row.title,
-          tags: row.tags,
-        });
-        count++;
-      }
+      const result = await importsApi.importBulk(
+        validRows.map((r) => ({
+          url: r.url,
+          alias: r.alias,
+          title: r.title,
+          tags: r.tags.join('|'),
+        }))
+      );
 
+      const importedCount = result.summary?.imported || 0;
       setImportSummary({
         total: parsedRows.length,
-        imported: count,
-        skipped: parsedRows.length - count,
+        imported: importedCount,
+        skipped: parsedRows.length - importedCount,
       });
-      success(`Successfully imported ${count} links!`);
-    } catch {
-      toastError('Import failed mid-stream');
+      success(`Successfully imported ${importedCount} links!`);
+    } catch (err: any) {
+      toastError(err.message || 'Import failed');
     } finally {
       setIsImporting(false);
     }

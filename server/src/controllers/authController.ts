@@ -4,10 +4,7 @@ import crypto from 'crypto';
 import { User } from '../models/index.ts';
 import { AuthRequest } from '../middleware/auth.ts';
 
-function createSessionToken(email: string): string {
-  const secret = crypto.randomBytes(24).toString('hex');
-  return Buffer.from(`${email.toLowerCase()}:${secret}`).toString('base64');
-}
+import { signSessionToken } from '../utils/token.ts';
 
 export class AuthController {
   public static async register(req: Request, res: Response) {
@@ -42,11 +39,17 @@ export class AuthController {
         apiKey,
       });
 
-      const token = createSessionToken(user.email);
+      const token = signSessionToken({
+        userId: String(user._id),
+        email: user.email,
+        role: user.role,
+      });
 
       res.cookie('lp_session', token, {
         httpOnly: true,
         sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+        path: '/',
         maxAge: 30 * 24 * 60 * 60 * 1000,
       });
 
@@ -84,11 +87,17 @@ export class AuthController {
         return res.status(401).json({ error: 'Invalid email or password.' });
       }
 
-      const token = createSessionToken(user.email);
+      const token = signSessionToken({
+        userId: String(user._id),
+        email: user.email,
+        role: user.role,
+      });
 
       res.cookie('lp_session', token, {
         httpOnly: true,
         sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+        path: '/',
         maxAge: 30 * 24 * 60 * 60 * 1000,
       });
 
@@ -125,11 +134,17 @@ export class AuthController {
         });
       }
 
-      const token = createSessionToken(user.email);
+      const token = signSessionToken({
+        userId: String(user._id),
+        email: user.email,
+        role: user.role,
+      });
 
       res.cookie('lp_session', token, {
         httpOnly: true,
         sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+        path: '/',
         maxAge: 30 * 24 * 60 * 60 * 1000,
       });
 

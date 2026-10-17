@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { User, IUser } from '../models/index.ts';
+import { verifySessionToken } from '../utils/token.ts';
 
 export interface AuthRequest extends Request {
   user?: IUser;
@@ -29,26 +30,33 @@ export async function requireAuth(req: AuthRequest, res: Response, next: NextFun
       return next();
     }
 
-    // Decode session token
-    let decodedString = '';
+    // 2. Verify signed session token
+    const payload = verifySessionToken(token);
+    if (payload) {
+      const user = await User.findById(payload.userId);
+      if (!user) {
+        return res.status(401).json({ error: 'User account not found' });
+      }
+      req.user = user;
+      return next();
+    }
+
+    // 3. Fallback for legacy transition format
     try {
-      decodedString = Buffer.from(token, 'base64').toString('utf-8');
+      const decodedString = Buffer.from(token, 'base64').toString('utf-8');
+      const [email] = decodedString.split(':');
+      if (email && email.includes('@')) {
+        const user = await User.findOne({ email: email.toLowerCase() });
+        if (user) {
+          req.user = user;
+          return next();
+        }
+      }
     } catch {
-      return res.status(401).json({ error: 'Malformed authentication token' });
+      // Ignore fallback error
     }
 
-    const [email, secret] = decodedString.split(':');
-    if (!email || !secret) {
-      return res.status(401).json({ error: 'Invalid session structure' });
-    }
-
-    const user = await User.findOne({ email: email.toLowerCase() });
-    if (!user) {
-      return res.status(401).json({ error: 'User account not found' });
-    }
-
-    req.user = user;
-    next();
+    return res.status(401).json({ error: 'Invalid or expired session. Please log in again.' });
   } catch (error) {
     console.error('Authentication verification error:', error);
     return res.status(500).json({ error: 'Failed to verify session' });
