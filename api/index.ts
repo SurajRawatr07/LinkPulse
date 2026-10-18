@@ -8,5 +8,11 @@ export default async function handler(req: Request, res: Response) {
   } catch (err) {
     console.error('Vercel serverless database connection error:', err);
   }
+
+  // Normalize URL path if Vercel strips the /api prefix
+  if (req.url && req.url.startsWith('/v1/')) {
+    req.url = '/api' + req.url;
+  }
+
   return app(req, res);
 }

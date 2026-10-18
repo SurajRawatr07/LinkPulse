@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Clock,
   AlertTriangle,
@@ -10,6 +11,7 @@ import {
   Power,
   RefreshCw,
   TrendingUp,
+  Link2,
 } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 import { useToastStore } from '../store/useToastStore';
@@ -18,23 +20,29 @@ import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import { Skeleton } from '../components/ui/Skeleton';
+import { EmptyState } from '../components/ui/EmptyState';
 import { getBaseShortUrl } from '../lib/utils';
 
 export function LifecyclePage() {
   const { user } = useAuthStore();
   const { success, error: toastError } = useToastStore();
+  const navigate = useNavigate();
 
   const [summary, setSummary] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [processingId, setProcessingId] = useState<string | null>(null);
 
   async function loadSummary() {
     setIsLoading(true);
+    setFetchError(null);
     try {
       const data = await lifecycleApi.getSummary();
       setSummary(data);
-    } catch {
-      toastError('Failed to fetch link lifecycle metrics');
+    } catch (err: any) {
+      const msg = err.message || 'Failed to fetch link lifecycle metrics';
+      setFetchError(msg);
+      toastError(msg);
     } finally {
       setIsLoading(false);
     }
@@ -83,17 +91,43 @@ export function LifecyclePage() {
     }
   }
 
-  if (isLoading || !summary) {
+  if (isLoading) {
     return (
       <div className="space-y-6">
         <Skeleton className="h-8 w-48" />
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <Skeleton className="h-24" />
           <Skeleton className="h-24" />
           <Skeleton className="h-24" />
           <Skeleton className="h-24" />
           <Skeleton className="h-24" />
         </div>
         <Skeleton className="h-96" />
+      </div>
+    );
+  }
+
+  if (fetchError && !summary) {
+    return (
+      <div className="max-w-2xl mx-auto py-12 text-center space-y-4">
+        <div className="w-12 h-12 rounded-2xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center mx-auto">
+          <AlertTriangle className="w-6 h-6" />
+        </div>
+        <h2 className="text-lg font-bold text-neutral-900 dark:text-white">
+          Unable to Load Link Lifecycle Center
+        </h2>
+        <p className="text-xs text-neutral-500 max-w-md mx-auto">
+          {fetchError}
+        </p>
+        <div className="pt-2 flex justify-center gap-3">
+          <Button variant="outline" size="sm" onClick={loadSummary}>
+            <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
+            Retry
+          </Button>
+          <Button variant="primary" size="sm" onClick={() => navigate('/app/links/new')}>
+            Create New Link
+          </Button>
+        </div>
       </div>
     );
   }
@@ -193,7 +227,30 @@ export function LifecyclePage() {
           </div>
         </div>
 
-        {criticalLinks.length === 0 ? (
+        {counts.total === 0 || (counts.active === 0 && counts.expired === 0 && counts.disabled === 0 && counts.limitReached === 0) ? (
+          <div className="py-12 text-center space-y-4">
+            <div className="w-12 h-12 rounded-2xl bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 flex items-center justify-center mx-auto">
+              <Link2 className="w-6 h-6" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-sm font-semibold text-neutral-900 dark:text-white">
+                No links monitored yet
+              </h3>
+              <p className="text-xs text-neutral-500 max-w-sm mx-auto">
+                Create a short link with an expiration date or click quota to track its health and lifecycle transitions here.
+              </p>
+            </div>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => navigate('/app/links/new')}
+              className="text-xs"
+            >
+              <PlusCircle className="w-3.5 h-3.5 mr-1.5" />
+              <span>Create Your First Link</span>
+            </Button>
+          </div>
+        ) : criticalLinks.length === 0 ? (
           <div className="py-12 text-center space-y-3">
             <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 flex items-center justify-center mx-auto">
               <CheckCircle2 className="w-5 h-5" />

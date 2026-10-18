@@ -509,4 +509,85 @@ describe('LinkPulse End-to-End API Test Suite', () => {
       expect(linkRes.body.error).toContain('blocklist');
     });
   });
+
+  describe('13. Link Lifecycle Center API', () => {
+    let lifecycleLinkId: string;
+
+    beforeAll(async () => {
+      const res = await request(app)
+        .post('/api/v1/links')
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({
+          destinationUrl: 'https://example.com/lifecycle-test',
+          title: 'Lifecycle Test Link',
+          expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+          clickLimit: 50,
+        });
+      lifecycleLinkId = res.body.link.id;
+    });
+
+    it('retrieves lifecycle health summary and categorizes critical links', async () => {
+      const res = await request(app)
+        .get('/api/v1/lifecycle/summary')
+        .set('Authorization', `Bearer ${userToken}`);
+      expect(res.status).toBe(200);
+      expect(res.body.counts).toBeDefined();
+      expect(res.body.counts.total).toBeGreaterThanOrEqual(1);
+      expect(Array.isArray(res.body.criticalLinks)).toBe(true);
+    });
+
+    it('extends link expiration by +30 days via lifecycle endpoint', async () => {
+      const res = await request(app)
+        .post(`/api/v1/lifecycle/extend-expiry/${lifecycleLinkId}`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ days: 30 });
+      expect(res.status).toBe(200);
+      expect(res.body.link.expiresAt).toBeDefined();
+    });
+
+    it('increases click quota via lifecycle endpoint', async () => {
+      const res = await request(app)
+        .post(`/api/v1/lifecycle/increase-limit/${lifecycleLinkId}`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ additionalClicks: 100 });
+      expect(res.status).toBe(200);
+      expect(res.body.link.clickLimit).toBe(150);
+    });
+
+    it('toggles link active/suspended status via lifecycle endpoint', async () => {
+      const res = await request(app)
+        .post(`/api/v1/lifecycle/${lifecycleLinkId}/toggle`)
+        .set('Authorization', `Bearer ${userToken}`);
+      expect(res.status).toBe(200);
+      expect(res.body.link.isActive).toBe(false);
+    });
+  });
+
+  describe('14. Session Resilience & Token Consistency', () => {
+    it('authenticates successfully via cookie when header is absent', async () => {
+      const res = await request(app)
+        .get('/api/v1/auth/me')
+        .set('Cookie', [`lp_session=${userToken}`]);
+      expect(res.status).toBe(200);
+      expect(res.body.user.email).toBe(registeredEmail);
+    });
+
+    it('rejects invalid or placeholder local tokens with structured 401 response', async () => {
+      const res = await request(app)
+        .get('/api/v1/auth/me')
+        .set('Authorization', 'Bearer local_tok_usr_invalid123');
+      expect(res.status).toBe(401);
+      expect(res.body.code).toBe('UNAUTHENTICATED');
+    });
+
+    it('rejects tampered signature tokens with SESSION_EXPIRED code', async () => {
+      const parts = userToken.split('.');
+      const tampered = parts[0] + '.tamperedSignature123';
+      const res = await request(app)
+        .get('/api/v1/auth/me')
+        .set('Authorization', `Bearer ${tampered}`);
+      expect(res.status).toBe(401);
+      expect(res.body.code).toBe('SESSION_EXPIRED');
+    });
+  });
 });

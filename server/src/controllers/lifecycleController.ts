@@ -141,4 +141,106 @@ export class LifecycleController {
       return res.status(500).json({ error: 'Failed to toggle link status.' });
     }
   }
+
+  public static async extendExpiry(req: AuthRequest, res: Response) {
+    const { id } = req.params;
+    const { days = 30 } = req.body;
+    const userId = req.user!._id;
+
+    try {
+      const link = await Link.findById(id);
+      if (!link) {
+        return res.status(404).json({ error: 'Link not found' });
+      }
+
+      if (req.user!.role !== 'admin' && String(link.userId) !== String(userId)) {
+        return res.status(403).json({ error: 'Access denied' });
+      }
+
+      const currentExpiry =
+        link.expiresAt && new Date(link.expiresAt) > new Date()
+          ? new Date(link.expiresAt)
+          : new Date();
+      const newExpiry = new Date(currentExpiry.getTime() + Number(days) * 24 * 60 * 60 * 1000);
+
+      link.expiresAt = newExpiry;
+      if (link.status === 'expired') {
+        link.status = 'active';
+        link.isActive = true;
+      }
+      await link.save();
+
+      AuditLog.create({
+        userId,
+        userEmail: req.user!.email,
+        action: 'link.updated',
+        resourceType: 'link',
+        resourceId: String(link._id),
+        details: { shortCode: link.shortCode, expiresAt: newExpiry },
+      }).catch(() => {});
+
+      return res.json({
+        message: `Expiration extended by ${days} days.`,
+        link: {
+          id: String(link._id),
+          shortCode: link.shortCode,
+          expiresAt: link.expiresAt,
+          status: link.status,
+          isActive: link.isActive,
+        },
+      });
+    } catch (error) {
+      console.error('Extend expiry error:', error);
+      return res.status(500).json({ error: 'Failed to extend link expiration.' });
+    }
+  }
+
+  public static async increaseLimit(req: AuthRequest, res: Response) {
+    const { id } = req.params;
+    const { additionalClicks = 100 } = req.body;
+    const userId = req.user!._id;
+
+    try {
+      const link = await Link.findById(id);
+      if (!link) {
+        return res.status(404).json({ error: 'Link not found' });
+      }
+
+      if (req.user!.role !== 'admin' && String(link.userId) !== String(userId)) {
+        return res.status(403).json({ error: 'Access denied' });
+      }
+
+      const currentLimit = link.clickLimit || link.clicksCount || 0;
+      link.clickLimit = currentLimit + Number(additionalClicks);
+      if (link.status === 'limit_reached') {
+        link.status = 'active';
+        link.isActive = true;
+      }
+      await link.save();
+
+      AuditLog.create({
+        userId,
+        userEmail: req.user!.email,
+        action: 'link.updated',
+        resourceType: 'link',
+        resourceId: String(link._id),
+        details: { shortCode: link.shortCode, clickLimit: link.clickLimit },
+      }).catch(() => {});
+
+      return res.json({
+        message: `Click quota increased by +${additionalClicks} visits.`,
+        link: {
+          id: String(link._id),
+          shortCode: link.shortCode,
+          clickLimit: link.clickLimit,
+          clicksCount: link.clicksCount,
+          status: link.status,
+          isActive: link.isActive,
+        },
+      });
+    } catch (error) {
+      console.error('Increase limit error:', error);
+      return res.status(500).json({ error: 'Failed to increase click limit.' });
+    }
+  }
 }
