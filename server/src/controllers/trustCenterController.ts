@@ -83,6 +83,14 @@ export class TrustCenterController {
       return res.status(201).json({
         message: 'Abuse report received. Our Trust & Safety team will review it shortly.',
         reportId: String(report._id),
+        report: {
+          id: String(report._id),
+          shortCode: report.shortCode,
+          targetUrl: report.targetUrl,
+          reason: report.reason,
+          status: report.status,
+          createdAt: report.createdAt,
+        },
       });
     } catch (error) {
       console.error('Submit abuse report error:', error);

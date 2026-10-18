@@ -148,6 +148,7 @@ export interface ILink extends Document {
   deviceTargeting?: {
     iosUrl?: string;
     androidUrl?: string;
+    mobileUrl?: string;
     desktopUrl?: string;
   };
   countryTargeting?: Array<{
@@ -185,6 +186,7 @@ const LinkSchema = new Schema<ILink>(
     deviceTargeting: {
       iosUrl: { type: String, trim: true },
       androidUrl: { type: String, trim: true },
+      mobileUrl: { type: String, trim: true },
       desktopUrl: { type: String, trim: true },
     },
     countryTargeting: [

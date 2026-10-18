@@ -55,6 +55,19 @@ export class SecurityService {
 
     const hostname = parsed.hostname.toLowerCase();
 
+    // Enforce valid domain structure (must have a top-level domain unless localhost)
+    if (hostname !== 'localhost' && !hostname.includes('.')) {
+      return {
+        valid: false,
+        isBlocklisted: false,
+        riskLevel: 'high',
+        riskScore: 100,
+        hostname,
+        triggers: ['Domain name lacks a top-level domain (TLD)'],
+        error: 'Please provide a valid destination domain (e.g. https://example.com)',
+      };
+    }
+
     // 2. SSRF Protection: check for private, local, and metadata IP networks
     if (PRIVATE_IP_REGEX.test(hostname)) {
       return {

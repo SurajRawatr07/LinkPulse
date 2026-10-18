@@ -5,10 +5,12 @@ import { creationRateLimiter } from '../middleware/rateLimit.ts';
 
 export const linksRoutes = Router();
 
+// Public alias availability check
+linksRoutes.get('/check-alias', LinksController.checkAlias);
+
 linksRoutes.use(requireAuth);
 
 linksRoutes.get('/', LinksController.getLinks);
-linksRoutes.get('/check-alias', LinksController.checkAlias);
 linksRoutes.post('/', creationRateLimiter, LinksController.createLink);
 linksRoutes.get('/:id', LinksController.getLink);
 linksRoutes.patch('/:id', LinksController.updateLink);

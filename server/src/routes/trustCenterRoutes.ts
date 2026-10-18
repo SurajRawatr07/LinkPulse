@@ -7,6 +7,7 @@ export const trustCenterRoutes = Router();
 
 // Public abuse report submission
 trustCenterRoutes.post('/report-abuse', reportsRateLimiter, TrustCenterController.submitAbuseReport);
+trustCenterRoutes.post('/report', reportsRateLimiter, TrustCenterController.submitAbuseReport);
 
 // Authenticated surfaces
 trustCenterRoutes.get('/overview', requireAuth, TrustCenterController.getOverview);
@@ -15,4 +16,6 @@ trustCenterRoutes.get('/audit-logs', requireAuth, TrustCenterController.getAudit
 
 // Admin moderation
 trustCenterRoutes.get('/abuse-reports', requireAuth, requireAdmin, TrustCenterController.getAbuseReports);
+trustCenterRoutes.get('/reports', requireAuth, requireAdmin, TrustCenterController.getAbuseReports);
 trustCenterRoutes.patch('/abuse-reports/:id', requireAuth, requireAdmin, TrustCenterController.resolveAbuseReport);
+trustCenterRoutes.patch('/reports/:id', requireAuth, requireAdmin, TrustCenterController.resolveAbuseReport);

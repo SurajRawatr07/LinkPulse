@@ -14,6 +14,13 @@ export class AdminController {
       ]);
 
       return res.json({
+        stats: {
+          totalUsers,
+          totalLinks,
+          activeLinks,
+          totalClicks,
+          blockedDomains,
+        },
         totalUsers,
         totalLinks,
         activeLinks,

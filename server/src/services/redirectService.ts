@@ -69,9 +69,11 @@ export class RedirectService {
     const osName = (result.os.name || '').toLowerCase();
     const isIos = /ios|iphone|ipad|ipod/i.test(osName);
     const isAndroid = /android/i.test(osName);
+    const isMobile = device === 'mobile' || isIos || isAndroid;
 
     return {
       device,
+      isMobile,
       browser: result.browser.name || 'Unknown',
       os: result.os.name || 'Unknown',
       isBot,
@@ -308,7 +310,7 @@ export class RedirectService {
     }
     // Device targeting policy
     else if (link.deviceTargeting) {
-      if (client.isIos && link.deviceTargeting.iosUrl) {
+      if ((client.isIos || client.isMobile) && link.deviceTargeting.iosUrl) {
         finalUrl = link.deviceTargeting.iosUrl;
         trace.push({
           step: 7,
@@ -317,7 +319,7 @@ export class RedirectService {
           action: 'divert',
           explanation: `iOS client detected. Diverting traffic to iOS destination: ${finalUrl}`,
         });
-      } else if (client.isAndroid && link.deviceTargeting.androidUrl) {
+      } else if ((client.isAndroid || client.isMobile) && link.deviceTargeting.androidUrl) {
         finalUrl = link.deviceTargeting.androidUrl;
         trace.push({
           step: 7,
@@ -325,6 +327,15 @@ export class RedirectService {
           matched: true,
           action: 'divert',
           explanation: `Android client detected. Diverting traffic to Android destination: ${finalUrl}`,
+        });
+      } else if ((client.isMobile || client.isIos || client.isAndroid) && (link.deviceTargeting as any).mobileUrl) {
+        finalUrl = (link.deviceTargeting as any).mobileUrl;
+        trace.push({
+          step: 7,
+          phase: 'Device Policy Engine',
+          matched: true,
+          action: 'divert',
+          explanation: `Mobile client detected. Diverting traffic to Mobile destination: ${finalUrl}`,
         });
       } else if (client.device === 'desktop' && link.deviceTargeting.desktopUrl) {
         finalUrl = link.deviceTargeting.desktopUrl;

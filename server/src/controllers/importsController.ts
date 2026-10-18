@@ -108,7 +108,9 @@ export class ImportsController {
       summary: {
         total: rows.length,
         imported: imported.length,
+        successful: imported.length,
         skipped: skipped.length,
+        failed: skipped.length,
       },
       imported,
       skipped,
