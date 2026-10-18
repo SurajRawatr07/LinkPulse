@@ -41,21 +41,6 @@ export async function requireAuth(req: AuthRequest, res: Response, next: NextFun
       return next();
     }
 
-    // 3. Fallback for legacy transition format
-    try {
-      const decodedString = Buffer.from(token, 'base64').toString('utf-8');
-      const [email] = decodedString.split(':');
-      if (email && email.includes('@')) {
-        const user = await User.findOne({ email: email.toLowerCase() });
-        if (user) {
-          req.user = user;
-          return next();
-        }
-      }
-    } catch {
-      // Ignore fallback error
-    }
-
     return res.status(401).json({ error: 'Invalid or expired session. Please log in again.' });
   } catch (error) {
     console.error('Authentication verification error:', error);

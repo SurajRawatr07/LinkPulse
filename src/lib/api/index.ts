@@ -165,29 +165,6 @@ export const authApi = {
     localStorage.removeItem('lp_token');
     sessionStorage.removeItem('lp_token');
   },
-
-  demoLogin: async (role: 'admin' | 'user' = 'user'): Promise<User> => {
-    const res = await apiFetch<{ user: any; token: string }>('/api/v1/auth/demo-login', {
-      method: 'POST',
-      body: JSON.stringify({ role }),
-    });
-
-    if (res.data?.user && res.data?.token) {
-      localStorage.setItem('lp_token', res.data.token);
-      const u = res.data.user;
-      return {
-        id: String(u.id),
-        name: u.name,
-        email: u.email,
-        passwordHash: '',
-        salt: '',
-        role: u.role as 'admin' | 'user',
-        createdAt: u.createdAt || new Date().toISOString(),
-      };
-    }
-
-    throw new Error(res.error || 'Failed to initiate demo session');
-  },
 };
 
 export const linksApi = {

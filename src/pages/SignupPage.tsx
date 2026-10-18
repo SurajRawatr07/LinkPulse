@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Link2, Eye, EyeOff, ArrowRight, Check, X, ShieldAlert, ShieldCheck } from 'lucide-react';
+import { Link2, Eye, EyeOff, ArrowRight, Check, Shield } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 import { useToastStore } from '../store/useToastStore';
-import { authApi } from '../lib/api';
 import { NameSchema, EmailSchema, PasswordSchema, checkPasswordRules } from '../lib/validators';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
@@ -31,13 +30,6 @@ export function SignupPage() {
   }>({});
 
   const [isLoading, setIsLoading] = useState(false);
-  const [isFirstUser, setIsFirstUser] = useState(false);
-
-  useEffect(() => {
-    authApi.getUserCount().then((count) => {
-      setIsFirstUser(count === 0);
-    });
-  }, []);
 
   const passwordAnalysis = checkPasswordRules(password);
 
@@ -103,7 +95,7 @@ export function SignupPage() {
 
     setIsLoading(true);
     try {
-      const user = await register(name, email, password);
+      const user = await register(name.trim(), email.trim().toLowerCase(), password);
       success(`Account created! Welcome, ${user.name}`);
       const redirectUrl = searchParams.get('url');
       if (redirectUrl) {
@@ -113,7 +105,7 @@ export function SignupPage() {
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Registration failed';
-      if (msg.includes('already registered')) {
+      if (msg.toLowerCase().includes('already exists') || msg.toLowerCase().includes('already registered')) {
         setErrors((prev) => ({ ...prev, email: 'This email is already registered.' }));
       } else {
         toastError('Signup Error', msg);
@@ -139,19 +131,9 @@ export function SignupPage() {
             Create Your Account
           </h1>
           <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 mt-1 font-body">
-            Start shortening links and streaming analytics in seconds.
+            Start shortening links and streaming live analytics with your dedicated workspace.
           </p>
         </div>
-
-        {/* Note shown only for the first user */}
-        {isFirstUser && (
-          <div className="p-3 bg-neutral-100 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 rounded-xl text-xs text-neutral-800 dark:text-neutral-200 flex items-start gap-2">
-            <ShieldCheck className="w-4 h-4 text-neutral-900 dark:text-white shrink-0 mt-0.5" />
-            <div>
-              <span className="font-semibold">Administrator Notice:</span> The first registered account automatically receives full Administrator privileges and pre-seeded sample data.
-            </div>
-          </div>
-        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
@@ -163,6 +145,7 @@ export function SignupPage() {
             error={errors.name}
             helperText="Letters and spaces only (2-50 characters)"
             required
+            autoComplete="name"
           />
 
           <Input
@@ -175,6 +158,7 @@ export function SignupPage() {
             error={errors.email}
             helperText="Enter your active email address"
             required
+            autoComplete="email"
           />
 
           {/* Password with live rules checklist and strength meter */}
@@ -189,6 +173,7 @@ export function SignupPage() {
               error={errors.password}
               helperText="8 to 64 characters with mixed case, number and symbol"
               required
+              autoComplete="new-password"
               rightIcon={
                 <button
                   type="button"
@@ -269,6 +254,7 @@ export function SignupPage() {
             error={errors.confirmPassword}
             helperText="Must match your password above"
             required
+            autoComplete="new-password"
             rightIcon={
               <button
                 type="button"
@@ -293,64 +279,10 @@ export function SignupPage() {
           </Button>
         </form>
 
-        <div className="relative flex py-1 items-center">
-          <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
-          <span className="flex-shrink mx-3 text-xs text-slate-400">or sign up with</span>
-          <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
+        <div className="p-3 bg-neutral-50 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 rounded-xl text-xs text-neutral-600 dark:text-neutral-400 flex items-center gap-2.5">
+          <Shield className="w-4 h-4 text-neutral-800 dark:text-neutral-200 shrink-0" />
+          <span>Accounts are secured with bcrypt password hashing and cryptographic session tokens.</span>
         </div>
-
-        {/* Google Sign-In Button */}
-        <button
-          type="button"
-          onClick={async () => {
-            setIsLoading(true);
-            try {
-              const { auth, googleAuthProvider } = await import('../lib/firebase');
-              const { signInWithPopup } = await import('firebase/auth');
-              const result = await signInWithPopup(auth, googleAuthProvider);
-              const idToken = await result.user.getIdToken();
-              const res = await fetch('/api/v1/auth/google-session', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ idToken }),
-              });
-              const data = await res.json();
-              if (data.user && data.token) {
-                localStorage.setItem('lp_token', data.token);
-                success(`Welcome to LinkPulse, ${data.user.name}!`);
-                navigate(data.user.role === 'admin' ? '/admin/links' : '/app/dashboard');
-              } else {
-                toastError('Google sign in failed');
-              }
-            } catch (err: any) {
-              console.error('Google Sign-In Error:', err);
-              toastError('Google sign-in canceled or failed');
-            } finally {
-              setIsLoading(false);
-            }
-          }}
-          className="w-full flex items-center justify-center gap-3 py-2.5 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-200 transition-colors min-h-[44px] cursor-pointer shadow-xs"
-        >
-          <svg className="w-4 h-4" viewBox="0 0 24 24">
-            <path
-              fill="#4285F4"
-              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-            />
-            <path
-              fill="#34A853"
-              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-            />
-            <path
-              fill="#FBBC05"
-              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
-            />
-            <path
-              fill="#EA4335"
-              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
-            />
-          </svg>
-          <span>Continue with Google</span>
-        </button>
 
         <p className="text-center text-xs text-neutral-600">
           Already have an account?{' '}

@@ -98,7 +98,15 @@ export function LifecyclePage() {
     );
   }
 
-  const { counts, criticalLinks = [] } = summary;
+  const counts = {
+    active: 0,
+    expiringSoon: 0,
+    expired: 0,
+    limitReached: 0,
+    disabled: 0,
+    ...(summary?.counts || summary?.stats || {}),
+  };
+  const criticalLinks = Array.isArray(summary?.criticalLinks) ? summary.criticalLinks : [];
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
@@ -131,7 +139,7 @@ export function LifecyclePage() {
             Active Links
           </span>
           <p className="text-2xl font-bold text-neutral-900 dark:text-white">
-            {counts.active || 0}
+            {counts.active ?? 0}
           </p>
         </Card>
 
@@ -140,7 +148,7 @@ export function LifecyclePage() {
             Expiring Soon (&lt;48h)
           </span>
           <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">
-            {counts.expiringSoon || 0}
+            {counts.expiringSoon ?? 0}
           </p>
         </Card>
 
@@ -149,7 +157,7 @@ export function LifecyclePage() {
             Expired
           </span>
           <p className="text-2xl font-bold text-neutral-500">
-            {counts.expired || 0}
+            {counts.expired ?? 0}
           </p>
         </Card>
 
@@ -158,7 +166,7 @@ export function LifecyclePage() {
             Cap 100% Reached
           </span>
           <p className="text-2xl font-bold text-rose-600 dark:text-rose-400">
-            {counts.limitReached || 0}
+            {counts.limitReached ?? 0}
           </p>
         </Card>
 
@@ -167,7 +175,7 @@ export function LifecyclePage() {
             Disabled
           </span>
           <p className="text-2xl font-bold text-neutral-400">
-            {counts.disabled || 0}
+            {counts.disabled ?? 0}
           </p>
         </Card>
       </div>
@@ -196,70 +204,73 @@ export function LifecyclePage() {
           </div>
         ) : (
           <div className="divide-y divide-neutral-100 dark:divide-neutral-800">
-            {criticalLinks.map((link: any) => (
-              <div key={link.id} className="py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="space-y-1.5 flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono font-bold text-sm text-neutral-900 dark:text-white">
-                      /{link.shortCode}
-                    </span>
-                    <Badge variant={link.status === 'expired' || link.status === 'limit_reached' ? 'danger' : 'warning'}>
-                      {link.warningReason || link.status}
-                    </Badge>
+            {criticalLinks.map((link: any) => {
+              const linkId = String(link.id || link._id || '');
+              return (
+                <div key={linkId || link.shortCode} className="py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div className="space-y-1.5 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono font-bold text-sm text-neutral-900 dark:text-white">
+                        /{link.shortCode}
+                      </span>
+                      <Badge variant={link.status === 'expired' || link.status === 'limit_reached' ? 'danger' : 'warning'}>
+                        {link.warningReason || link.status}
+                      </Badge>
+                    </div>
+
+                    <p className="text-xs text-neutral-500 truncate max-w-lg">
+                      {link.destinationUrl}
+                    </p>
+
+                    <div className="flex items-center gap-4 text-[11px] text-neutral-400 font-mono">
+                      <span>Clicks: {link.clicksCount} {link.clickLimit ? `/ ${link.clickLimit}` : ''}</span>
+                      {link.expiresAt && (
+                        <span>Expires: {new Date(link.expiresAt).toLocaleDateString()}</span>
+                      )}
+                    </div>
                   </div>
 
-                  <p className="text-xs text-neutral-500 truncate max-w-lg">
-                    {link.destinationUrl}
-                  </p>
-
-                  <div className="flex items-center gap-4 text-[11px] text-neutral-400 font-mono">
-                    <span>Clicks: {link.clicksCount} {link.clickLimit ? `/ ${link.clickLimit}` : ''}</span>
+                  {/* Remediation Actions */}
+                  <div className="flex items-center gap-2 shrink-0">
                     {link.expiresAt && (
-                      <span>Expires: {new Date(link.expiresAt).toLocaleDateString()}</span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleExtendExpiry(linkId, 30)}
+                        disabled={processingId === linkId}
+                        className="text-xs"
+                      >
+                        <Calendar className="w-3.5 h-3.5 mr-1 text-amber-500" />
+                        <span>+30 Days</span>
+                      </Button>
                     )}
+
+                    {link.clickLimit && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleIncreaseLimit(linkId, 100)}
+                        disabled={processingId === linkId}
+                        className="text-xs"
+                      >
+                        <PlusCircle className="w-3.5 h-3.5 mr-1 text-emerald-500" />
+                        <span>+100 Clicks</span>
+                      </Button>
+                    )}
+
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleToggleStatus(linkId, link.status !== 'disabled')}
+                      disabled={processingId === linkId}
+                      className="text-xs"
+                    >
+                      <Power className="w-3.5 h-3.5" />
+                    </Button>
                   </div>
                 </div>
-
-                {/* Remediation Actions */}
-                <div className="flex items-center gap-2 shrink-0">
-                  {link.expiresAt && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleExtendExpiry(link.id, 30)}
-                      disabled={processingId === link.id}
-                      className="text-xs"
-                    >
-                      <Calendar className="w-3.5 h-3.5 mr-1 text-amber-500" />
-                      <span>+30 Days</span>
-                    </Button>
-                  )}
-
-                  {link.clickLimit && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleIncreaseLimit(link.id, 100)}
-                      disabled={processingId === link.id}
-                      className="text-xs"
-                    >
-                      <PlusCircle className="w-3.5 h-3.5 mr-1 text-emerald-500" />
-                      <span>+100 Clicks</span>
-                    </Button>
-                  )}
-
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleToggleStatus(link.id, link.status !== 'disabled')}
-                    disabled={processingId === link.id}
-                    className="text-xs"
-                  >
-                    <Power className="w-3.5 h-3.5" />
-                  </Button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </Card>

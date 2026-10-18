@@ -73,15 +73,18 @@ export class LifecycleController {
         .limit(10)
         .lean();
 
+      const countsData = {
+        total: allLinks.length,
+        active: activeCount,
+        expiringSoon: expiringSoonCount,
+        expired: expiredCount,
+        limitReached: limitReachedCount,
+        disabled: disabledCount,
+      };
+
       return res.json({
-        stats: {
-          total: allLinks.length,
-          active: activeCount,
-          expiringSoon: expiringSoonCount,
-          expired: expiredCount,
-          limitReached: limitReachedCount,
-          disabled: disabledCount,
-        },
+        counts: countsData,
+        stats: countsData,
         criticalLinks: criticalLinks.slice(0, 10),
         timeline: recentEvents.map((e) => ({
           id: String(e._id),

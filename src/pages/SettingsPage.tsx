@@ -6,7 +6,6 @@ import {
   Sun,
   Moon,
   Laptop,
-  RotateCcw,
   Shield,
   Copy,
   Check,
@@ -15,11 +14,9 @@ import {
 import { useAuthStore } from '../store/useAuthStore';
 import { useThemeStore } from '../store/useThemeStore';
 import { useToastStore } from '../store/useToastStore';
-import { systemApi } from '../lib/api';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
-import { ConfirmDialog } from '../components/ui/Modal';
 
 export function SettingsPage() {
   const { user, setUser } = useAuthStore();
@@ -29,8 +26,6 @@ export function SettingsPage() {
   const [workspaceName, setWorkspaceName] = useState(user?.workspaceName || 'TechFlow HQ');
   const [apiKey, setApiKey] = useState('lp_live_9f81a7b8e2194d2093e1a0b5f67');
   const [copiedKey, setCopiedKey] = useState(false);
-  const [resetModalOpen, setResetModalOpen] = useState(false);
-  const [isResetting, setIsResetting] = useState(false);
 
   function handleSaveProfile(e: React.FormEvent) {
     e.preventDefault();
@@ -50,21 +45,6 @@ export function SettingsPage() {
     setCopiedKey(true);
     success('API key copied to clipboard');
     setTimeout(() => setCopiedKey(false), 2000);
-  }
-
-  async function handleResetDemoData() {
-    setIsResetting(true);
-    try {
-      await systemApi.resetDemoData();
-      success('Demo data restored to initial state');
-      setResetModalOpen(false);
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
-    } catch {
-      toastError('Failed to reset demo data');
-      setIsResetting(false);
-    }
   }
 
   if (!user) return null;
@@ -167,39 +147,30 @@ export function SettingsPage() {
         </div>
       </Card>
 
-      {/* Reset Demo Data */}
-      <Card className="p-6 space-y-4 border-rose-200 dark:border-rose-900/40 bg-rose-50/20 dark:bg-rose-950/10">
+      {/* Account Security & Role Status */}
+      <Card className="p-6 space-y-4">
         <div>
-          <h3 className="text-sm font-semibold text-rose-700 dark:text-rose-400 flex items-center gap-2">
-            <RotateCcw className="w-4 h-4" />
-            <span>Reset Demo Store & Analytics</span>
+          <h3 className="text-sm font-semibold text-neutral-900 dark:text-white flex items-center gap-2">
+            <Shield className="w-4 h-4 text-neutral-900 dark:text-white" />
+            <span>Account Security & Verified Role</span>
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Restores the mock database back to original seed data (~40 links, 3 users, campaigns, blocklist, and ~3,000 realistic click events).
+          <p className="text-xs text-neutral-500 mt-1">
+            Your role is assigned on the server and verified cryptographically on every protected request.
           </p>
         </div>
 
-        <Button
-          variant="danger"
-          size="sm"
-          onClick={() => setResetModalOpen(true)}
-          className="text-xs"
-        >
-          Reset Demo Data to Default
-        </Button>
+        <div className="flex items-center justify-between p-3 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-xs">
+          <div>
+            <span className="font-medium text-neutral-800 dark:text-neutral-200">Current Role: </span>
+            <span className="font-semibold uppercase tracking-wider text-neutral-900 dark:text-white">
+              {user.role}
+            </span>
+          </div>
+          <span className="text-[11px] text-neutral-500">
+            Account ID: {user.id.slice(-8)}
+          </span>
+        </div>
       </Card>
-
-      {/* Reset Confirm Dialog */}
-      <ConfirmDialog
-        isOpen={resetModalOpen}
-        onClose={() => setResetModalOpen(false)}
-        onConfirm={handleResetDemoData}
-        title="Reset All Demo Data"
-        message="This will wipe all newly created links and restore the default 40 sample links, campaigns, and ~3,000 click events. Continue?"
-        confirmLabel="Reset Everything"
-        isDestructive
-        isLoading={isResetting}
-      />
     </div>
   );
 }

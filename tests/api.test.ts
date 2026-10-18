@@ -7,17 +7,22 @@ import { Link, DomainBlocklist, User, ClickEvent } from '../server/src/models/in
 
 describe('LinkPulse End-to-End API Test Suite', () => {
   let userToken = '';
+  let secondUserToken = '';
   let adminToken = '';
   let createdLinkId = '';
   const testAlias = `test-${Date.now()}`;
+  const registeredEmail = `registered_${Date.now()}@test.io`;
+  const registeredPassword = 'Password123!';
+  const bootstrapSecret = 'test_admin_bootstrap_secret_2026';
 
   beforeAll(async () => {
+    process.env.ADMIN_BOOTSTRAP_SECRET = bootstrapSecret;
     await connectDB();
     await seedMongoDatabase();
   });
 
   afterAll(async () => {
-    // clean up or disconnect
+    // Teardown
   });
 
   describe('1. Health & System Status', () => {
@@ -35,65 +40,163 @@ describe('LinkPulse End-to-End API Test Suite', () => {
     });
   });
 
-  describe('2. Authentication & Authorization', () => {
-    it('successfully logs in seeded demo user', async () => {
+  describe('2. Real User Registration & Password Security', () => {
+    it('allows a new user to register with real bcrypt hashing', async () => {
+      const res = await request(app)
+        .post('/api/v1/auth/register')
+        .send({
+          name: 'Jane Doe',
+          email: registeredEmail,
+          password: registeredPassword,
+          role: 'admin', // Attack attempt: client tries to self-grant admin
+        });
+
+      expect(res.status).toBe(201);
+      expect(res.body.user.email).toBe(registeredEmail);
+      // Strictly verify server enforced 'user' role and ignored client role
+      expect(res.body.user.role).toBe('user');
+      expect(res.body.token).toBeDefined();
+
+      // Verify in database that password is stored as hash, NEVER plaintext
+      const dbUser = await User.findOne({ email: registeredEmail });
+      expect(dbUser).toBeDefined();
+      expect(dbUser!.passwordHash).not.toBe(registeredPassword);
+      expect(dbUser!.passwordHash.startsWith('$2')).toBe(true);
+      expect(dbUser!.role).toBe('user');
+    });
+
+    it('rejects duplicate email registration with 409 Conflict', async () => {
+      const res = await request(app)
+        .post('/api/v1/auth/register')
+        .send({
+          name: 'Another Person',
+          email: registeredEmail,
+          password: 'AnotherPassword123!',
+        });
+
+      expect(res.status).toBe(409);
+      expect(res.body.error).toContain('already exists');
+    });
+
+    it('rejects passwords shorter than 8 characters', async () => {
+      const res = await request(app)
+        .post('/api/v1/auth/register')
+        .send({
+          name: 'Short Pass',
+          email: `short_${Date.now()}@test.io`,
+          password: 'short',
+        });
+
+      expect(res.status).toBe(400);
+      expect(res.body.error).toContain('8 characters');
+    });
+  });
+
+  describe('3. Login, Sessions & Logout', () => {
+    it('successfully logs in with registered credentials and sets session cookie', async () => {
       const res = await request(app)
         .post('/api/v1/auth/login')
-        .send({ email: 'alex@linkpulse.io', password: 'demo123' });
+        .send({ email: registeredEmail, password: registeredPassword });
+
       expect(res.status).toBe(200);
       expect(res.body.token).toBeDefined();
+      expect(res.body.user.email).toBe(registeredEmail);
       expect(res.body.user.role).toBe('user');
+      expect(res.headers['set-cookie']).toBeDefined();
+
       userToken = res.body.token;
     });
 
-    it('successfully logs in seeded admin', async () => {
+    it('rejects invalid password with generic error message', async () => {
       const res = await request(app)
         .post('/api/v1/auth/login')
-        .send({ email: 'admin@linkpulse.io', password: 'admin123' });
-      expect(res.status).toBe(200);
-      expect(res.body.token).toBeDefined();
-      expect(res.body.user.role).toBe('admin');
-      adminToken = res.body.token;
-    });
+        .send({ email: registeredEmail, password: 'wrongpassword' });
 
-    it('rejects invalid password', async () => {
-      const res = await request(app)
-        .post('/api/v1/auth/login')
-        .send({ email: 'alex@linkpulse.io', password: 'wrongpassword' });
       expect(res.status).toBe(401);
+      expect(res.body.error).toBe('Invalid email or password.');
     });
 
-    it('allows registering a new user with bcrypt hash', async () => {
-      const newEmail = `user_${Date.now()}@test.io`;
+    it('rejects non-existent email with same generic error message', async () => {
       const res = await request(app)
-        .post('/api/v1/auth/register')
-        .send({ name: 'Test User', email: newEmail, password: 'password123' });
-      expect(res.status).toBe(201);
-      expect(res.body.user.email).toBe(newEmail);
-      expect(res.body.user.role).toBe('user');
+        .post('/api/v1/auth/login')
+        .send({ email: 'nobody_exists@domain.com', password: 'SomePassword123!' });
+
+      expect(res.status).toBe(401);
+      expect(res.body.error).toBe('Invalid email or password.');
     });
 
     it('retrieves current authenticated user profile via /api/v1/auth/me', async () => {
       const res = await request(app)
         .get('/api/v1/auth/me')
         .set('Authorization', `Bearer ${userToken}`);
+
       expect(res.status).toBe(200);
-      expect(res.body.user.email).toBe('alex@linkpulse.io');
+      expect(res.body.user.email).toBe(registeredEmail);
+      expect(res.body.user.role).toBe('user');
     });
 
-    it('blocks unauthenticated access to protected route', async () => {
+    it('blocks unauthenticated access to protected routes', async () => {
       const res = await request(app).get('/api/v1/links');
       expect(res.status).toBe(401);
     });
 
-    it('enforces admin-only access on admin routes', async () => {
-      // User attempting admin endpoint
+    it('allows logging out and clearing session cookie', async () => {
+      const res = await request(app).post('/api/v1/auth/logout');
+      expect(res.status).toBe(200);
+      expect(res.headers['set-cookie']).toBeDefined();
+    });
+  });
+
+  describe('4. Secure Admin Account Provisioning & Role Enforcement', () => {
+    const adminEmail = `admin_${Date.now()}@linkpulse.io`;
+    const adminPassword = 'AdminSecurePass2026!';
+
+    it('rejects bootstrap-admin endpoint if x-bootstrap-secret is missing or incorrect', async () => {
+      const resWithoutSecret = await request(app)
+        .post('/api/v1/auth/bootstrap-admin')
+        .send({ email: adminEmail, password: adminPassword });
+      expect(resWithoutSecret.status).toBe(403);
+
+      const resWithWrongSecret = await request(app)
+        .post('/api/v1/auth/bootstrap-admin')
+        .set('x-bootstrap-secret', 'wrong_secret')
+        .send({ email: adminEmail, password: adminPassword });
+      expect(resWithWrongSecret.status).toBe(403);
+    });
+
+    it('successfully provisions real administrator account with valid server secret', async () => {
+      const res = await request(app)
+        .post('/api/v1/auth/bootstrap-admin')
+        .set('x-bootstrap-secret', bootstrapSecret)
+        .send({
+          email: adminEmail,
+          password: adminPassword,
+          name: 'Chief Security Officer',
+        });
+
+      expect(res.status).toBe(201);
+      expect(res.body.user.role).toBe('admin');
+      expect(res.body.user.email).toBe(adminEmail);
+
+      // Log in as this real provisioned administrator
+      const loginRes = await request(app)
+        .post('/api/v1/auth/login')
+        .send({ email: adminEmail, password: adminPassword });
+
+      expect(loginRes.status).toBe(200);
+      expect(loginRes.body.user.role).toBe('admin');
+      adminToken = loginRes.body.token;
+    });
+
+    it('strictly forbids regular users from accessing administrator endpoints', async () => {
       const userRes = await request(app)
         .get('/api/v1/admin/overview')
         .set('Authorization', `Bearer ${userToken}`);
       expect(userRes.status).toBe(403);
+      expect(userRes.body.error).toContain('Administrator');
+    });
 
-      // Admin accessing admin endpoint
+    it('permits authorized administrator to access admin telemetry and controls', async () => {
       const adminRes = await request(app)
         .get('/api/v1/admin/overview')
         .set('Authorization', `Bearer ${adminToken}`);
@@ -102,8 +205,8 @@ describe('LinkPulse End-to-End API Test Suite', () => {
     });
   });
 
-  describe('3. Short Link Creation & Validation', () => {
-    it('creates a new short link with custom alias', async () => {
+  describe('5. Resource Ownership & Access Isolation', () => {
+    it('creates a link owned by User 1', async () => {
       const res = await request(app)
         .post('/api/v1/links')
         .set('Authorization', `Bearer ${userToken}`)
@@ -112,12 +215,56 @@ describe('LinkPulse End-to-End API Test Suite', () => {
           customAlias: testAlias,
           title: 'LinkPulse GitHub Repo',
         });
+
       expect(res.status).toBe(201);
       expect(res.body.link.shortCode).toBe(testAlias);
-      expect(res.body.link.destinationUrl).toBe('https://github.com/SurajRawatr07/LinkPulse');
       createdLinkId = res.body.link.id;
     });
 
+    it('registers a second regular user (User 2)', async () => {
+      const user2Email = `user2_${Date.now()}@test.io`;
+      const res = await request(app)
+        .post('/api/v1/auth/register')
+        .send({
+          name: 'Second User',
+          email: user2Email,
+          password: 'PasswordUser2!',
+        });
+
+      expect(res.status).toBe(201);
+      secondUserToken = res.body.token;
+    });
+
+    it('prevents User 2 from updating or deleting User 1 private link', async () => {
+      // User 2 tries to update User 1's link
+      const patchRes = await request(app)
+        .patch(`/api/v1/links/${createdLinkId}`)
+        .set('Authorization', `Bearer ${secondUserToken}`)
+        .send({ title: 'Hacked Title' });
+
+      expect(patchRes.status).toBe(403);
+
+      // User 2 tries to delete User 1's link
+      const deleteRes = await request(app)
+        .delete(`/api/v1/links/${createdLinkId}`)
+        .set('Authorization', `Bearer ${secondUserToken}`);
+
+      expect(deleteRes.status).toBe(403);
+    });
+
+    it('ensures User 2 link directory query does not expose User 1 links', async () => {
+      const res = await request(app)
+        .get('/api/v1/links')
+        .set('Authorization', `Bearer ${secondUserToken}`);
+
+      expect(res.status).toBe(200);
+      const items = res.body.items || [];
+      const hasUser1Link = items.some((item: any) => item.id === createdLinkId || item.shortCode === testAlias);
+      expect(hasUser1Link).toBe(false);
+    });
+  });
+
+  describe('6. Short Link Creation & Validation', () => {
     it('rejects duplicate custom alias at database level', async () => {
       const res = await request(app)
         .post('/api/v1/links')
@@ -152,7 +299,7 @@ describe('LinkPulse End-to-End API Test Suite', () => {
     });
   });
 
-  describe('4. Server-Side Redirect Engine & Live Click Tracking', () => {
+  describe('7. Server-Side Redirect Engine & Live Click Tracking', () => {
     it('resolves public link metadata via /api/v1/redirect/:code/metadata', async () => {
       const res = await request(app).get(`/api/v1/redirect/${testAlias}/metadata`);
       expect(res.status).toBe(200);
@@ -196,7 +343,7 @@ describe('LinkPulse End-to-End API Test Suite', () => {
     });
   });
 
-  describe('5. Advanced Redirect Rules (Password, Expiry, Click Limits)', () => {
+  describe('8. Advanced Redirect Rules (Password, Expiry, Click Limits)', () => {
     it('enforces password protection challenge on protected link', async () => {
       const passAlias = `pass-${Date.now()}`;
       const createRes = await request(app)
@@ -209,7 +356,7 @@ describe('LinkPulse End-to-End API Test Suite', () => {
         });
       expect(createRes.status).toBe(201);
 
-      // Request without password returns 200 with HTML unlock form or JSON challenge
+      // Request without password returns 403 challenge
       const redirectRes = await request(app)
         .get(`/r/${passAlias}`)
         .set('Accept', 'application/json');
@@ -261,7 +408,7 @@ describe('LinkPulse End-to-End API Test Suite', () => {
     });
   });
 
-  describe('6. Policy Lab Simulator', () => {
+  describe('9. Policy Lab Simulator', () => {
     it('simulates redirect policy outcomes without creating click events', async () => {
       const res = await request(app)
         .post('/api/v1/policy-lab/simulate')
@@ -283,7 +430,7 @@ describe('LinkPulse End-to-End API Test Suite', () => {
     });
   });
 
-  describe('7. Bulk CSV Import Engine', () => {
+  describe('10. Bulk CSV Import Engine', () => {
     it('imports valid rows, skips duplicates, and returns structured summary', async () => {
       const uniqueCode = `csv-${Date.now()}`;
       const res = await request(app)
@@ -304,15 +451,15 @@ describe('LinkPulse End-to-End API Test Suite', () => {
     });
   });
 
-  describe('8. Link-in-Bio Pages', () => {
+  describe('11. Link-in-Bio Pages', () => {
     it('allows user to save and retrieve their bio page', async () => {
-      const bioSlug = `alex-${Date.now()}`;
+      const bioSlug = `user-${Date.now()}`;
       const saveRes = await request(app)
         .put('/api/v1/bio/me')
         .set('Authorization', `Bearer ${userToken}`)
         .send({
           slug: bioSlug,
-          title: 'Alex Mercer Creator Bio',
+          title: 'Creator Bio',
           bio: 'Building open-source developer tools',
           theme: 'emerald',
           links: [{ id: 'b1', title: 'My Portfolio', url: 'https://portfolio.me', isActive: true }],
@@ -323,11 +470,11 @@ describe('LinkPulse End-to-End API Test Suite', () => {
       // Public resolution
       const publicRes = await request(app).get(`/api/v1/bio/p/${bioSlug}`);
       expect(publicRes.status).toBe(200);
-      expect(publicRes.body.page.title).toBe('Alex Mercer Creator Bio');
+      expect(publicRes.body.page.title).toBe('Creator Bio');
     });
   });
 
-  describe('9. Trust Center & Domain Blocking', () => {
+  describe('12. Trust Center & Domain Blocking', () => {
     it('allows reporting abuse on a link', async () => {
       const reportRes = await request(app)
         .post('/api/v1/trust-center/report')
