@@ -15,11 +15,43 @@ export const LocalStore = {
   isLocalMode: false,
 
   getUsers(): User[] {
+    const defaultUsers: User[] = [
+      {
+        id: 'usr_demo_admin',
+        name: 'Demo Administrator',
+        email: 'demo.admin@linkpulse.test',
+        passwordHash: simpleHash('DemoAdmin@123'),
+        salt: 'demo',
+        role: 'admin',
+        createdAt: '2026-01-01T00:00:00.000Z',
+      },
+      {
+        id: 'usr_demo_user',
+        name: 'Demo User',
+        email: 'demo.user@linkpulse.test',
+        passwordHash: simpleHash('DemoUser@123'),
+        salt: 'demo',
+        role: 'user',
+        createdAt: '2026-01-01T00:00:00.000Z',
+      },
+    ];
+
     try {
       const data = localStorage.getItem('lp_local_users');
-      return data ? JSON.parse(data) : [];
+      if (!data) {
+        this.saveUsers(defaultUsers);
+        return defaultUsers;
+      }
+      const parsed: User[] = JSON.parse(data);
+      // Ensure demo users exist
+      for (const du of defaultUsers) {
+        if (!parsed.some((u) => u.email.toLowerCase() === du.email.toLowerCase())) {
+          parsed.push(du);
+        }
+      }
+      return parsed;
     } catch {
-      return [];
+      return defaultUsers;
     }
   },
 

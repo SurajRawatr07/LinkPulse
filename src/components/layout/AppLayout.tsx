@@ -47,72 +47,93 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   if (!user) {
+    if (location.pathname.startsWith('/admin')) {
+      return <Navigate to="/admin/login" replace state={{ from: location.pathname }} />;
+    }
     return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   }
 
-  // Admin route guard
-  if (location.pathname.startsWith('/admin') && user.role !== 'admin') {
+  const isAdminSection = location.pathname.startsWith('/admin');
+
+  // Strict Admin route guard: regular users cannot access Admin routes
+  if (isAdminSection && user.role !== 'admin') {
     return <Navigate to="/app/dashboard" replace />;
   }
 
   const userNav = [
-    { label: 'Dashboard', path: '/app/dashboard', icon: BarChart3 },
-    { label: 'Links', path: '/app/links', icon: LinkIcon },
+    { label: 'Overview', path: '/app/dashboard', icon: BarChart3 },
+    { label: 'My Links', path: '/app/links', icon: LinkIcon },
     { label: 'Create Link', path: '/app/links/new', icon: PlusCircle },
     { label: 'QR Studio', path: '/app/qr', icon: QrCode },
     { label: 'Link-in-Bio', path: '/app/bio', icon: Sparkles },
     { label: 'Policy Lab', path: '/app/policy-lab', icon: Sliders },
-    { label: 'Lifecycle', path: '/app/lifecycle', icon: Clock },
+    { label: 'Link Lifecycle', path: '/app/lifecycle', icon: Clock },
     { label: 'Campaigns', path: '/app/campaigns', icon: FolderKanban },
     { label: 'Tags', path: '/app/tags', icon: Tags },
-    { label: 'Bulk Import', path: '/app/links/import', icon: FileSpreadsheet },
+    { label: 'Bulk CSV Import', path: '/app/links/import', icon: FileSpreadsheet },
     { label: 'Trust & Safety', path: '/app/trust-center', icon: Shield },
-    { label: 'Settings', path: '/app/settings', icon: Settings },
+    { label: 'Workspace Settings', path: '/app/settings', icon: Settings },
   ];
 
   const adminNav = [
     { label: 'Platform Overview', path: '/admin/overview', icon: BarChart3 },
-    { label: 'All Links', path: '/admin/links', icon: LinkIcon },
-    { label: 'Users Directory', path: '/admin/users', icon: Users },
-    { label: 'Abuse Reports', path: '/admin/abuse', icon: ShieldAlert },
+    { label: 'Global Links Directory', path: '/admin/links', icon: LinkIcon },
+    { label: 'User Directory', path: '/admin/users', icon: Users },
+    { label: 'Abuse Moderation Queue', path: '/admin/abuse', icon: ShieldAlert },
     { label: 'Domain Blocklist', path: '/admin/blocklist', icon: Ban },
+    { label: 'Platform Settings', path: '/app/settings', icon: Settings },
   ];
 
+  const activeNavList = isAdminSection ? adminNav : userNav;
+
   const currentLabel =
-    [...userNav, ...adminNav].find((i) => location.pathname === i.path || (i.path !== '/app/links' && location.pathname.startsWith(i.path)))?.label ||
-    'Dashboard';
+    activeNavList.find(
+      (i) =>
+        location.pathname === i.path ||
+        (i.path !== '/app/links' && i.path !== '/app/dashboard' && location.pathname.startsWith(i.path))
+    )?.label || (isAdminSection ? 'Platform Administration' : 'Workspace');
 
   const NavContent = () => (
     <div className="flex flex-col h-full">
-      {/* Brand */}
+      {/* Brand Header */}
       <div className="p-4 border-b border-neutral-200 dark:border-neutral-800">
         <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="w-7 h-7 rounded-xl bg-neutral-900 text-white flex items-center justify-center shadow-xs group-hover:bg-black transition-colors">
-            <Link2 className="w-4 h-4 stroke-[2.2]" />
+          <div className={cn(
+            "w-7 h-7 rounded-xl text-white flex items-center justify-center shadow-xs transition-colors",
+            isAdminSection ? "bg-amber-600 dark:bg-amber-500" : "bg-neutral-900 group-hover:bg-black"
+          )}>
+            {isAdminSection ? <Shield className="w-4 h-4 stroke-[2.2]" /> : <Link2 className="w-4 h-4 stroke-[2.2]" />}
           </div>
           <div>
-            <span className="font-display text-base font-bold tracking-tight text-neutral-900 dark:text-white leading-none block">
-              LinkPulse
-            </span>
+            <div className="flex items-center gap-1.5">
+              <span className="font-display text-base font-bold tracking-tight text-neutral-900 dark:text-white leading-none block">
+                LinkPulse
+              </span>
+              {isAdminSection && (
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 uppercase tracking-wider">
+                  Admin
+                </span>
+              )}
+            </div>
             <span className="text-[10px] text-neutral-500 font-medium">
-              Short links, smart insights
+              {isAdminSection ? 'Platform Governance' : 'Intelligent URL Management'}
             </span>
           </div>
         </Link>
       </div>
 
       {/* Nav items */}
-      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
+      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-4">
         <div>
-          <p className="px-3 text-[11px] font-semibold text-neutral-400 uppercase tracking-wider mb-1.5">
-            Workspace
+          <p className="px-3 text-[11px] font-semibold text-neutral-400 uppercase tracking-wider mb-2">
+            {isAdminSection ? 'Administrative Controls' : 'User Workspace'}
           </p>
           <nav className="space-y-1">
-            {userNav.map((item) => {
+            {activeNavList.map((item) => {
               const Icon = item.icon;
               const isActive =
                 location.pathname === item.path ||
-                (item.path !== '/app/links' && item.path !== '/app/dashboard' && location.pathname.startsWith(item.path));
+                (item.path !== '/app/links' && item.path !== '/app/dashboard' && item.path !== '/admin/overview' && location.pathname.startsWith(item.path));
               return (
                 <Link
                   key={item.path}
@@ -121,11 +142,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                   className={cn(
                     'flex items-center gap-3 px-3 py-2.5 min-h-[44px] text-xs font-medium rounded-xl transition-all whitespace-nowrap',
                     isActive
-                      ? 'bg-neutral-900 text-white font-medium shadow-2xs'
+                      ? isAdminSection
+                        ? 'bg-neutral-900 text-white font-medium shadow-2xs border-l-2 border-amber-500'
+                        : 'bg-neutral-900 text-white font-medium shadow-2xs'
                       : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-neutral-100'
                   )}
                 >
-                  <Icon className={cn('w-4 h-4 shrink-0', isActive ? 'text-white' : 'text-neutral-500')} />
+                  <Icon className={cn('w-4 h-4 shrink-0', isActive ? (isAdminSection ? 'text-amber-400' : 'text-white') : 'text-neutral-500')} />
                   <span>{item.label}</span>
                 </Link>
               );
@@ -133,33 +156,31 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </nav>
         </div>
 
+        {/* Portal Switcher for Admins */}
         {user.role === 'admin' && (
-          <div>
-            <p className="px-3 text-[11px] font-semibold text-rose-500 uppercase tracking-wider mb-1.5">
-              Admin Controls
-            </p>
-            <nav className="space-y-1">
-              {adminNav.map((item) => {
-                const Icon = item.icon;
-                const isActive = location.pathname.startsWith(item.path);
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    onClick={() => setMobileDrawerOpen(false)}
-                    className={cn(
-                      'flex items-center gap-3 px-3 py-2.5 min-h-[44px] text-xs font-medium rounded-lg transition-colors whitespace-nowrap',
-                      isActive
-                        ? 'bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 font-semibold'
-                        : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/80 hover:text-slate-900 dark:hover:text-slate-100'
-                    )}
-                  >
-                    <Icon className={cn('w-4 h-4 shrink-0', isActive ? 'text-rose-600 dark:text-rose-400' : 'text-slate-400')} />
-                    <span>{item.label}</span>
-                  </Link>
-                );
-              })}
-            </nav>
+          <div className="pt-2 px-1">
+            {isAdminSection ? (
+              <Link
+                to="/app/dashboard"
+                onClick={() => setMobileDrawerOpen(false)}
+                className="w-full flex items-center justify-between p-2.5 text-xs rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
+              >
+                <span className="font-medium">← User Workspace</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </Link>
+            ) : (
+              <Link
+                to="/admin/overview"
+                onClick={() => setMobileDrawerOpen(false)}
+                className="w-full flex items-center justify-between p-2.5 text-xs rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-900 dark:text-amber-300 hover:bg-amber-500/20 transition-colors"
+              >
+                <div className="flex items-center gap-1.5">
+                  <Shield className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                  <span className="font-semibold">Admin Portal</span>
+                </div>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </Link>
+            )}
           </div>
         )}
       </div>

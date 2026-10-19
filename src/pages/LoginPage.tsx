@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Link2, Eye, EyeOff, ArrowRight, AlertCircle, Shield } from 'lucide-react';
+import { Link2, Eye, EyeOff, ArrowRight, AlertCircle, Shield, KeyRound } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 import { useToastStore } from '../store/useToastStore';
 import { EmailSchema } from '../lib/validators';
@@ -25,6 +25,12 @@ export function LoginPage() {
   }>({});
 
   const [isLoading, setIsLoading] = useState(false);
+
+  function fillDemoCredentials() {
+    setEmail('demo.user@linkpulse.test');
+    setPassword('DemoUser@123');
+    setErrors({});
+  }
 
   function validateEmailOnBlur() {
     const res = EmailSchema.safeParse(email);
@@ -98,11 +104,32 @@ export function LoginPage() {
             </span>
           </Link>
           <h1 className="font-display text-2xl sm:text-3xl font-normal tracking-tight text-neutral-900 dark:text-white">
-            Sign in to Your Account
+            User Workspace Login
           </h1>
           <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 mt-1 font-body">
-            Enter your credentials to manage your links and view real-time click insights.
+            Manage your personal links, customize vanity aliases, monitor visit quotas, and view click analytics.
           </p>
+        </div>
+
+        {/* Demo User Credentials Box */}
+        <div className="p-4 rounded-xl bg-neutral-50 dark:bg-neutral-900/90 border border-neutral-200 dark:border-neutral-800 space-y-2.5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-neutral-900 dark:text-white">
+              <KeyRound className="w-3.5 h-3.5 text-neutral-700 dark:text-neutral-300" />
+              <span>Demo User Credentials</span>
+            </div>
+            <button
+              type="button"
+              onClick={fillDemoCredentials}
+              className="text-[11px] font-semibold text-neutral-900 dark:text-white bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 px-2.5 py-1 rounded-md transition-colors cursor-pointer"
+            >
+              Fill Demo Credentials
+            </button>
+          </div>
+          <div className="text-[11px] font-mono text-neutral-600 dark:text-neutral-300 space-y-0.5">
+            <p><span className="text-neutral-400">Email:</span> demo.user@linkpulse.test</p>
+            <p><span className="text-neutral-400">Password:</span> DemoUser@123</p>
+          </div>
         </div>
 
         {errors.general && (
@@ -168,28 +195,26 @@ export function LoginPage() {
             className="w-full mt-2 min-h-[44px]"
             isLoading={isLoading}
           >
-            <span>Sign In</span>
+            <span>Sign In to Workspace</span>
             <ArrowRight className="w-4 h-4 ml-1" />
           </Button>
         </form>
 
-        <div className="relative flex py-1 items-center">
-          <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
-          <span className="flex-shrink mx-3 text-xs text-slate-400">secure authentication</span>
-          <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
-        </div>
+        <div className="pt-2 border-t border-neutral-100 dark:border-neutral-800 space-y-3">
+          <div className="flex items-center justify-between text-xs text-neutral-600 dark:text-neutral-400">
+            <span>Don't have an account yet?</span>
+            <Link to="/register" className="text-neutral-900 dark:text-white font-semibold underline decoration-neutral-300 hover:decoration-neutral-900">
+              Create an account
+            </Link>
+          </div>
 
-        <div className="p-3 bg-neutral-50 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 rounded-xl text-xs text-neutral-600 dark:text-neutral-400 flex items-center gap-2.5">
-          <Shield className="w-4 h-4 text-neutral-800 dark:text-neutral-200 shrink-0" />
-          <span>Role-based access is strictly verified on the server for all protected workspace and administrative operations.</span>
+          <div className="p-2.5 bg-neutral-100/70 dark:bg-neutral-800/60 rounded-xl text-center text-xs">
+            <span className="text-neutral-500">Platform Administrator? </span>
+            <Link to="/admin/login" className="text-neutral-900 dark:text-white font-semibold hover:underline">
+              Go to Admin Login →
+            </Link>
+          </div>
         </div>
-
-        <p className="text-center text-xs text-neutral-600">
-          Don't have an account yet?{' '}
-          <Link to="/register" className="text-neutral-900 dark:text-white font-semibold underline decoration-neutral-300 hover:decoration-neutral-900">
-            Create an account
-          </Link>
-        </p>
       </Card>
     </div>
   );

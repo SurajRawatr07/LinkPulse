@@ -31,6 +31,7 @@ import { TagsPage } from './pages/TagsPage';
 import { SettingsPage } from './pages/SettingsPage';
 
 // Admin Pages
+import { AdminLoginPage } from './pages/admin/AdminLoginPage';
 import { AdminOverviewPage } from './pages/admin/AdminOverviewPage';
 import { AdminLinksPage } from './pages/admin/AdminLinksPage';
 import { AdminUsersPage } from './pages/admin/AdminUsersPage';
@@ -67,6 +68,14 @@ export default function App() {
           }
         />
         <Route
+          path="/admin/login"
+          element={
+            <PublicLayout>
+              <AdminLoginPage />
+            </PublicLayout>
+          }
+        />
+        <Route
           path="/register"
           element={
             <PublicLayout>
@@ -80,6 +89,11 @@ export default function App() {
         <Route path="/r/:code" element={<RedirectPage />} />
         <Route path="/bio/:slug" element={<PublicBioPage />} />
         <Route path="/b/:slug" element={<PublicBioPage />} />
+
+        {/* Top-Level Aliases */}
+        <Route path="/dashboard" element={<Navigate to="/app/dashboard" replace />} />
+        <Route path="/links" element={<Navigate to="/app/links" replace />} />
+        <Route path="/lifecycle" element={<Navigate to="/app/lifecycle" replace />} />
 
         {/* User App Routes */}
         <Route path="/app" element={<Navigate to="/app/dashboard" replace />} />
@@ -231,7 +245,8 @@ export default function App() {
           }
         />
 
-        {/* 404 Catch-All */}
+        {/* Root Short-Link Redirect & 404 Catch-All */}
+        <Route path="/:code" element={<RedirectPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

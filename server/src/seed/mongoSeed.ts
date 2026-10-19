@@ -36,7 +36,61 @@ export async function seedMongoDatabase() {
     }
   }
 
-  // 2. Seed initial security domain blocklist if empty
+  // 2. Safe Hackathon & Demo Provisioning: Demo Admin & Demo User
+  const demoAdminEmail = 'demo.admin@linkpulse.test';
+  const existingDemoAdmin = await User.findOne({ email: demoAdminEmail });
+  if (!existingDemoAdmin) {
+    const passwordHash = await bcrypt.hash('DemoAdmin@123', 10);
+    const apiKey = `lp_sec_${crypto.randomBytes(24).toString('hex')}`;
+    await User.create({
+      email: demoAdminEmail,
+      passwordHash,
+      name: 'Demo Administrator',
+      role: 'admin',
+      apiKey,
+    });
+    console.log(`🛡️ Provisioned Hackathon Demo Administrator (${demoAdminEmail})`);
+  }
+
+  const demoUserEmail = 'demo.user@linkpulse.test';
+  const existingDemoUser = await User.findOne({ email: demoUserEmail });
+  if (!existingDemoUser) {
+    const passwordHash = await bcrypt.hash('DemoUser@123', 10);
+    const apiKey = `lp_sec_${crypto.randomBytes(24).toString('hex')}`;
+    const demoUser = await User.create({
+      email: demoUserEmail,
+      passwordHash,
+      name: 'Demo User',
+      role: 'user',
+      apiKey,
+    });
+    console.log(`👤 Provisioned Hackathon Demo User (${demoUserEmail})`);
+
+    // Create a starter link for demo user so Lifecycle & Analytics work immediately
+    const demoCamp = await Campaign.create({
+      name: 'Summer Product Launch',
+      color: '#18181B',
+      userId: demoUser._id,
+      description: 'Official demo campaign assets and promotion',
+    });
+
+    await Link.create({
+      userId: demoUser._id,
+      shortCode: 'demopulse',
+      destinationUrl: 'https://github.com/SurajRawatr07/LinkPulse',
+      title: 'LinkPulse Open Source Repository',
+      campaignId: demoCamp._id,
+      clicksCount: 14,
+      uniqueClicksCount: 11,
+      isActive: true,
+      status: 'active',
+      clickLimit: 500,
+      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      tags: ['demo', 'github', 'product'],
+    });
+  }
+
+  // 3. Seed initial security domain blocklist if empty
   const blocklistCount = await DomainBlocklist.countDocuments();
   if (blocklistCount === 0) {
     await DomainBlocklist.insertMany([

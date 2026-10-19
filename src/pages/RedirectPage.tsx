@@ -92,20 +92,10 @@ export function RedirectPage() {
     resolveRedirect();
   }, [code, searchParams]);
 
-  // Countdown for success redirect
+  // Immediate redirect for successful resolution
   useEffect(() => {
-    if (evalResult?.status === 'success') {
-      const interval = setInterval(() => {
-        setCountdown((c) => {
-          if (c <= 1) {
-            clearInterval(interval);
-            window.location.replace(evalResult.destinationUrl);
-            return 0;
-          }
-          return c - 1;
-        });
-      }, 1000);
-      return () => clearInterval(interval);
+    if (evalResult?.status === 'success' && evalResult.destinationUrl) {
+      window.location.replace(evalResult.destinationUrl);
     }
   }, [evalResult]);
 

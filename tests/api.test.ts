@@ -590,4 +590,36 @@ describe('LinkPulse End-to-End API Test Suite', () => {
       expect(res.body.code).toBe('SESSION_EXPIRED');
     });
   });
+
+  describe('15. Demo Credentials & Root Vanity Redirects', () => {
+    it('authenticates successfully with seeded Demo User credentials', async () => {
+      const res = await request(app)
+        .post('/api/v1/auth/login')
+        .send({
+          email: 'demo.user@linkpulse.test',
+          password: 'DemoUser@123',
+        });
+      expect(res.status).toBe(200);
+      expect(res.body.user.role).toBe('user');
+      expect(res.body.token).toBeDefined();
+    });
+
+    it('authenticates successfully with seeded Demo Admin credentials', async () => {
+      const res = await request(app)
+        .post('/api/v1/auth/login')
+        .send({
+          email: 'demo.admin@linkpulse.test',
+          password: 'DemoAdmin@123',
+        });
+      expect(res.status).toBe(200);
+      expect(res.body.user.role).toBe('admin');
+      expect(res.body.token).toBeDefined();
+    });
+
+    it('resolves root-level vanity short code directly without /r/ prefix', async () => {
+      const res = await request(app).get('/demopulse');
+      expect(res.status).toBe(302);
+      expect(res.headers.location).toContain('github.com');
+    });
+  });
 });

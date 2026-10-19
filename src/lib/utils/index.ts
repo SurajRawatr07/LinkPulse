@@ -215,14 +215,12 @@ export function getBaseShortUrl(): string {
     return envDomain.replace(/\/$/, '');
   }
 
-  // In local development on localhost, keep localhost:3000 for local redirect testing
-  if (typeof window !== 'undefined') {
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-      return window.location.origin;
-    }
+  // Dynamically adapt to active hostname (e.g. AI Studio preview, localhost, or production Vercel deployment)
+  if (typeof window !== 'undefined' && window.location && window.location.origin) {
+    return window.location.origin;
   }
 
-  // Official validated production domain
+  // Fallback domain
   return 'https://linkpulse2026.vercel.app';
 }
 
