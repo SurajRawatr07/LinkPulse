@@ -19,9 +19,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       secondary:
         'pearl-btn-pearl active:translate-y-px',
       outline:
-        'border border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-800 shadow-2xs active:translate-y-px',
+        'border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-800 dark:text-neutral-200 shadow-2xs active:translate-y-px',
       ghost:
-        'bg-transparent hover:bg-neutral-100 text-neutral-700 hover:text-neutral-900 active:translate-y-px',
+        'bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white active:translate-y-px',
       danger:
         'bg-red-600 hover:bg-red-700 text-white shadow-xs border border-red-700/20 active:translate-y-px',
     };

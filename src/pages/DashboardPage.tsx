@@ -148,9 +148,9 @@ export function DashboardPage() {
           </div>
 
           {/* Campaign Filter */}
-          <div className="w-44">
+          <div className="w-full sm:w-44">
             <Select
-              className="text-xs py-1.5 min-h-[38px]"
+              className="text-xs py-1.5 min-h-[38px] w-full"
               options={[
                 { value: '', label: 'All Campaigns' },
                 ...campaigns.map((c) => ({ value: c.id, label: c.name })),
@@ -160,8 +160,8 @@ export function DashboardPage() {
             />
           </div>
 
-          <Link to="/app/links/new">
-            <Button variant="primary" size="sm" className="text-xs min-h-[38px]">
+          <Link to="/app/links/new" className="w-full sm:w-auto">
+            <Button variant="primary" size="sm" className="text-xs min-h-[38px] w-full sm:w-auto">
               <Plus className="w-3.5 h-3.5 mr-1" />
               <span>Create Link</span>
             </Button>
@@ -171,7 +171,7 @@ export function DashboardPage() {
 
       {isLoading ? (
         <div className="space-y-6">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 min-[420px]:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {Array.from({ length: 4 }).map((_, i) => (
               <Card key={i} className="p-4 space-y-2">
                 <Skeleton className="h-3 w-20" />
@@ -193,7 +193,7 @@ export function DashboardPage() {
       ) : (
         <>
           {/* 4 KPI Cards: Total links, Total clicks, Unique visitors, Active links */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 min-[420px]:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <Card className="p-4 space-y-1">
               <span className="text-xs text-neutral-500">Total Links</span>
               <p className="text-2xl font-bold font-mono text-neutral-900 dark:text-white tabular-nums">

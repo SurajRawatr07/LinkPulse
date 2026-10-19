@@ -622,4 +622,56 @@ describe('LinkPulse End-to-End API Test Suite', () => {
       expect(res.headers.location).toContain('github.com');
     });
   });
+
+  describe('16. Homepage Clean Design & Lottie Contract', () => {
+    it('verifies exact local Lottie animation asset exists and is valid Lottie JSON', async () => {
+      const fs = await import('fs');
+      const path = await import('path');
+      const assetPath = path.resolve('src/assets/hero-animation.json');
+      expect(fs.existsSync(assetPath)).toBe(true);
+      const jsonContent = JSON.parse(fs.readFileSync(assetPath, 'utf8'));
+      expect(jsonContent.v).toBeDefined();
+      expect(Array.isArray(jsonContent.layers)).toBe(true);
+      expect(jsonContent.w).toBe(512);
+      expect(jsonContent.h).toBe(512);
+    });
+
+    it('verifies Navbar strictly exposes only Home, How It Works, and FAQ', async () => {
+      const fs = await import('fs');
+      const path = await import('path');
+      const navPath = path.resolve('src/components/layout/Navbar.tsx');
+      const content = fs.readFileSync(navPath, 'utf8');
+      expect(content).toMatch(/>\s*Home\s*</);
+      expect(content).toMatch(/>\s*How It Works\s*</);
+      expect(content).toMatch(/>\s*FAQ\s*</);
+      // Must not contain '#features' or feature grid links
+      expect(content).not.toContain('href="#features"');
+      expect(content).not.toMatch(/>\s*Features\s*</);
+    });
+
+    it('verifies LandingPage strictly adheres to the 5 required advanced feature categories in the modal', async () => {
+      const fs = await import('fs');
+      const path = await import('path');
+      const modalPath = path.resolve('src/components/common/AdvancedFeaturesModal.tsx');
+      const content = fs.readFileSync(modalPath, 'utf8');
+      expect(content).toContain('Smart Link Lifecycle');
+      expect(content).toContain('Policy Lab');
+      expect(content).toContain('Trust Center');
+      expect(content).toContain('Campaign Intelligence');
+      expect(content).toContain('QR & Bulk Link Studio');
+      expect(content).toContain('Explore LinkPulse Features');
+    });
+
+    it('verifies Final CTA preserves exact requested wording and hierarchy', async () => {
+      const fs = await import('fs');
+      const path = await import('path');
+      const landingPath = path.resolve('src/pages/LandingPage.tsx');
+      const content = fs.readFileSync(landingPath, 'utf8');
+      expect(content).toContain('GET STARTED TODAY');
+      expect(content).toContain('Ready to shorten your first link?');
+      expect(content).toContain('Create Free Account');
+      expect(content).toContain('Sign In');
+    });
+  });
 });
+

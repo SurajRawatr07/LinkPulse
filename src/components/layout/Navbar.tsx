@@ -11,35 +11,32 @@ export function Navbar() {
   const navigate = useNavigate();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-neutral-200/90 bg-white/95 backdrop-blur-md">
-      <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-4 sm:gap-8 px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 w-full border-b border-neutral-200/90 dark:border-neutral-800 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-md transition-colors">
+      <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-3 sm:gap-8 px-4 sm:px-6 lg:px-8">
         {/* Brand */}
         <Link to="/" className="flex items-center gap-2.5 whitespace-nowrap shrink-0 group">
-          <div className="w-8 h-8 rounded-xl bg-neutral-900 text-white flex items-center justify-center shadow-xs group-hover:bg-black transition-colors">
+          <div className="w-8 h-8 rounded-xl bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center shadow-xs group-hover:bg-black dark:group-hover:bg-white transition-colors">
             <Link2 className="w-4.5 h-4.5 stroke-[2.2]" />
           </div>
           <div className="flex flex-col">
-            <span className="font-display text-xl font-bold tracking-tight text-neutral-900 leading-none">
+            <span className="font-display text-xl font-bold tracking-tight text-neutral-900 dark:text-white leading-none">
               LinkPulse
             </span>
-            <span className="text-[10px] text-neutral-500 font-medium tracking-tight mt-0.5">
+            <span className="text-[10px] text-neutral-500 dark:text-neutral-400 font-medium tracking-tight mt-0.5">
               URL Shortener & Analytics
             </span>
           </div>
         </Link>
 
-        {/* Navigation Links */}
-        <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-neutral-600">
-          <Link to="/" className="hover:text-neutral-900 transition-colors">
+        {/* Navigation Links: Exactly Home, How It Works, FAQ */}
+        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-neutral-600 dark:text-neutral-300">
+          <Link to="/" className="hover:text-neutral-900 dark:hover:text-white transition-colors">
             Home
           </Link>
-          <a href="#how-it-works" className="hover:text-neutral-900 transition-colors">
-            How it works
+          <a href="#how-it-works" className="hover:text-neutral-900 dark:hover:text-white transition-colors">
+            How It Works
           </a>
-          <a href="#features" className="hover:text-neutral-900 transition-colors">
-            Features
-          </a>
-          <a href="#faq" className="hover:text-neutral-900 transition-colors">
+          <a href="#faq" className="hover:text-neutral-900 dark:hover:text-white transition-colors">
             FAQ
           </a>
         </nav>
@@ -49,7 +46,7 @@ export function Navbar() {
           <button
             onClick={toggleTheme}
             aria-label="Toggle dark mode"
-            className="p-2 rounded-lg text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 transition-colors cursor-pointer"
+            className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
           >
             {effectiveTheme === 'dark' ? <Sun className="w-4.5 h-4.5" /> : <Moon className="w-4.5 h-4.5" />}
           </button>
@@ -84,17 +81,17 @@ export function Navbar() {
         </div>
 
         {/* Mobile menu trigger */}
-        <div className="flex sm:hidden items-center gap-2">
+        <div className="flex sm:hidden items-center gap-1.5">
           <button
             onClick={toggleTheme}
             aria-label="Toggle dark mode"
-            className="p-2 text-neutral-500"
+            className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center text-neutral-500 dark:text-neutral-400 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800"
           >
             {effectiveTheme === 'dark' ? <Sun className="w-4.5 h-4.5" /> : <Moon className="w-4.5 h-4.5" />}
           </button>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-neutral-700 rounded-lg hover:bg-neutral-100"
+            className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center text-neutral-700 dark:text-neutral-200 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -104,38 +101,31 @@ export function Navbar() {
 
       {/* Mobile drop menu */}
       {mobileMenuOpen && (
-        <div className="sm:hidden border-b border-neutral-200 bg-white px-4 pt-3 pb-6 space-y-3 shadow-lg">
-          <div className="flex flex-col space-y-2 py-2 text-sm font-medium text-neutral-700">
+        <div className="sm:hidden border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 px-4 pt-3 pb-6 space-y-3 shadow-lg">
+          <div className="flex flex-col space-y-1.5 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-200">
             <Link
               to="/"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-lg hover:bg-neutral-100"
+              className="px-3 py-2.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800"
             >
               Home
             </Link>
             <a
               href="#how-it-works"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-lg hover:bg-neutral-100"
+              className="px-3 py-2.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800"
             >
-              How it works
-            </a>
-            <a
-              href="#features"
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-lg hover:bg-neutral-100"
-            >
-              Features
+              How It Works
             </a>
             <a
               href="#faq"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-lg hover:bg-neutral-100"
+              className="px-3 py-2.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800"
             >
               FAQ
             </a>
           </div>
-          <div className="pt-2 border-t border-neutral-100 flex flex-col gap-2">
+          <div className="pt-2 border-t border-neutral-100 dark:border-neutral-800 flex flex-col gap-2">
             {user ? (
               <button
                 type="button"

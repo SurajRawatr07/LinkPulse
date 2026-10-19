@@ -47,7 +47,7 @@ export function Drawer({
       {/* Drawer content */}
       <div
         className={cn(
-          'relative z-10 w-full max-w-xs sm:max-w-sm bg-white dark:bg-slate-900 h-full shadow-2xl flex flex-col border-slate-200 dark:border-slate-800 transition-transform duration-200',
+          'relative z-10 w-[85vw] max-w-xs sm:max-w-sm bg-white dark:bg-slate-900 h-full shadow-2xl flex flex-col border-slate-200 dark:border-slate-800 transition-transform duration-200',
           side === 'left'
             ? 'border-r animate-in slide-in-from-left duration-200'
             : 'ml-auto border-l animate-in slide-in-from-right duration-200',

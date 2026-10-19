@@ -3,20 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import {
   Link2,
   ArrowRight,
-  MousePointerClick,
-  QrCode,
-  ShieldCheck,
   CheckCircle2,
-  Smartphone,
-  Laptop,
-  Globe,
   ChevronDown,
+  Sparkles,
+  ClipboardPaste,
+  SlidersHorizontal,
+  Share2,
 } from 'lucide-react';
+import { LottieHeroAnimation } from '../components/common/LottieHeroAnimation';
+import { AdvancedFeaturesModal } from '../components/common/AdvancedFeaturesModal';
 
 export function LandingPage() {
   const navigate = useNavigate();
   const [quickUrl, setQuickUrl] = useState('');
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [featuresModalOpen, setFeaturesModalOpen] = useState(false);
 
   function handleQuickStart(e: React.FormEvent) {
     e.preventDefault();
@@ -27,48 +28,90 @@ export function LandingPage() {
     }
   }
 
+  const steps = [
+    {
+      num: '1',
+      icon: ClipboardPaste,
+      title: 'Paste your long URL',
+      desc: 'Enter any long web address into the link creation bar. LinkPulse sanitizes and validates destination URLs before creating the redirect.',
+    },
+    {
+      num: '2',
+      icon: SlidersHorizontal,
+      title: 'Customize and create your short link',
+      desc: 'Set an optional custom memorable alias, expiration date, or password protection, then generate your short link with one click.',
+    },
+    {
+      num: '3',
+      icon: Share2,
+      title: 'Share your link and view available click analytics',
+      desc: 'Distribute your clean short URL or downloadable QR code, and inspect real-time click volume and device metrics in your dashboard.',
+    },
+  ];
+
   const faqs = [
     {
-      q: 'How does LinkPulse track link clicks?',
-      a: 'Every time someone opens your shortened link, our real-time redirect engine securely logs the timestamp, device platform, operating system, and geographic region before seamlessly directing them to your destination.',
+      q: 'What is LinkPulse?',
+      a: 'LinkPulse is a dependable URL shortening and click intelligence platform. It provides clean short URLs, high-resolution QR codes, link lifecycle scheduling, and verified traffic analytics for individuals and modern teams.',
     },
     {
-      q: 'Can I protect links with passwords or limits?',
-      a: 'Yes. You can protect any link with an encrypted password, specify an expiration date, or set strict maximum click quotas that automatically disable the link once reached.',
+      q: 'How do I create a short link?',
+      a: 'Paste any destination URL into the shortener box in the hero section or inside your dashboard, optionally configure a custom alias or click quota, and click "Shorten Link".',
     },
     {
-      q: 'Are custom short aliases supported?',
-      a: 'Yes, you can choose custom memorable short codes (e.g. lp.ee/product-launch) and instantly generate high-resolution QR codes for print and mobile distribution.',
+      q: 'Can I customize my short-link alias?',
+      a: 'Yes. You can choose a custom memorable alias (e.g. linkpulse.io/r/custom-name) for any link you create, provided the chosen code is not already registered.',
     },
     {
-      q: 'Can I import links in bulk from CSV?',
-      a: 'Absolutely. Upload CSV spreadsheets with hundreds of URLs at once with automated validation, domain safety verification, and progress reporting.',
+      q: 'Can I generate a QR code?',
+      a: 'Yes. Every created short link automatically includes high-resolution QR code generation that you can preview, customize with distinct colors, and download instantly.',
+    },
+    {
+      q: 'How can I view link analytics?',
+      a: 'When authenticated, open your Dashboard or My Links page to inspect atomic click counts, device breakdowns, referrer platforms, and geographic traffic data for each of your active links.',
+    },
+    {
+      q: 'Is LinkPulse free to use?',
+      a: 'Yes, LinkPulse is completely free to use. You can shorten links, generate QR codes, organize campaigns, and access full management tools with no credit card required.',
     },
   ];
 
   return (
-    <div className="space-y-16 sm:space-y-24 pb-20 overflow-x-hidden">
+    <div className="space-y-16 sm:space-y-24 pb-16 overflow-x-hidden bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors">
       {/* 1. Hero Section */}
-      <section className="relative w-full overflow-hidden px-4 sm:px-6 lg:px-8 pt-8 sm:pt-14 lg:pt-20 pb-12 sm:pb-16 bg-white border-b border-neutral-200/80">
+      <section className="relative w-full overflow-hidden px-4 sm:px-6 lg:px-8 pt-8 sm:pt-14 lg:pt-20 pb-12 sm:pb-16 bg-white dark:bg-neutral-950 border-b border-neutral-200/80 dark:border-neutral-800 transition-colors">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-            {/* Left Column: Heading, Subtitle, Form */}
+            {/* Left Column: Heading, Subtitle, Form, Feature trigger */}
             <div className="lg:col-span-7 flex flex-col items-start text-left space-y-6">
-              <div className="text-xs font-semibold tracking-widest uppercase text-neutral-500 mb-1">
-                URL SHORTENER & ANALYTICS PLATFORM
+              <div className="flex flex-wrap items-center gap-2.5">
+                <span className="text-xs font-semibold tracking-widest uppercase text-neutral-500 dark:text-neutral-400">
+                  URL SHORTENER & ANALYTICS PLATFORM
+                </span>
+                <span className="text-neutral-300 dark:text-neutral-700">·</span>
+                {/* Button to open Advanced Features Modal */}
+                <button
+                  type="button"
+                  onClick={() => setFeaturesModalOpen(true)}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full bg-neutral-100 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white border border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors cursor-pointer"
+                  aria-label="Explore Advanced Features"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-[#b45309] dark:text-amber-400" />
+                  <span>Explore Advanced Features</span>
+                </button>
               </div>
 
               <h1
                 style={{ textWrap: 'balance' }}
-                className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-normal text-neutral-900 tracking-tight leading-[1.12]"
+                className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-normal text-neutral-900 dark:text-white tracking-tight leading-[1.12]"
               >
                 Make long links{' '}
                 <span className="relative inline-block whitespace-nowrap">
-                  <em className="text-[#b45309] not-italic font-normal">short & smart</em>
+                  <em className="text-[#b45309] dark:text-amber-500 not-italic font-normal">short & smart</em>
                 </span>
               </h1>
 
-              <div className="max-w-xl space-y-2 text-base sm:text-[17px] text-neutral-600 leading-[1.65] font-body">
+              <div className="max-w-xl space-y-2 text-base sm:text-[17px] text-neutral-600 dark:text-neutral-300 leading-[1.65] font-body">
                 <p>
                   Create clean short links, track real-time click intelligence, and safeguard your audience.
                 </p>
@@ -91,7 +134,7 @@ export function LandingPage() {
                     placeholder="https://your-long-website-address.com/..."
                     value={quickUrl}
                     onChange={(e) => setQuickUrl(e.target.value)}
-                    className="w-full pl-10 pr-3.5 py-3 min-h-[46px] text-sm rounded-xl border border-neutral-300 bg-white text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/15 focus:border-neutral-900 transition-colors shadow-2xs"
+                    className="w-full pl-10 pr-3.5 py-3 min-h-[46px] text-sm rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/15 dark:focus:ring-white/20 focus:border-neutral-900 dark:focus:border-neutral-100 transition-colors shadow-2xs"
                   />
                 </div>
                 <button
@@ -103,9 +146,9 @@ export function LandingPage() {
                 </button>
               </form>
 
-              <div className="pt-1 flex flex-wrap items-center gap-4 text-xs text-neutral-500">
-                <span className="inline-flex items-center gap-1.5 font-medium text-neutral-700">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-neutral-900" /> Free to use
+              <div className="pt-1 flex flex-wrap items-center gap-3 sm:gap-4 text-xs text-neutral-500 dark:text-neutral-400">
+                <span className="inline-flex items-center gap-1.5 font-medium text-neutral-800 dark:text-neutral-200">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-neutral-900 dark:text-neutral-100" /> Free to use
                 </span>
                 <span>·</span>
                 <span>No credit card required</span>
@@ -114,301 +157,69 @@ export function LandingPage() {
               </div>
             </div>
 
-            {/* Right Column: Live Link Visual Card */}
+            {/* Right Column: Exact LottieFiles URL Shortening & Analytics Animation */}
             <div className="lg:col-span-5 flex justify-center w-full">
-              <div className="relative w-full max-w-md p-6 sm:p-7 rounded-2xl bg-[#faf9f6] border border-neutral-300/90 shadow-sm space-y-5">
-                {/* 1. Long URL card */}
-                <div className="p-3.5 rounded-xl border border-neutral-200 bg-white space-y-1">
-                  <span className="text-[10px] uppercase font-mono tracking-wider text-neutral-400 block font-medium">
-                    Original Destination URL
-                  </span>
-                  <p className="font-mono text-neutral-600 text-xs truncate">
-                    https://example.com/launches/q4-global-rollout?ref=hackathon
-                  </p>
-                </div>
-
-                {/* Arrow indicator */}
-                <div className="flex items-center justify-center">
-                  <div className="w-7 h-7 rounded-full bg-white text-neutral-900 flex items-center justify-center border border-neutral-300 shadow-2xs">
-                    <ArrowRight className="w-3.5 h-3.5 rotate-90" />
-                  </div>
-                </div>
-
-                {/* 2. Short Link Card */}
-                <div className="p-4 rounded-xl border border-neutral-900 bg-neutral-900 text-white text-center space-y-1 shadow-sm">
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 font-semibold block">
-                    LinkPulse Short Link
-                  </span>
-                  <p className="font-mono text-lg font-bold text-white tracking-wide">
-                    linkpulse.io/r/launch2026
-                  </p>
-                </div>
-
-                {/* 3. Live Stats Indicator */}
-                <div className="pt-1">
-                  <div className="flex items-center justify-between text-xs mb-2.5">
-                    <span className="font-medium text-neutral-700">
-                      Real-Time Activity
-                    </span>
-                    <span className="font-mono text-[#b45309] font-bold tabular-nums">
-                      +1,420 visits logged
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-2.5">
-                    <div className="p-3 rounded-xl border border-neutral-200 bg-white flex flex-col items-center gap-1.5 text-center">
-                      <Smartphone className="w-4 h-4 text-neutral-900" />
-                      <span className="text-[11px] text-neutral-600 font-medium">Mobile (64%)</span>
-                    </div>
-
-                    <div className="p-3 rounded-xl border border-neutral-200 bg-white flex flex-col items-center gap-1.5 text-center">
-                      <Laptop className="w-4 h-4 text-neutral-900" />
-                      <span className="text-[11px] text-neutral-600 font-medium">Desktop (31%)</span>
-                    </div>
-
-                    <div className="p-3 rounded-xl border border-neutral-200 bg-white flex flex-col items-center gap-1.5 text-center">
-                      <Globe className="w-4 h-4 text-neutral-900" />
-                      <span className="text-[11px] text-neutral-600 font-medium">Global (18 CTs)</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <LottieHeroAnimation />
             </div>
           </div>
         </div>
       </section>
 
-      {/* 2. How It Works (3 Steps) */}
-      <section id="how-it-works" className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      {/* 2. How It Works (Exactly 3 Simple Steps) */}
+      <section id="how-it-works" className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto scroll-mt-20">
         <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-14 space-y-3">
-          <div className="text-xs font-semibold tracking-widest uppercase text-neutral-500">
+          <div className="text-xs font-semibold tracking-widest uppercase text-neutral-500 dark:text-neutral-400">
             HOW IT WORKS
           </div>
           <h2
             style={{ textWrap: 'balance' }}
-            className="font-display text-2xl sm:text-3xl md:text-4xl font-normal text-neutral-900 tracking-tight leading-[1.15]"
+            className="font-display text-2xl sm:text-3xl md:text-4xl font-normal text-neutral-900 dark:text-white tracking-tight leading-[1.15]"
           >
             Three simple steps to{' '}
             <span className="relative inline-block">
-              <em className="text-[#b45309] not-italic font-normal">streamline links</em>
+              <em className="text-[#b45309] dark:text-amber-500 not-italic font-normal">streamline links</em>
             </span>
           </h2>
-          <p className="text-sm sm:text-base text-neutral-600 max-w-lg mx-auto">
+          <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-300 max-w-lg mx-auto">
             Everything you need to turn unwieldy URLs into actionable marketing assets.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            {
-              step: '01',
-              title: 'Paste Destination URL',
-              desc: 'Enter any long web address. Configure optional custom aliases, click quotas, expiration dates, or passwords.',
-            },
-            {
-              step: '02',
-              title: 'Share Anywhere',
-              desc: 'Distribute your short URL or download clean vector QR codes for social campaigns, emails, banners, or print.',
-            },
-            {
-              step: '03',
-              title: 'Track Click Insights',
-              desc: 'Inspect live click events, device breakdowns, referrers, and geolocation metrics on your clean dashboard.',
-            },
-          ].map((item) => (
-            <div
-              key={item.step}
-              className="p-7 rounded-2xl border border-neutral-200/90 bg-[#faf9f6] space-y-4 shadow-2xs hover:border-neutral-300 transition-colors"
-            >
-              <div className="w-10 h-10 rounded-xl bg-neutral-900 text-white font-mono text-sm font-bold flex items-center justify-center">
-                {item.step}
-              </div>
-              <h3 className="font-display text-xl font-normal text-neutral-900">
-                {item.title}
-              </h3>
-              <p className="text-sm text-neutral-600 leading-relaxed font-body">
-                {item.desc}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 3. Core Features Grid */}
-      <section id="features" className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-14 space-y-3">
-          <div className="text-xs font-semibold tracking-widest uppercase text-neutral-500">
-            PLATFORM CAPABILITIES
-          </div>
-          <h2
-            style={{ textWrap: 'balance' }}
-            className="font-display text-2xl sm:text-3xl md:text-4xl font-normal text-neutral-900 tracking-tight leading-[1.15]"
-          >
-            Built for performance,{' '}
-            <span className="relative inline-block">
-              <em className="text-[#b45309] not-italic font-normal">reliability & trust</em>
-            </span>
-          </h2>
-          <p className="text-sm sm:text-base text-neutral-600 max-w-lg mx-auto">
-            Essential tools designed to give you complete visibility over every click.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* 1. Short links */}
-          <div className="p-7 rounded-2xl border border-neutral-200/90 bg-[#faf9f6] space-y-4 shadow-2xs">
-            <div className="w-10 h-10 rounded-xl bg-neutral-900 text-white flex items-center justify-center">
-              <Link2 className="w-5 h-5" />
-            </div>
-            <h3 className="font-display text-lg font-normal text-neutral-900">
-              Short Links & Aliases
-            </h3>
-            <p className="text-sm text-neutral-600 leading-relaxed font-body">
-              Convert long parameters into clean, memorable links with custom aliases and optional expiration dates.
-            </p>
-          </div>
-
-          {/* 2. Click tracking */}
-          <div className="p-7 rounded-2xl border border-neutral-200/90 bg-[#faf9f6] space-y-4 shadow-2xs">
-            <div className="w-10 h-10 rounded-xl bg-neutral-900 text-white flex items-center justify-center">
-              <MousePointerClick className="w-5 h-5" />
-            </div>
-            <h3 className="font-display text-lg font-normal text-neutral-900">
-              Click Tracking
-            </h3>
-            <p className="text-sm text-neutral-600 leading-relaxed font-body">
-              Accurate, atomic click counters distinguishing human visitors from automated crawlers in real time.
-            </p>
-          </div>
-
-          {/* 3. QR codes */}
-          <div className="p-7 rounded-2xl border border-neutral-200/90 bg-[#faf9f6] space-y-4 shadow-2xs">
-            <div className="w-10 h-10 rounded-xl bg-neutral-900 text-white flex items-center justify-center">
-              <QrCode className="w-5 h-5" />
-            </div>
-            <h3 className="font-display text-lg font-normal text-neutral-900">
-              Branded QR Codes
-            </h3>
-            <p className="text-sm text-neutral-600 leading-relaxed font-body">
-              Instant high-resolution QR generation for flyers, packaging, menus, and digital displays.
-            </p>
-          </div>
-
-          {/* 4. Safe links */}
-          <div className="p-7 rounded-2xl border border-neutral-200/90 bg-[#faf9f6] space-y-4 shadow-2xs">
-            <div className="w-10 h-10 rounded-xl bg-neutral-900 text-white flex items-center justify-center">
-              <ShieldCheck className="w-5 h-5" />
-            </div>
-            <h3 className="font-display text-lg font-normal text-neutral-900">
-              Safe Links & Blocklist
-            </h3>
-            <p className="text-sm text-neutral-600 leading-relaxed font-body">
-              Pre-redirect domain inspection and spam filtering to block malicious sites before any visitor is harmed.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. Live Analytics Demonstration */}
-      <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="p-8 sm:p-12 rounded-3xl border border-neutral-200/90 bg-[#faf9f6] space-y-8 shadow-xs">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <div className="space-y-2">
-              <div className="text-xs font-semibold tracking-widest uppercase text-neutral-500">
-                LIVE TRAFFIC ATTRIBUTION
-              </div>
-              <h2 className="font-display text-2xl sm:text-3xl font-normal text-neutral-900">
-                Real-time click intelligence
-              </h2>
-              <p className="text-sm text-neutral-600 max-w-xl">
-                Every redirect is logged with device targeting, referrer tracking, and atomic counters backed by PostgreSQL.
-              </p>
-            </div>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-neutral-300 bg-white text-xs font-mono font-medium text-neutral-900 shadow-2xs">
-              <span className="w-2 h-2 rounded-full bg-neutral-900" />
-              Live PostgreSQL Persistence
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
-            {/* Clicks over time preview */}
-            <div className="md:col-span-2 p-6 rounded-2xl border border-neutral-200 bg-white space-y-5">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-display text-base font-normal text-neutral-900">
-                    Weekly Click Volume
-                  </h4>
-                  <p className="text-xs text-neutral-500">Continuous 7-day attribution</p>
+          {steps.map((item) => {
+            const Icon = item.icon;
+            return (
+              <div
+                key={item.num}
+                className="p-6 sm:p-7 rounded-2xl border border-neutral-200/90 dark:border-neutral-800 bg-[#faf9f6] dark:bg-neutral-900 space-y-4 shadow-2xs hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="w-10 h-10 rounded-xl bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-mono text-sm font-bold flex items-center justify-center">
+                    0{item.num}
+                  </div>
+                  <Icon className="w-5 h-5 text-neutral-400 dark:text-neutral-500" />
                 </div>
-                <span className="text-xs font-mono font-bold text-neutral-900 bg-neutral-100 px-3 py-1 rounded-lg border border-neutral-200">
-                  +4,821 Total Visits
-                </span>
+                <h3 className="font-display text-lg sm:text-xl font-normal text-neutral-900 dark:text-white">
+                  {item.title}
+                </h3>
+                <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed font-body">
+                  {item.desc}
+                </p>
               </div>
-
-              <div className="h-44 w-full flex items-end gap-3 pt-6 pb-2 px-2 border-b border-neutral-100">
-                {[
-                  { day: 'Mon', count: 340, height: '42%' },
-                  { day: 'Tue', count: 520, height: '64%' },
-                  { day: 'Wed', count: 610, height: '75%' },
-                  { day: 'Thu', count: 480, height: '59%' },
-                  { day: 'Fri', count: 790, height: '96%' },
-                  { day: 'Sat', count: 840, height: '100%' },
-                  { day: 'Sun', count: 690, height: '84%' },
-                ].map((item) => (
-                  <div key={item.day} className="flex-1 flex flex-col items-center gap-2 h-full justify-end group">
-                    <span className="text-[10px] font-mono font-medium text-neutral-400 group-hover:text-neutral-900 transition-colors">
-                      {item.count}
-                    </span>
-                    <div
-                      style={{ height: item.height }}
-                      className="w-full max-w-[44px] rounded-t-lg bg-neutral-900 group-hover:bg-neutral-800 transition-all"
-                    />
-                    <span className="text-xs text-neutral-500 font-medium">{item.day}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Platform breakdown */}
-            <div className="p-6 rounded-2xl border border-neutral-200 bg-white space-y-5">
-              <div>
-                <h4 className="font-display text-base font-normal text-neutral-900">
-                  Platform Distribution
-                </h4>
-                <p className="text-xs text-neutral-500">User agents parsed in real time</p>
-              </div>
-
-              <div className="space-y-4 pt-1">
-                {[
-                  { label: 'Mobile (iOS & Android)', pct: '62%', color: 'bg-neutral-900' },
-                  { label: 'Desktop (macOS & Windows)', pct: '31%', color: 'bg-neutral-600' },
-                  { label: 'Tablet & Others', pct: '7%', color: 'bg-[#b45309]' },
-                ].map((d) => (
-                  <div key={d.label} className="space-y-1.5">
-                    <div className="flex justify-between text-xs">
-                      <span className="text-neutral-700 font-medium">{d.label}</span>
-                      <span className="font-mono font-bold text-neutral-900">{d.pct}</span>
-                    </div>
-                    <div className="w-full h-2 rounded-full bg-neutral-100 overflow-hidden">
-                      <div className={`h-full rounded-full ${d.color}`} style={{ width: d.pct }} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+            );
+          })}
         </div>
       </section>
 
-      {/* 5. Frequently Asked Questions */}
-      <section id="faq" className="px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+      {/* 3. Frequently Asked Questions Accordion */}
+      <section id="faq" className="px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto scroll-mt-20">
         <div className="text-center max-w-xl mx-auto mb-10 space-y-3">
-          <div className="text-xs font-semibold tracking-widest uppercase text-neutral-500">
+          <div className="text-xs font-semibold tracking-widest uppercase text-neutral-500 dark:text-neutral-400">
             FAQ
           </div>
           <h2
             style={{ textWrap: 'balance' }}
-            className="font-display text-2xl sm:text-3xl md:text-4xl font-normal text-neutral-900 tracking-tight leading-[1.15]"
+            className="font-display text-2xl sm:text-3xl md:text-4xl font-normal text-neutral-900 dark:text-white tracking-tight leading-[1.15]"
           >
             Frequently Asked Questions
           </h2>
@@ -420,22 +231,29 @@ export function LandingPage() {
             return (
               <div
                 key={faq.q}
-                className="rounded-2xl border border-neutral-200/90 bg-[#faf9f6] overflow-hidden transition-colors"
+                className="rounded-2xl border border-neutral-200/90 dark:border-neutral-800 bg-[#faf9f6] dark:bg-neutral-900 overflow-hidden transition-colors"
               >
                 <button
                   type="button"
                   onClick={() => setOpenFaq(isOpen ? null : index)}
-                  className="w-full px-6 py-4.5 text-left flex items-center justify-between gap-4 font-display text-base sm:text-lg font-normal text-neutral-900 cursor-pointer"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setOpenFaq(isOpen ? null : index);
+                    }
+                  }}
+                  className="w-full px-5 sm:px-6 py-4.5 text-left flex items-center justify-between gap-4 font-display text-base sm:text-lg font-normal text-neutral-900 dark:text-white hover:text-neutral-700 dark:hover:text-neutral-200 cursor-pointer transition-colors"
+                  aria-expanded={isOpen}
                 >
-                  <span>{faq.q}</span>
+                  <span className="text-left">{faq.q}</span>
                   <ChevronDown
-                    className={`w-5 h-5 text-neutral-500 transition-transform duration-200 shrink-0 ${
+                    className={`w-5 h-5 text-neutral-500 dark:text-neutral-400 transition-transform duration-200 shrink-0 ${
                       isOpen ? 'rotate-180' : ''
                     }`}
                   />
                 </button>
                 {isOpen && (
-                  <div className="px-6 pb-5 pt-1 text-sm text-neutral-600 leading-relaxed font-body border-t border-neutral-200/60">
+                  <div className="px-5 sm:px-6 pb-5 pt-1 text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed font-body border-t border-neutral-200/60 dark:border-neutral-800/80">
                     {faq.a}
                   </div>
                 )}
@@ -445,22 +263,22 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* 6. Final Registration Call to Action */}
+      {/* 4. Final CTA Section (Preserving exact wording and hierarchy) */}
       <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="p-10 sm:p-14 rounded-3xl bg-neutral-900 text-white text-center space-y-6 shadow-xl border border-neutral-800">
+        <div className="p-8 sm:p-12 md:p-14 rounded-3xl bg-neutral-900 dark:bg-neutral-900 text-white text-center space-y-6 shadow-xl border border-neutral-800">
           <div className="text-xs font-semibold tracking-widest uppercase text-neutral-400">
             GET STARTED TODAY
           </div>
-          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-normal tracking-tight text-white">
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-normal tracking-tight text-white leading-tight">
             Ready to shorten your first link?
           </h2>
-          <p className="text-base text-neutral-300 max-w-lg mx-auto font-body">
+          <p className="text-sm sm:text-base text-neutral-300 max-w-lg mx-auto font-body leading-relaxed">
             Join LinkPulse to create custom links, export branded QR codes, and gain actionable click analytics in seconds.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2 w-full max-w-md mx-auto sm:max-w-none">
             <button
               type="button"
-              className="pearl-btn-pearl inline-flex items-center justify-center gap-2 rounded-xl px-7 py-3.5 text-sm font-semibold cursor-pointer"
+              className="pearl-btn-pearl w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl px-7 py-3.5 min-h-[46px] text-sm font-semibold cursor-pointer"
               onClick={() => navigate('/register')}
             >
               <span>Create Free Account</span>
@@ -468,7 +286,7 @@ export function LandingPage() {
             </button>
             <button
               type="button"
-              className="inline-flex items-center justify-center rounded-xl px-6 py-3.5 text-sm font-medium text-neutral-300 hover:text-white hover:bg-neutral-800 border border-neutral-700 transition-colors cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl px-6 py-3.5 min-h-[46px] text-sm font-medium text-neutral-300 hover:text-white hover:bg-neutral-800 border border-neutral-700 transition-colors cursor-pointer"
               onClick={() => navigate('/login')}
             >
               Sign In
@@ -476,6 +294,12 @@ export function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* Advanced Features Modal Popup */}
+      <AdvancedFeaturesModal
+        isOpen={featuresModalOpen}
+        onClose={() => setFeaturesModalOpen(false)}
+      />
     </div>
   );
 }

@@ -81,7 +81,6 @@ export async function seedMongoDatabase() {
       title: 'LinkPulse Open Source Repository',
       campaignId: demoCamp._id,
       clicksCount: 14,
-      uniqueClicksCount: 11,
       isActive: true,
       status: 'active',
       clickLimit: 500,

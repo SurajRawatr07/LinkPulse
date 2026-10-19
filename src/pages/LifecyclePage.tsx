@@ -167,7 +167,7 @@ export function LifecyclePage() {
       </div>
 
       {/* KPI Status Row */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3.5">
+      <div className="grid grid-cols-1 min-[380px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
         <Card className="p-4 space-y-1">
           <span className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">
             Active Links
@@ -288,7 +288,7 @@ export function LifecyclePage() {
                   </div>
 
                   {/* Remediation Actions */}
-                  <div className="flex items-center gap-2 shrink-0">
+                  <div className="flex flex-wrap items-center gap-2 pt-1 sm:pt-0">
                     {link.expiresAt && (
                       <Button
                         variant="outline"
