@@ -14,6 +14,7 @@ import {
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 
+
 export async function seedDatabase() {
   console.log('🌱 Starting Cloud SQL database seeding...');
 
