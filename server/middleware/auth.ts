@@ -5,6 +5,7 @@ import { users } from '../../src/db/schema.ts';
 import { eq } from 'drizzle-orm';
 import crypto from 'crypto';
 
+
 export interface AuthenticatedUser {
   id: number;
   uid: string;
