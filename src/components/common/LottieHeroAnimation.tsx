@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import lottie, { type AnimationItem } from 'lottie-web';
-import heroAnimationData from '../../assets/hero-animation.json';
+import heroAnimationData from '../../assets/linkpulse-hero.json';
 
 interface LottieHeroAnimationProps {
   className?: string;
@@ -35,7 +35,10 @@ export function LottieHeroAnimation({ className = '' }: LottieHeroAnimationProps
         // Use direct bundled JSON data with fallback to fetch
         let animData = heroAnimationData;
         if (!animData || typeof animData !== 'object' || !('v' in animData)) {
-          const res = await fetch('/animations/hero-animation.json');
+          let res = await fetch('/assets/lottie/linkpulse-hero.json').catch(() => null);
+          if (!res || !res.ok) {
+            res = await fetch('/hero-animation.json');
+          }
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
           animData = await res.json();
         }
@@ -109,7 +112,7 @@ export function LottieHeroAnimation({ className = '' }: LottieHeroAnimationProps
       role="img"
       aria-label="LinkPulse Real-Time URL Routing and Analytics Lottie Animation"
     >
-      {/* Animation wrapper with fluid responsiveness across 320px -> 1440px */}
+      {/* Fluid responsive wrapper: strictly within viewport on 320px up to 1440px desktop */}
       <div className="relative w-full max-w-[280px] min-[360px]:max-w-[320px] sm:max-w-[380px] md:max-w-[440px] lg:max-w-[480px] aspect-square flex items-center justify-center">
         {/* Subtle decorative glow that responds to light/dark themes */}
         <div
@@ -117,7 +120,7 @@ export function LottieHeroAnimation({ className = '' }: LottieHeroAnimationProps
           aria-hidden="true"
         />
 
-        {/* Loading skeleton / placeholder while SVG mounts */}
+        {/* Loading skeleton while SVG mounts */}
         {!isLoaded && !hasError && (
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-10 h-10 border-2 border-neutral-300 dark:border-neutral-700 border-t-neutral-800 dark:border-t-neutral-100 rounded-full animate-spin" />

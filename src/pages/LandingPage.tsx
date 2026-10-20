@@ -10,7 +10,7 @@ import {
   SlidersHorizontal,
   Share2,
 } from 'lucide-react';
-import { LottieHeroAnimation } from '../components/common/LottieHeroAnimation';
+import { HeroPhoneQrIllustration } from '../components/common/HeroPhoneQrIllustration';
 import { AdvancedFeaturesModal } from '../components/common/AdvancedFeaturesModal';
 
 export function LandingPage() {
@@ -157,9 +157,9 @@ export function LandingPage() {
               </div>
             </div>
 
-            {/* Right Column: Exact LottieFiles URL Shortening & Analytics Animation */}
+            {/* Right Column: Premium Smartphone QR Code & Person Interactive Animation */}
             <div className="lg:col-span-5 flex justify-center w-full">
-              <LottieHeroAnimation />
+              <HeroPhoneQrIllustration />
             </div>
           </div>
         </div>
