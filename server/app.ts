@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
+
 // Middlewares
 import { requestIdMiddleware } from './src/middleware/requestId.ts';
 import { getDbStatus } from './src/config/db.ts';
