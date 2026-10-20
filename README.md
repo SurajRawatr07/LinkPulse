@@ -1,154 +1,239 @@
-# LinkPulse — Full-Stack URL Shortener & Analytics Platform
+# LinkPulse
 
-**Short links, smart insights, enterprise-grade safety.**
+### Short Links. Smart Insights. Enterprise-Grade Safety.
 
-LinkPulse is a complete, production-ready full-stack URL shortening and click analytics platform built with React 18, Vite, TypeScript, Express.js, and Google Cloud SQL (PostgreSQL) managed with Drizzle ORM.
+LinkPulse is a full-stack URL shortening and analytics platform that helps users create, manage, track, and protect short links through intelligent redirect rules, campaign management, QR codes, click analytics, bulk imports, and administrative security controls.
 
-The visual design system matches the reference design with a deep slate aesthetic (`#090D16`), signature teal accents (`#0F9D8A`), 12px border radius, and clean, responsive layouts from 320px mobile to desktop.
+🌐 **Live Demo:** https://linkpulse2026.vercel.app/  
+💻 **GitHub Repository:** https://github.com/SurajRawatr07/LinkPulse
 
 ---
 
-## 🛠 Technology Stack
+## ✨ Features
+
+### 🔗 Smart Link Management
+- Create short URLs with custom aliases.
+- Configure expiration dates and click limits.
+- Protect links with passwords.
+- Enable, disable, and manage short links.
+- Configure device-based redirects for mobile, tablet, and desktop.
+- Generate downloadable QR codes.
+- Organize links using campaigns, folders, and tags.
+
+### 📊 Analytics & Insights
+- Track click activity and engagement trends.
+- Analyze devices, browsers, operating systems, and referrers.
+- View individual link performance.
+- Monitor aggregate analytics and campaign statistics.
+- Record click events for reporting and analysis.
+
+### 📦 Bulk Link Import
+- Import multiple links through CSV files.
+- Validate entries before importing.
+- Identify invalid URLs and duplicate aliases.
+- Review import results before creating links.
+
+### 🛡️ Security & Administration
+- Email/password authentication.
+- Google Sign-In integration.
+- Server-side session management.
+- Role-based access control for users and admins.
+- Domain safety blocklist.
+- Public malicious-link reporting.
+- Link moderation and audit logs.
+- Password-protected redirects and expiry enforcement.
+
+### 📱 Responsive Design
+- Responsive layouts for mobile, tablet, and desktop.
+- Dark-themed interface with teal accents.
+- Reusable components and consistent styling.
+- Interactive analytics dashboards and navigation.
+
+---
+
+## 🛠️ Technology Stack
 
 ### Frontend
-- **React 18 + Vite + TypeScript**: Modular components with functional hooks.
-- **Tailwind CSS (`darkMode: "class"`)**: Responsive, tokenized styling with flash-free dark mode.
-- **React Router v6**: Route guards for Visitors, Authenticated Users, and Admins (`/app/*`, `/admin/*`).
-- **Zustand**: Reactive state management for authentication, toast notifications, and themes.
-- **Recharts**: Responsive data visualization (Clicks over time, device distribution, top referrers).
-- **Zod**: Input validation for URLs, aliases, forms, and CSV data.
-- **qrcode.react & papaparse**: Real-time vector QR code generation (PNG/SVG) and client-side CSV bulk parser.
-- **Lucide React**: Clean, accessible UI icons.
+- React 18
+- TypeScript
+- Vite
+- Tailwind CSS
+- React Router v6
+- Zustand
+- Recharts
+- Zod
+- Lucide React
+- qrcode.react
+- PapaParse
 
-### Backend & Database
-- **Node.js + Express.js (`server.ts`)**: Versioned REST API architecture (`/api/v1/*`), health checks, and 9-step redirect engine (`/r/:code`).
-- **Google Cloud SQL (PostgreSQL)**: Fully provisioned relational database in region `asia-southeast1`.
-- **Drizzle ORM & Drizzle Kit**: Type-safe relational schema with connection pooling, migrations, and relationships.
-- **Firebase Auth & Admin SDK**: Token verification, Google Sign-In via OAuth popup, and secure server-side session cookies.
-- **bcryptjs**: Salted password hashing for link protection and user credentials.
-- **ua-parser-js**: User-Agent parsing for device category (Mobile, Desktop, Tablet, Bot), browser, and OS attribution.
+### Backend
+- Node.js
+- Express.js
+- TypeScript
+- REST API
+- Firebase Authentication
+- Firebase Admin SDK
+- bcryptjs
+- ua-parser-js
+
+### Database & ORM
+- PostgreSQL
+- Google Cloud SQL
+- Drizzle ORM
+- Drizzle Kit
 
 ---
 
-## 🚀 Quickstart & Setup
+## 🏗️ System Architecture
 
-```bash
-# 1. Install dependencies
+```mermaid
+flowchart TD
+    A["Visitor / User / Admin"]
+    B["React + TypeScript Frontend"]
+    C["Authentication & Session Management"]
+    D["Express.js REST API"]
+    E["Link Management"]
+    F["Redirect Engine"]
+    G["Analytics & Click Events"]
+    H["Admin & Safety Controls"]
+    I[("PostgreSQL Database")]
+    J["Analytics Dashboard"]
+    K["Destination Website"]
+
+    A --> B
+    B --> C
+    C --> D
+    B --> D
+    D --> E
+    D --> F
+    D --> H
+    E --> I
+    F --> I
+    F --> G
+    G --> I
+    H --> I
+    I --> J
+    F --> K
+
+
+
+🔄 Smart Redirect Workflow
+Every short link passes through validation and configured redirect rules before reaching its destination.
+#chatgpt-mermaid-_r_1kj_{font-family:-apple-system-body,ui-sans-serif,-apple-system,system-ui,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";font-size:16px;fill:rgb(13, 13, 13);}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#chatgpt-mermaid-_r_1kj_ .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#chatgpt-mermaid-_r_1kj_ .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#chatgpt-mermaid-_r_1kj_ .error-icon{fill:rgb(243, 243, 243);}#chatgpt-mermaid-_r_1kj_ .error-text{fill:rgb(13, 13, 13);stroke:rgb(13, 13, 13);}#chatgpt-mermaid-_r_1kj_ .edge-thickness-normal{stroke-width:1px;}#chatgpt-mermaid-_r_1kj_ .edge-thickness-thick{stroke-width:3.5px;}#chatgpt-mermaid-_r_1kj_ .edge-pattern-solid{stroke-dasharray:0;}#chatgpt-mermaid-_r_1kj_ .edge-thickness-invisible{stroke-width:0;fill:none;}#chatgpt-mermaid-_r_1kj_ .edge-pattern-dashed{stroke-dasharray:3;}#chatgpt-mermaid-_r_1kj_ .edge-pattern-dotted{stroke-dasharray:2;}#chatgpt-mermaid-_r_1kj_ .marker{fill:rgb(143, 143, 143);stroke:rgb(143, 143, 143);}#chatgpt-mermaid-_r_1kj_ .marker.cross{stroke:rgb(143, 143, 143);}#chatgpt-mermaid-_r_1kj_ svg{font-family:-apple-system-body,ui-sans-serif,-apple-system,system-ui,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";font-size:16px;}#chatgpt-mermaid-_r_1kj_ p{margin:0;}#chatgpt-mermaid-_r_1kj_ .label{font-family:-apple-system-body,ui-sans-serif,-apple-system,system-ui,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";color:rgb(13, 13, 13);}#chatgpt-mermaid-_r_1kj_ .cluster-label text{fill:rgb(13, 13, 13);}#chatgpt-mermaid-_r_1kj_ .cluster-label span{color:rgb(13, 13, 13);}#chatgpt-mermaid-_r_1kj_ .cluster-label span p{background-color:transparent;}#chatgpt-mermaid-_r_1kj_ .label text,#chatgpt-mermaid-_r_1kj_ span{fill:rgb(13, 13, 13);color:rgb(13, 13, 13);}#chatgpt-mermaid-_r_1kj_ .node rect,#chatgpt-mermaid-_r_1kj_ .node circle,#chatgpt-mermaid-_r_1kj_ .node ellipse,#chatgpt-mermaid-_r_1kj_ .node polygon,#chatgpt-mermaid-_r_1kj_ .node path{fill:rgb(222, 234, 251);stroke:rgb(83, 154, 248);stroke-width:1px;}#chatgpt-mermaid-_r_1kj_ .rough-node .label text,#chatgpt-mermaid-_r_1kj_ .node .label text,#chatgpt-mermaid-_r_1kj_ .image-shape .label,#chatgpt-mermaid-_r_1kj_ .icon-shape .label{text-anchor:middle;}#chatgpt-mermaid-_r_1kj_ .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#chatgpt-mermaid-_r_1kj_ .rough-node .label,#chatgpt-mermaid-_r_1kj_ .node .label,#chatgpt-mermaid-_r_1kj_ .image-shape .label,#chatgpt-mermaid-_r_1kj_ .icon-shape .label{text-align:center;}#chatgpt-mermaid-_r_1kj_ .node.clickable{cursor:pointer;}#chatgpt-mermaid-_r_1kj_ .root .anchor path{fill:rgb(143, 143, 143)!important;stroke-width:0;stroke:rgb(143, 143, 143);}#chatgpt-mermaid-_r_1kj_ .arrowheadPath{fill:rgb(143, 143, 143);}#chatgpt-mermaid-_r_1kj_ .edgePath .path{stroke:rgb(143, 143, 143);stroke-width:1px;}#chatgpt-mermaid-_r_1kj_ .flowchart-link{stroke:rgb(143, 143, 143);fill:none;}#chatgpt-mermaid-_r_1kj_ .edgeLabel{background-color:rgb(252, 252, 252);text-align:center;}#chatgpt-mermaid-_r_1kj_ .edgeLabel p{background-color:rgb(252, 252, 252);}#chatgpt-mermaid-_r_1kj_ .edgeLabel rect{opacity:0.5;background-color:rgb(252, 252, 252);fill:rgb(252, 252, 252);}#chatgpt-mermaid-_r_1kj_ .labelBkg{background-color:rgba(252, 252, 252, 0.5);}#chatgpt-mermaid-_r_1kj_ .cluster rect{fill:rgb(243, 243, 243);stroke:rgba(0, 0, 0, 0.1);stroke-width:1px;}#chatgpt-mermaid-_r_1kj_ .cluster text{fill:rgb(13, 13, 13);}#chatgpt-mermaid-_r_1kj_ .cluster span{color:rgb(13, 13, 13);}#chatgpt-mermaid-_r_1kj_ div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:-apple-system-body,ui-sans-serif,-apple-system,system-ui,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";font-size:12px;background:rgb(243, 243, 243);border:1px solid rgba(0, 0, 0, 0.1);border-radius:2px;pointer-events:none;z-index:100;}#chatgpt-mermaid-_r_1kj_ .flowchartTitleText{text-anchor:middle;font-size:18px;fill:rgb(13, 13, 13);}#chatgpt-mermaid-_r_1kj_ rect.text{fill:none;stroke-width:0;}#chatgpt-mermaid-_r_1kj_ .icon-shape,#chatgpt-mermaid-_r_1kj_ .image-shape{background-color:rgb(252, 252, 252);text-align:center;}#chatgpt-mermaid-_r_1kj_ .icon-shape p,#chatgpt-mermaid-_r_1kj_ .image-shape p{background-color:rgb(252, 252, 252);padding:2px;}#chatgpt-mermaid-_r_1kj_ .icon-shape .label rect,#chatgpt-mermaid-_r_1kj_ .image-shape .label rect{opacity:0.5;background-color:rgb(252, 252, 252);fill:rgb(252, 252, 252);}#chatgpt-mermaid-_r_1kj_ .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#chatgpt-mermaid-_r_1kj_ .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#chatgpt-mermaid-_r_1kj_ .node .neo-node{stroke:rgb(83, 154, 248);}#chatgpt-mermaid-_r_1kj_ [data-look="neo"].node rect,#chatgpt-mermaid-_r_1kj_ [data-look="neo"].cluster rect,#chatgpt-mermaid-_r_1kj_ [data-look="neo"].node polygon{stroke:url(#chatgpt-mermaid-_r_1kj_-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#chatgpt-mermaid-_r_1kj_ [data-look="neo"].swimlane.cluster rect{filter:none;}#chatgpt-mermaid-_r_1kj_ [data-look="neo"].node path{stroke:url(#chatgpt-mermaid-_r_1kj_-gradient);stroke-width:1px;}#chatgpt-mermaid-_r_1kj_ [data-look="neo"].node .outer-path{filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#chatgpt-mermaid-_r_1kj_ [data-look="neo"].node .neo-line path{stroke:rgb(83, 154, 248);filter:none;}#chatgpt-mermaid-_r_1kj_ [data-look="neo"].node circle{stroke:url(#chatgpt-mermaid-_r_1kj_-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#chatgpt-mermaid-_r_1kj_ [data-look="neo"].node circle .state-start{fill:#000000;}#chatgpt-mermaid-_r_1kj_ [data-look="neo"].icon-shape .icon{fill:url(#chatgpt-mermaid-_r_1kj_-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#chatgpt-mermaid-_r_1kj_ [data-look="neo"].icon-shape .icon-neo path{stroke:url(#chatgpt-mermaid-_r_1kj_-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#chatgpt-mermaid-_r_1kj_ .node text{font-size:14px;font-weight:600;letter-spacing:normal;fill:rgb(0, 79, 153);}#chatgpt-mermaid-_r_1kj_ .edgeLabels text{font-size:13px;font-weight:600;letter-spacing:-0.08px;fill:rgb(0, 79, 153);}#chatgpt-mermaid-_r_1kj_ .node tspan[font-weight="normal"],#chatgpt-mermaid-_r_1kj_ .edgeLabels tspan[font-weight="normal"]{font-weight:600;}#chatgpt-mermaid-_r_1kj_ .edgeLabel .label rect{opacity:1;rx:13px;ry:13px;fill:rgb(245, 250, 255);stroke:rgb(206, 219, 229);stroke-width:1px;}#chatgpt-mermaid-_r_1kj_ .node rect,#chatgpt-mermaid-_r_1kj_ .node circle,#chatgpt-mermaid-_r_1kj_ .node ellipse,#chatgpt-mermaid-_r_1kj_ .node polygon,#chatgpt-mermaid-_r_1kj_ .node path{fill:rgb(229, 243, 255);stroke:rgba(0, 0, 0, 0.1);stroke-width:1px;}#chatgpt-mermaid-_r_1kj_ .node rect{rx:16px;ry:16px;}#chatgpt-mermaid-_r_1kj_ .node.mermaid-decision .label-container{fill:rgb(245, 250, 255);stroke:rgb(206, 219, 229);stroke-dasharray:2,2;}#chatgpt-mermaid-_r_1kj_ .edgePaths .flowchart-link{stroke:rgb(143, 143, 143);stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;}#chatgpt-mermaid-_r_1kj_ .marker{fill:rgb(143, 143, 143);stroke:rgb(143, 143, 143);}#chatgpt-mermaid-_r_1kj_ :root{--mermaid-font-family:-apple-system-body,ui-sans-serif,-apple-system,system-ui,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";}Visitor opens short URLFind short codeLink exists?Return 404Link active and domain safe?Block redirectLink expired?Show expired statusClick limit reached?Show limit statusPassword protected?Verify passwordAccess valid?Reject or request passwordApply device targetingRecord click eventHTTP 302 RedirectNoYesNoYesYesNoYesNoYesNoYesNo
+
+
+
+
+
+
+🔐 Authentication & Roles
+Role	Permissions
+Visitor	Open public short links and submit abuse reports
+User	Manage owned links, QR codes, campaigns, and analytics
+Admin	Manage users and links, moderate suspicious URLs, and maintain the domain blocklist
+All protected operations should enforce authorization on the server.
+
+📡 REST API Overview
+Method	Endpoint	Description
+GET	/api/health	Service health check
+POST	/api/v1/auth/register	Register a user
+POST	/api/v1/auth/login	User login
+POST	/api/v1/auth/google-session	Google authentication session
+POST	/api/v1/auth/demo-login	Demo login
+GET	/api/v1/auth/me	Current user profile
+POST	/api/v1/auth/logout	End session
+GET	/api/v1/links	List owned links
+POST	/api/v1/links	Create a short link
+POST	/api/v1/links/check-alias	Check alias availability
+GET	/api/v1/links/:id	Get link details
+PATCH	/api/v1/links/:id	Update link settings
+DELETE	/api/v1/links/:id	Archive a link
+GET	/api/v1/links/:id/analytics	Link analytics
+GET	/api/v1/campaigns	List campaigns
+POST	/api/v1/campaigns	Create a campaign
+GET	/api/v1/analytics/overview	Analytics overview
+POST	/api/v1/imports/csv	Import links from CSV
+GET	/api/v1/admin/overview	Admin overview
+GET	/api/v1/admin/users	List users
+GET	/api/v1/admin/links	Manage platform links
+GET	/api/v1/admin/blocklist	View blocked domains
+POST	/api/v1/admin/blocklist	Add a blocked domain
+POST	/api/v1/reports	Report a suspicious link
+GET	/r/:code	Resolve a short link
+
+🚀 Getting Started
+Prerequisites
+- Node.js
+- npm
+- PostgreSQL database access
+- Firebase configuration
+1. Clone the Repository
+git clone https://github.com/SurajRawatr07/LinkPulse.git
+cd LinkPulse
+
+
+2. Install Dependencies
 npm install
 
-# 2. Run schema update / migrations (configured in src/db/drizzle.config.ts)
-# (Schema already applied to Cloud SQL instance)
 
-# 3. Seed demo data (campaigns, tags, sample links, and click history)
+3. Configure Environment Variables
+Configure the required environment variables using .env.example, if provided.
+
+Never commit database credentials, Firebase private keys, or production secrets to GitHub.
+4. Prepare the Database
+Run the database migration or setup commands configured in the repository.
+
+If the seed script exists and is configured for the intended database, you can run:
 npx tsx server/seed.ts
 
-# 4. Start full-stack development server (Port 3000)
+
+5. Start the Development Server
 npm run dev
 
-# 5. Type-check and lint
-npm run lint
 
-# 6. Build for production
+6. Build for Production
 npm run build
 npm run start
-```
 
----
 
-## 🔐 Authentication & Roles
+Check package.json for the exact available scripts before running commands.
 
-LinkPulse enforces server-side role-based access control (RBAC):
+🎬 Hackathon Demo
+Scenario 1: Link Creation & Analytics
+1. Sign in with an authorized demo account.
+2. Open the Create Link page.
+3. Enter a destination URL and custom alias.
+4. Publish the short link.
+5. Generate and copy its QR code.
+6. Open the short URL in a new tab.
+7. Return to the dashboard and inspect the recorded click analytics.
+Scenario 2: Bulk Import & Link Moderation
+1. Open the Bulk Import page.
+2. Upload a CSV containing valid and invalid entries.
+3. Review row-by-row validation results.
+4. Import the valid links.
+5. Sign in with an authorized demo admin account.
+6. Disable a test link.
+7. Open the short URL and verify that redirection is blocked.
+8. Test the domain blocklist using a controlled test domain.
 
-1. **Visitor / Anonymous**:
-   - Opens public short links (`/r/:code`).
-   - Solves password challenges on protected links.
-   - Submits public malicious link reports (`/api/v1/reports`).
-   - No access to private analytics or administrative tools.
+🔒 Security & Reliability
+- Validate URLs and aliases on the server.
+- Enforce link ownership and role permissions.
+- Apply expiry and click-limit checks before redirecting.
+- Use secure session-cookie settings.
+- Hash passwords using an appropriate password-hashing algorithm.
+- Avoid storing raw IP addresses when anonymized attribution is sufficient.
+- Keep secrets in environment variables.
+- Test authentication, database connectivity, and redirect failure scenarios before deployment.
 
-2. **User**:
-   - Registers and logs in (via email/password, Google Sign-In, or 1-click Demo User).
-   - Creates and manages their own short links, custom aliases, QR codes, campaigns, folders, and tags.
-   - Configures expiration dates, click quotas, passwords, and device routing rules.
-   - Bulk imports links via CSV.
-   - Views analytics strictly for their owned links.
+🚀 Future Enhancements
+- Link risk intelligence and reputation checks.
+- Click anomaly detection and suspicious traffic alerts.
+- Campaign comparison and downloadable analytics reports.
+- Link lifecycle history and change tracking.
+- Enhanced workspace collaboration.
 
-3. **Admin**:
-   - Platform-wide link and user management.
-   - Immediate link disabling and reactivation.
-   - Maintains the real-time Domain Safety Blocklist.
-   - Inspects audit logs and abuse reports.
-   - The first registered account automatically receives Admin privileges. A 1-click Demo Admin is also available on `/login`.
-
----
-
-## 🔄 9-Step Redirect Engine (`/r/:code`)
-
-Redirect resolution executes deterministically in this order:
-1. **Find Short Code**: Queries Cloud SQL `links` table.
-2. **Not Found**: Returns HTTP 404 and displays friendly Not Found page.
-3. **Disabled & Blocked Check**: Verifies link `isActive` status and checks destination against `domain_blocklist`.
-4. **Expiration Check**: Validates scheduled expiration date/time.
-5. **Click Limit Check**: Atomically verifies whether `clicksCount >= clickLimit`.
-6. **Password Challenge**: If protected, redirects to password form. Upon valid bcrypt verification, issues a short-lived access token.
-7. **Device Targeting**: Detects Mobile, Tablet, or Desktop user agent and selects device-specific destination if configured.
-8. **Asynchronous Click Logging**: Inserts visit record into `click_events` with anonymized IP hash, device, browser, and referrer, while atomically incrementing `clicksCount`.
-9. **Redirect**: Issues clean HTTP 302 to destination URL.
-
----
-
-## 📡 REST API Reference
-
-| Method | Endpoint | Description | Auth Required |
-|---|---|---|---|
-| `GET` | `/api/health` | Service health & database connectivity | No |
-| `POST` | `/api/v1/auth/register` | Register new user account | No |
-| `POST` | `/api/v1/auth/login` | Email/password sign-in with lockout | No |
-| `POST` | `/api/v1/auth/google-session` | Exchange Firebase ID token | No |
-| `POST` | `/api/v1/auth/demo-login` | Instant demo login (User / Admin) | No |
-| `GET` | `/api/v1/auth/me` | Current authenticated user profile | Yes |
-| `POST` | `/api/v1/auth/logout` | Terminate session & clear cookies | No |
-| `GET` | `/api/v1/links` | List user links with search & filters | User |
-| `POST` | `/api/v1/links` | Create new short link & QR code | User |
-| `POST` | `/api/v1/links/check-alias` | Verify custom alias availability | User |
-| `GET` | `/api/v1/links/:id` | Get link details & QR customization | User |
-| `PATCH` | `/api/v1/links/:id` | Update link settings & rules | User |
-| `DELETE` | `/api/v1/links/:id` | Archive link (preserves analytics) | User |
-| `POST` | `/api/v1/links/:id/disable` | Disable link | User |
-| `POST` | `/api/v1/links/:id/enable` | Reactivate link | User |
-| `GET` | `/api/v1/links/:id/analytics` | Link-specific click metrics | User |
-| `GET` | `/api/v1/campaigns` | List user campaigns & link stats | User |
-| `POST` | `/api/v1/campaigns` | Create new campaign | User |
-| `GET` | `/api/v1/analytics/overview` | Aggregated analytics & alerts | User |
-| `POST` | `/api/v1/imports/csv` | Batch CSV bulk link import | User |
-| `GET` | `/api/v1/admin/overview` | Platform-wide KPIs & counts | Admin |
-| `GET` | `/api/v1/admin/users` | Platform user directory | Admin |
-| `GET` | `/api/v1/admin/links` | Platform-wide link moderation | Admin |
-| `POST` | `/api/v1/admin/links/:id/disable` | Admin disable link with audit log | Admin |
-| `GET` | `/api/v1/admin/blocklist` | Domain safety deny-list | Admin |
-| `POST` | `/api/v1/admin/blocklist` | Add domain to blocklist | Admin |
-| `DELETE` | `/api/v1/admin/blocklist/:id` | Remove domain from blocklist | Admin |
-| `POST` | `/api/v1/reports` | Submit malicious link report | No |
-| `GET` | `/r/:code` | Public short code redirect engine | No |
-
----
-
-## 🎬 5-Minute Hackathon Demo Scenarios
-
-### Scenario A — Link Creation to Live Analytics
-1. Navigate to `/login` and click **"Demo User"** (or create an account on `/register`).
-2. Go to **"Create Link"** (`/app/links/new`).
-3. Enter Destination URL `https://github.com/google`, set custom alias `demo-launch`, and choose Campaign **Product Launch Q4**.
-4. Click **Publish Short Link**. Review the generated QR code and copy button.
-5. In your browser or a new tab, open `http://localhost:3000/r/demo-launch`.
-6. Confirm instant HTTP 302 redirection to the destination.
-7. Return to `/app/dashboard` and verify the click count and device attribution increment in real time!
-
-### Scenario B — Bulk CSV Import to Administrative Moderation
-1. Go to **"Bulk Import"** (`/app/links/import`).
-2. Download the sample CSV template or upload links containing both valid destinations and a duplicate alias.
-3. Review the live row-by-row validation table showing valid and flagged entries.
-4. Click **Import Valid Links** to batch create the links in Cloud SQL.
-5. Log out and click **"Demo Admin"** on `/login`.
-6. Open **"Admin Links"** (`/admin/links`) and disable a suspicious link.
-7. Attempt to open that link's short URL: verify that redirection is blocked and an informative status page is shown.
-8. Go to **"Admin Blocklist"** (`/admin/blocklist`) and add a phishing domain (e.g. `bad-actor.com`). Try creating a link to that domain to demonstrate instant rejection!
+👨‍💻 Project Links
+Live Website: https://linkpulse2026.vercel.app/
+GitHub: https://github.com/SurajRawatr07/LinkPulse
