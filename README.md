@@ -5,101 +5,42 @@
 
 ### Engineering Every Link. Measuring Every Click.
 
-**A modern URL shortening and analytics platform.**
+**A smarter way to shorten, manage, control, and analyze URLs.**
 
-Create short links. Configure redirects. Organize campaigns. Understand clicks.
+[![Live Demo](https://img.shields.io/badge/Live-Demo-635BFF?style=for-the-badge&logo=vercel&logoColor=white)](https://linkpulse2026.vercel.app/)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/SurajRawatr07/LinkPulse)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Project-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
-<br/>
-
-<a href="https://linkpulse2026.vercel.app/">
-  <img src="https://img.shields.io/badge/🚀_EXPLORE_LIVE_DEMO-635BFF?style=for-the-badge" alt="Explore Live Demo"/>
-</a>
-<a href="https://github.com/SurajRawatr07/LinkPulse">
-  <img src="https://img.shields.io/badge/VIEW_SOURCE_CODE-181717?style=for-the-badge&logo=github&logoColor=white" alt="View Source Code"/>
-</a>
-
-<br/><br/>
-
-<img src="https://img.shields.io/badge/React-Frontend-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React"/>
-<img src="https://img.shields.io/badge/TypeScript-Typed_Code-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript"/>
-<img src="https://img.shields.io/badge/Node.js-Backend-339933?style=flat-square&logo=nodedotjs&logoColor=white" alt="Node.js"/>
-<img src="https://img.shields.io/badge/PostgreSQL-Database-4169E1?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL"/>
-
-<br/>
-
-**One link. More control. Better insights.**
+**Create. Control. Track. Understand.**
 
 </div>
-
----
-
-## 📍 Table of Contents
-
-- [Overview](#-overview)
-- [The Problem](#-the-problem)
-- [Key Features](#-key-features)
-- [What Makes LinkPulse Different](#-what-makes-linkpulse-different)
-- [Screenshots and Preview](#-screenshots--live-preview)
-- [System Architecture](#-system-architecture)
-- [How LinkPulse Works](#-how-linkpulse-works)
-- [Click Analytics Workflow](#-click-analytics-workflow)
-- [Technology Stack](#-technology-stack--what-each-tool-does)
-- [Database Schema](#-database-schema--data-model)
-- [API Reference](#-api-reference)
-- [Security and Access Control](#-security--access-control)
-- [Project Structure](#-project-structure)
-- [Getting Started](#-getting-started)
-- [Demo Workflow](#-demo-workflow-for-judges)
-- [Testing](#-testing)
-- [Roadmap](#-roadmap)
-- [Contributing](#-contributing)
-- [Security Policy](#-security-policy)
-- [License](#-license)
-- [Author](#-author)
 
 ---
 
 ## 📌 Overview
 
-**LinkPulse** is a URL shortening and link analytics platform that
-helps users create, manage, share, and measure links from one workspace.
+LinkPulse is a URL shortening and link analytics platform that turns
+ordinary URLs into manageable and measurable digital assets.
 
-A traditional URL shortener makes a long URL smaller. LinkPulse aims
-to make that link manageable throughout its lifecycle.
+Traditional URL shorteners primarily focus on making links shorter.
+LinkPulse takes the workflow further by bringing link management,
+redirect rules, campaigns, QR codes, and click analytics together.
 
-Users can create short URLs, configure redirect behaviour, organize
-links into campaigns, generate QR codes, and explore click activity.
+### 🎯 The Problem We Solve
 
-### The LinkPulse workflow
+- Long URLs are inconvenient to share.
+- Basic shorteners offer limited redirect controls.
+- Managing links across multiple campaigns becomes difficult.
+- Click counts alone provide limited insight into audience behaviour.
+- Expired or misused links require better management.
 
-<div align="center">
+### 💡 Our Solution
 
-**CREATE** → **CONFIGURE** → **SHARE** → **TRACK** → **ANALYZE**
+LinkPulse provides one workspace to create short links, configure
+their behaviour, organize campaigns, and understand click activity.
 
-</div>
-
-Each stage has a clear purpose: create the link, define its rules,
-share it with an audience, record interactions, and understand results.
-
----
-
-## 🎯 The Problem
-
-Managing links becomes difficult when campaigns, audiences, and
-destinations grow.
-
-| Common problem | LinkPulse approach |
-|---|---|
-| Long URLs are inconvenient to share | Create shorter, shareable links |
-| Links become difficult to organize | Group links into campaigns and folders |
-| A destination needs access or expiry rules | Configure supported redirect controls |
-| Basic click counts provide limited context | Explore available click analytics |
-| Many links must be created together | Use CSV bulk-import workflows |
-| Links need to be shared offline | Generate QR codes |
-
-### Our goal
-
-Make link management more than a copy-and-paste operation.
+**The idea:** Every short link should be more than a redirect. It should
+be a manageable record with a destination, rules, and useful analytics.
 
 ---
 
@@ -111,7 +52,7 @@ Make link management more than a copy-and-paste operation.
 
 ### 🔗 Smart Link Management
 
-- Short URL creation
+- Short URL generation
 - Custom aliases
 - Expiration settings
 - Click-limit controls
@@ -123,25 +64,25 @@ Make link management more than a copy-and-paste operation.
 
 ### 📊 Click Analytics
 
-- Click activity over time
+- Click trends over time
 - Device breakdown
-- Browser and operating-system insights
+- Browser and OS insights
 - Referrer information
-- Campaign-level reporting
-- Privacy-conscious analytics design
+- Campaign performance views
+- Privacy-conscious visitor identification
 
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
 
-### 🗂️ Campaign Workspace
+### 🗂️ Campaign Management
 
-- Campaign organization
-- Folders and tags
-- Centralized link management
-- Related-link grouping
-- Easier discovery and maintenance
+- Organize links into campaigns
+- Group links using folders
+- Add tags for discovery
+- Manage links from one workspace
+- Associate activity with campaigns
 
 </td>
 <td width="50%" valign="top">
@@ -150,199 +91,169 @@ Make link management more than a copy-and-paste operation.
 
 - QR code generation
 - CSV bulk import
+- Centralized dashboard
 - Link moderation
 - Domain blocklist
-- Abuse-management workflows
-- Administrative audit records
+- Audit and abuse-management workflows
 
 </td>
 </tr>
 </table>
 
-> Documentation should reflect the working application. Verify every
-> feature against the submitted build before claiming it is implemented.
+> Feature availability depends on the current implementation and deployment.
+> Keep only verified features marked as available.
 
 ---
 
 ## 🚀 What Makes LinkPulse Different?
 
-LinkPulse brings link creation, redirect controls, organization,
-and click analytics into a unified workflow.
-
-| Capability | Basic shortener | LinkPulse approach |
+| Capability | Basic URL Shortener | LinkPulse |
 |---|---|---|
-| Short links | Core functionality | Core functionality |
-| Custom aliases | Depends on provider | Configurable aliases |
-| Link lifecycle | Often limited | Expiry and usage controls |
+| Short URL | Yes | Yes |
+| Custom alias | Varies | Configurable |
+| Expiration | Varies | Expiry controls |
+| Click limits | Often limited | Configurable limits |
 | Password protection | Varies | Protected-link workflow |
-| Device-based redirects | Less common | Configurable routing |
-| QR codes | Sometimes separate | Integrated workflow |
+| Device-based redirects | Uncommon | Configurable routing |
+| QR codes | May require another tool | Integrated workflow |
 | Bulk link creation | Varies | CSV import workflow |
-| Campaign organization | Often limited | Campaigns, folders, and tags |
-| Traffic insights | Often basic | Multiple analytics dimensions |
-| Moderation | Varies | Administrative controls |
+| Campaign organization | Limited | Campaigns, folders, tags |
+| Click analytics | Often basic | Trends and traffic breakdowns |
+| Link moderation | Varies | Administrative controls |
 
-### 💡 The key differentiator
+### 🌟 Our Core Innovation
 
-**A LinkPulse link is intended to be more than a shortened URL.**
+**LinkPulse connects link creation, redirect behaviour, organization,
+and analytics into one workflow.**
 
-It can have a destination, redirect rules, an organizational context,
-and associated click activity.
-
-This makes the platform useful for campaigns, events, portfolios,
-student projects, product launches, and shared resources.
+Instead of creating a short URL and forgetting about it, users can
+manage its lifecycle and learn from the traffic it receives.
 
 ---
 
-## 🖥️ Screenshots & Live Preview
+## 🖥️ Screenshots & Preview
 
-<div align="center">
+Explore the live application:
 
-### Explore the actual application
+**[Open LinkPulse →](https://linkpulse2026.vercel.app/)**
 
-<a href="https://linkpulse2026.vercel.app/">
-  <img src="https://img.shields.io/badge/OPEN_LINKPULSE-Visit_Live_Website-635BFF?style=for-the-badge&logo=vercel&logoColor=white" alt="Open LinkPulse live website"/>
-</a>
-
-</div>
-
-### Product screenshots
-
-Add screenshots captured from the actual website to the repository.
-These images help judges understand the product before reading the
-technical documentation.
-
-<div align="center">
+Add real screenshots from your project in `docs/screenshots/`.
 
 | Dashboard | Link Management |
 |---|---|
-| ![LinkPulse dashboard](docs/screenshots/dashboard.png) | ![Link management](docs/screenshots/links.png) |
-| *Main workspace* | *Create and manage links* |
+| ![Dashboard](docs/screenshots/dashboard.png) | ![Link Management](docs/screenshots/links.png) |
 
 | Analytics | Campaigns |
 |---|---|
-| ![Click analytics](docs/screenshots/analytics.png) | ![Campaign workspace](docs/screenshots/campaigns.png) |
-| *Traffic insights* | *Organize related links* |
+| ![Analytics](docs/screenshots/analytics.png) | ![Campaigns](docs/screenshots/campaigns.png) |
 
-</div>
-
-**Screenshot setup**
-
-1. Open the [live LinkPulse website](https://linkpulse2026.vercel.app/).
-2. Navigate to each page that is available and working.
-3. Capture genuine screenshots without private information.
-4. Save the images under `docs/screenshots/`.
-5. Use the exact filenames referenced above, or update the Markdown paths.
-
-```text
-docs/
-└── screenshots/
-    ├── dashboard.png
-    ├── links.png
-    ├── analytics.png
-    └── campaigns.png
-```
-
-> The image paths above are placeholders until you add the actual
-> screenshots. Do not leave broken image references in the final README.
+> Replace these example paths with actual screenshots committed to your
+> repository. Remove any image reference for which no screenshot exists.
 
 ---
 
 ## 🏗️ System Architecture
 
-This diagram explains how the main application components communicate.
+The following diagram explains how the main parts of LinkPulse connect.
 
 ```mermaid
 flowchart TB
-    U(["👤 User"])
+    USER["👤 User"]
 
-    subgraph FRONTEND["01 · FRONTEND"]
-        UI["React + TypeScript"]
+    subgraph FRONTEND["1. FRONTEND"]
+        UI["React + TypeScript UI"]
         DASH["Dashboard"]
-        LM["Link Management"]
-        AV["Analytics Views"]
+        LINKS["Link Management"]
+        CHARTS["Analytics Charts"]
     end
 
-    subgraph BACKEND["02 · BACKEND"]
+    subgraph BACKEND["2. BACKEND"]
         API["Express REST API"]
         AUTH["Authentication & Permissions"]
         LS["Link Management Service"]
         RE["Redirect Engine"]
         AS["Analytics Service"]
-        ADM["Administration"]
+        ADMIN["Admin & Moderation"]
     end
 
-    subgraph STORAGE["03 · DATA LAYER"]
+    subgraph DATABASE["3. DATA STORAGE"]
         ORM["Drizzle ORM"]
         DB[("PostgreSQL")]
     end
 
-    U --> UI
+    USER --> UI
     UI --> DASH
-    UI --> LM
-    UI --> AV
+    UI --> LINKS
+    UI --> CHARTS
 
     DASH --> API
-    LM --> API
-    AV --> API
+    LINKS --> API
+    CHARTS --> API
 
     API --> AUTH
     API --> LS
     API --> AS
-    API --> ADM
+    API --> ADMIN
 
     AUTH --> ORM
     LS --> ORM
     AS --> ORM
-    ADM --> ORM
+    ADMIN --> ORM
     ORM --> DB
 
-    U -->|"Opens short URL"| RE
-    RE -->|"Resolve link"| DB
+    USER -->|"Opens short URL"| RE
+    RE -->|"Find link and rules"| DB
     RE -->|"Record click"| AS
-    RE -->|"Redirect"| U
+    RE -->|"Redirect to destination"| USER
+
+    classDef frontend fill:#EDE9FE,stroke:#7C3AED,color:#312E81
+    classDef backend fill:#DBEAFE,stroke:#2563EB,color:#1E3A8A
+    classDef storage fill:#D1FAE5,stroke:#059669,color:#064E3B
+
+    class UI,DASH,LINKS,CHARTS frontend
+    class API,AUTH,LS,RE,AS,ADMIN backend
+    class ORM,DB storage
 ```
 
-### How to read this diagram
+### 🧠 Understand the Architecture
 
-| Layer | Responsibility |
+| Component | What it does |
 |---|---|
-| Frontend | Displays the dashboard, forms, links, and analytics charts |
-| REST API | Receives application requests and routes them to backend services |
-| Authentication | Verifies identity and permissions for protected actions |
-| Link service | Creates and updates link records and settings |
-| Redirect engine | Resolves short codes and applies configured redirect rules |
-| Analytics service | Records or processes click-related data |
-| ORM | Connects application code to database queries |
-| PostgreSQL | Stores persistent application records |
+| Frontend | Displays pages, forms, links, and charts. |
+| REST API | Receives requests from the frontend. |
+| Authentication | Verifies identity and access permissions. |
+| Link service | Creates and updates short-link records. |
+| Redirect engine | Resolves a short code and evaluates redirect rules. |
+| Analytics service | Processes click-related data for reporting. |
+| ORM | Connects application code to database operations. |
+| PostgreSQL | Stores persistent application records. |
 
-**In simple words:** The frontend is what the user sees. The backend
-contains the application logic. The database stores the information.
+**In simple words:** The frontend is what users see, the backend
+handles the logic, and the database stores the information.
 
 ---
 
 ## 🔄 How LinkPulse Works
 
-When someone opens a short URL, the application must resolve the code,
-check the applicable rules, and determine the next action.
+This flow explains what happens when a visitor opens a short link.
 
 ```mermaid
 flowchart TD
-    A(["Visitor clicks short URL"])
+    A(["Visitor opens short URL"])
     B["Read short code"]
-    C{"Does link exist?"}
-    D["Return not-found response"]
-    E{"Is link active?"}
+    C{"Link exists?"}
+    D["Return not found"]
+    E{"Link active?"}
     F["Reject disabled link"]
-    G{"Has it expired?"}
+    G{"Expired?"}
     H["Reject expired link"]
-    I{"Has click limit been reached?"}
-    J["Reject additional click"]
+    I{"Click limit reached?"}
+    J["Reject further clicks"]
     K{"Password required?"}
-    L["Validate access"]
+    L["Validate password"]
     M{"Device rule matches?"}
-    N["Select configured destination"]
-    O["Select default destination"]
+    N["Choose configured destination"]
+    O["Choose default destination"]
     P["Record click event"]
     Q(["Redirect to destination"])
 
@@ -365,110 +276,107 @@ flowchart TD
     P --> Q
 ```
 
-### Redirect process, step by step
+### Step-by-step explanation
 
-1. The visitor opens a short URL.
-2. The server extracts its unique short code.
-3. The application looks up the associated link.
-4. Applicable status, expiration, and click-limit rules are checked.
-5. Password access is validated when required.
-6. A matching device rule can select a configured destination.
-7. The application records permitted click information.
-8. The visitor is redirected to the selected destination.
+1. A visitor clicks a LinkPulse short URL.
+2. The server reads its unique short code.
+3. The application looks up the corresponding link.
+4. It checks applicable status, expiry, and usage rules.
+5. If required, it validates password access.
+6. It selects the destination using configured redirect rules.
+7. The click event is recorded for analytics.
+8. The visitor is redirected to the destination.
 
 The exact validation order and response behaviour should match the
-implementation. For example, a password-protected link may require an
-access step before a final redirect.
+implemented redirect engine.
 
 ---
 
 ## 📈 Click Analytics Workflow
 
-Click analytics help turn link activity into information users can
-understand and act on.
+LinkPulse turns redirect activity into useful reporting data.
 
 ```mermaid
 flowchart LR
-    A["Visitor opens link"]
+    A["Visitor clicks link"]
     B["Resolve short code"]
     C["Apply redirect rules"]
-    D["Collect permitted metadata"]
-    E[("Click Event Storage")]
-    F["Aggregate Metrics"]
-    G["Analytics Dashboard"]
-    H["Campaign Insights"]
+    D["Collect permitted event data"]
+    E[("Store click event")]
+    F["Aggregate metrics"]
+    G["Dashboard charts"]
+    H["Campaign insights"]
 
     A --> B --> C --> D --> E --> F
     F --> G
     F --> H
 ```
 
-### What can users learn?
+### 📊 What Users Can Understand
 
-| Analytics dimension | Question it helps answer |
+| Metric | What it tells you |
 |---|---|
-| Click trends | When did traffic increase or decrease? |
-| Device category | Which device types generated clicks? |
-| Browser and OS | What browser and operating-system distribution was observed? |
-| Referrers | Which sources sent visitors? |
-| Campaign metrics | How did grouped links perform over time? |
+| Click trends | When traffic increases or decreases. |
+| Device breakdown | Which device categories generate clicks. |
+| Browser and OS | The browser and operating-system distribution. |
+| Referrers | Which sources send visitors. |
+| Campaign metrics | How grouped links perform over time. |
 
-Analytics depend on the metadata actually captured by the application.
-Geographic insights should be shown only when supported by the data,
-and estimated location must not be presented as exact location.
+Analytics accuracy depends on available request metadata and
+privacy settings. Geographic information should not be presented as
+precise when it is estimated.
 
 ---
 
-## 🧩 Technology Stack & What Each Tool Does
+## 🧩 Technology Stack
 
-### 🎨 Frontend
+### 🎨 Frontend Technologies
 
-| Technology | Purpose |
+| Technology | Purpose in LinkPulse |
 |---|---|
-| React | Builds reusable components and interface pages |
-| TypeScript | Adds static types and improves maintainability |
-| Vite | Runs the development server and builds frontend assets |
-| Tailwind CSS | Creates responsive layouts and consistent styling |
-| React Router | Handles navigation between pages |
-| Zustand | Manages shared client-side state |
-| Recharts | Renders charts for analytics |
-| Zod | Validates data against defined schemas |
-| Lucide React | Supplies interface icons |
-| qrcode.react | Renders QR codes |
-| Papa Parse | Parses CSV data for bulk-import workflows |
+| React | Builds reusable UI components and application pages. |
+| TypeScript | Adds types to improve code reliability and maintainability. |
+| Vite | Provides the frontend development server and build process. |
+| Tailwind CSS | Creates responsive layouts and consistent styling. |
+| React Router | Handles navigation between application pages. |
+| Zustand | Manages shared client-side state. |
+| Recharts | Displays charts and visual analytics. |
+| Zod | Validates data against defined schemas. |
+| Lucide React | Provides consistent interface icons. |
+| qrcode.react | Generates QR-code visuals. |
+| Papa Parse | Parses CSV files for bulk import workflows. |
 
-### ⚙️ Backend
+### ⚙️ Backend Technologies
 
-| Technology | Purpose |
+| Technology | Purpose in LinkPulse |
 |---|---|
-| Node.js | Runs server-side JavaScript |
-| Express | Handles HTTP requests, routes, and middleware |
-| REST API | Defines communication between the frontend and backend |
-| Firebase Auth | Supports configured sign-in workflows |
-| Firebase Admin SDK | Supports trusted server-side authentication checks |
-| bcryptjs | Hashes passwords for safer storage |
-| ua-parser-js | Parses user-agent information for device analytics |
+| Node.js | Runs JavaScript on the server. |
+| Express | Defines API routes and request middleware. |
+| REST API | Connects frontend operations to backend functionality. |
+| Firebase Auth | Supports configured sign-in flows. |
+| Firebase Admin SDK | Verifies authentication on the trusted server side. |
+| bcryptjs | Hashes passwords for safer storage. |
+| ua-parser-js | Parses user-agent information for device analytics. |
 
 ### 🗄️ Database & Infrastructure
 
-| Technology | Purpose |
+| Technology | Purpose in LinkPulse |
 |---|---|
-| PostgreSQL | Stores persistent relational data |
-| Google Cloud SQL | Provides managed PostgreSQL hosting when configured |
-| Drizzle ORM | Provides typed database query operations |
-| Drizzle Kit | Supports database schema and migration workflows |
-| Secure session cookies | Carry session information with appropriate cookie controls |
-| Vercel | Hosts the frontend and supported deployment components |
+| PostgreSQL | Stores links, users, campaigns, and click records. |
+| Google Cloud SQL | Hosts a managed PostgreSQL database when configured. |
+| Drizzle ORM | Provides typed database queries. |
+| Drizzle Kit | Supports schema migrations and database tooling. |
+| Secure session cookies | Carry session information using browser cookie controls. |
+| Vercel | Can host the frontend and supported deployment components. |
 
-> Verify these dependencies against `package.json`, the server code,
-> and the deployment configuration. Listing a technology does not
-> establish that its service is currently configured in production.
+> Confirm the actual dependencies, configuration, and deployed services
+> before describing each technology as active in production.
 
 ---
 
 ## 🗃️ Database Schema & Data Model
 
-The conceptual model below illustrates how the primary records relate.
+The following conceptual diagram illustrates the main entities.
 
 ```mermaid
 erDiagram
@@ -517,39 +425,39 @@ erDiagram
     }
 ```
 
-### Main entities
+### What does this model mean?
 
-- **User:** Account identity and role.
-- **Link:** Short code, destination, status, and configured rules.
-- **Campaign:** Groups links related to a common activity.
-- **Folder:** Organizes links for easier management.
-- **Click event:** Represents a recorded interaction with a link.
-- **Audit log:** Records relevant administrative activity.
+- **User:** Represents an account and its permissions.
+- **Link:** Stores the short code, destination, and configured rules.
+- **Campaign:** Groups related links for management and analysis.
+- **Folder:** Helps organize links.
+- **Click event:** Stores information about a recorded interaction.
+- **Audit log:** Tracks relevant administrative actions.
 
-This diagram is conceptual. Keep it aligned with the real schema and
-database migrations in the repository.
+This is a conceptual model. Update it to reflect the actual database
+schema and relationships in the repository.
 
 ---
 
 ## 🔌 API Reference
 
-The application uses a versioned API structure.
+The backend uses versioned REST API routes.
 
 **Base path:** `/api/v1`
 
-| API area | Purpose |
+| API area | Responsibility |
 |---|---|
-| Authentication | Identity and session-related operations |
-| Links | Create, retrieve, update, and manage links |
-| Redirects | Resolve short codes and evaluate redirect rules |
-| Analytics | Retrieve click metrics and summaries |
-| Campaigns | Organize and retrieve campaign information |
-| Administration | Manage moderation and administrative operations |
-| Health | Check service availability |
+| Authentication | Sign-in and session-related operations. |
+| Links | Create, retrieve, update, and manage links. |
+| Redirects | Resolve short codes and evaluate link rules. |
+| Analytics | Retrieve click metrics and summaries. |
+| Campaigns | Organize and retrieve campaign data. |
+| Administration | Manage moderation and administrative operations. |
+| Health | Check service availability. |
 
 ### Illustrative endpoint structure
 
-```http
+```text
 GET    /api/v1/health
 GET    /api/v1/links
 POST   /api/v1/links
@@ -562,54 +470,53 @@ POST   /api/v1/campaigns
 GET    /r/:code
 ```
 
-These paths are examples of an API layout, not a verified list of
-implemented endpoints. Confirm each route against the server source.
+> Verify each endpoint against the actual server route definitions.
+> These examples are not a substitute for the implemented API contract.
 
 ---
 
 ## 🛡️ Security & Access Control
 
-LinkPulse needs appropriate access controls to protect link settings,
-user data, and administrative actions.
+LinkPulse is designed around controlled access to link-management
+operations and administrative features.
+
+### Access-control flow
 
 ```mermaid
 flowchart TD
     A["Incoming request"]
-    B{"Is authentication required?"}
+    B{"Authentication required?"}
     C["Continue with permitted public action"]
     D["Verify user identity"]
-    E{"Check permissions"}
-    F["Allow authorized user action"]
-    G["Allow authorized admin action"]
-    H["Reject unauthorized action"]
+    E{"Check role and permission"}
+    F["Allow permitted user action"]
+    G["Allow permitted admin action"]
+    H["Reject unauthorized request"]
 
     A --> B
     B -- No --> C
     B -- Yes --> D --> E
-    E -- User permission --> F
-    E -- Admin permission --> G
-    E -- Denied --> H
+    E -- User access --> F
+    E -- Admin access --> G
+    E -- Not permitted --> H
 ```
 
-### Security principles
+### Security measures
 
 - Validate input before processing requests.
-- Enforce permissions on the server.
-- Hash passwords rather than storing plaintext passwords.
-- Keep credentials and private keys out of source control.
-- Apply link expiration and click limits consistently.
-- Protect private link operations with appropriate checks.
-- Maintain audit records for relevant administrative operations.
-- Minimize sensitive data in analytics.
-
-Only describe controls as implemented after verifying their actual
-server-side enforcement.
+- Enforce authorization on the server.
+- Hash passwords instead of storing plaintext passwords.
+- Keep secret keys and credentials out of source control.
+- Apply configured expiry and click-limit rules.
+- Protect private link operations with appropriate access checks.
+- Use moderation and audit logs where implemented.
+- Minimize or anonymize sensitive analytics data where appropriate.
 
 ---
 
 ## 📂 Project Structure
 
-An illustrative full-stack project layout:
+An illustrative structure for the project:
 
 ```text
 LinkPulse/
@@ -635,8 +542,8 @@ LinkPulse/
 └── vite.config.ts
 ```
 
-This is a reference layout. Replace it with the actual directory tree
-so developers can navigate the repository accurately.
+This is an example layout, not a verified listing of the current
+repository. Replace it with the real directory structure.
 
 ---
 
@@ -644,23 +551,25 @@ so developers can navigate the repository accurately.
 
 ### Prerequisites
 
-- Node.js compatible with the project
-- pnpm or the package manager used by the repository
-- PostgreSQL, if required by the configured backend
-- Firebase credentials, if Firebase authentication is enabled
-- Required environment variables
+- Node.js version supported by the project.
+- pnpm or the package manager specified by the repository.
+- PostgreSQL, if required by the configured backend.
+- Firebase project credentials, if authentication uses Firebase.
+- Required environment variables.
 
 ### Installation
 
 ```bash
 git clone https://github.com/SurajRawatr07/LinkPulse.git
+
 cd LinkPulse
+
 pnpm install
 ```
 
 ### Environment Variables
 
-Create the environment files required by the source code.
+Create the environment files required by the application.
 
 Example placeholders:
 
@@ -672,140 +581,135 @@ FIREBASE_PRIVATE_KEY=
 SESSION_SECRET=
 ```
 
-Use the exact variable names referenced in the implementation.
+Use the exact variable names referenced by the source code.
 
-**Never commit real credentials, database passwords, or private keys.**
+**Never commit real API keys, database passwords, private keys,
+or production secrets.**
 
 ### Running Locally
 
-First, inspect the scripts available in `package.json`:
+Inspect the available package scripts:
 
 ```bash
 pnpm run
 ```
 
-Run the frontend and backend using the actual scripts defined by the
-project. Configure database access, authentication, and migrations
-where required.
+Run the frontend and backend using the scripts defined in the project.
+Configure the database, authentication provider, and migrations first
+if the selected configuration requires them.
 
 ---
 
-## 🎯 Demo Workflow for Judges
+## 🎯 Demo Workflow
 
-Use this flow to explain LinkPulse during a project presentation.
+Use this sequence to explain LinkPulse during a hackathon presentation.
 
 ```mermaid
 flowchart TD
-    A["01 · Open LinkPulse"]
-    B["02 · Sign in"]
-    C["03 · Create a short link"]
-    D["04 · Configure link rules"]
-    E["05 · Generate QR code"]
-    F["06 · Open the short URL"]
-    G["07 · Record click activity"]
-    H["08 · Explore analytics"]
-    I["09 · Organize a campaign"]
+    A["1. Open LinkPulse"]
+    B["2. Sign in"]
+    C["3. Create a short link"]
+    D["4. Configure redirect rules"]
+    E["5. Generate and share QR code"]
+    F["6. Open the short URL"]
+    G["7. Record click activity"]
+    H["8. View analytics"]
+    I["9. Explore campaign management"]
 
     A --> B --> C --> D --> E --> F --> G --> H --> I
 ```
 
-### What the judge should understand
+### What the judge should notice
 
 1. **Problem:** Ordinary URLs are difficult to organize and measure.
-2. **Solution:** LinkPulse manages links in a unified workspace.
-3. **Architecture:** The frontend, backend, redirect engine, and database have distinct responsibilities.
-4. **Differentiator:** Configurable redirect behaviour goes beyond basic shortening.
-5. **Analytics:** Click activity can feed reporting and campaign insights.
-6. **Trust:** Access controls and moderation support responsible link management.
+2. **Solution:** LinkPulse manages the link lifecycle in one workspace.
+3. **Engineering:** The frontend, API, redirect logic, and database have distinct responsibilities.
+4. **Innovation:** Configurable redirects add control beyond simple shortening.
+5. **Analytics:** Recorded clicks can feed reporting and campaign insights.
+6. **Trust:** Access control and moderation support safer link management.
 
-Demonstrate only features that are functional in the submitted build.
+Demonstrate only the steps that work in the submitted build.
 
 ---
 
 ## 🧪 Testing
 
-Use this checklist before the demo.
+Test the key user journeys before presenting the project.
 
 - [ ] Create a short link.
 - [ ] Open the short URL and verify the destination.
 - [ ] Test custom aliases.
-- [ ] Verify expiration behaviour.
-- [ ] Verify click-limit behaviour.
+- [ ] Test expiry behaviour.
+- [ ] Test click-limit behaviour.
 - [ ] Test password-protected links.
-- [ ] Test device-based routing.
+- [ ] Test device-routing rules.
 - [ ] Verify click events and analytics.
-- [ ] Test missing or invalid short codes.
+- [ ] Test invalid or missing short codes.
 - [ ] Check unauthorized administrative requests.
-- [ ] Check the interface on mobile and desktop.
+- [ ] Verify responsive layouts on mobile and desktop.
 
-Run the tests configured in the repository. Do not claim that tests
-pass until they have actually been executed.
+Use the test scripts configured in `package.json`. Do not claim a
+test suite passes until it has actually been executed.
 
 ---
 
 ## 🛣️ Roadmap
 
-Potential future improvements:
+Potential improvements for future releases:
 
 - [ ] Export analytics reports.
-- [ ] Compare campaigns side by side.
+- [ ] Compare campaign performance side by side.
 - [ ] Detect unusual click patterns.
 - [ ] Monitor broken destination URLs.
-- [ ] Schedule link activation and deactivation.
+- [ ] Add scheduled link activation and deactivation.
 - [ ] Add API-key management and developer documentation.
-- [ ] Add configurable analytics-retention controls.
-- [ ] Expand automated redirect-rule testing.
+- [ ] Introduce configurable analytics retention.
+- [ ] Expand automated redirect-rule tests.
 
-These items are proposed enhancements, not claims about existing features.
+These are roadmap ideas, not claims about currently implemented features.
 
 ---
 
 ## 🤝 Contributing
 
-Contributions can improve reliability, usability, testing, and
-documentation.
+Contributions can improve LinkPulse's reliability, usability,
+documentation, and testing.
 
 1. Fork the repository.
 2. Create a feature branch.
 3. Make a focused change.
-4. Run relevant checks and tests.
-5. Submit a pull request with a clear description.
+4. Run the relevant tests and checks.
+5. Open a pull request describing the change.
 
-Discuss substantial changes in an issue before implementation.
+For substantial changes, open an issue first to discuss the proposal.
 
 ---
 
 ## 🔒 Security Policy
 
-Never publish credentials, access tokens, private keys, or database
-passwords in issues or pull requests.
+Do not publish passwords, access tokens, private keys, or database
+credentials in issues or pull requests.
 
-Report vulnerabilities through a private reporting channel if one is
-available for this repository.
+Report vulnerabilities privately to the repository maintainer when
+a private reporting channel is available.
 
 ---
 
 ## 📄 License
 
 Add the license that actually applies to this repository. If no license
-has been selected, do not claim that the project uses a particular
-open-source license.
+has been selected, do not imply that the project is open-source under
+a particular license.
 
 ---
 
 ## 👨‍💻 Author
 
-<div align="center">
+**Suraj Rawat**
 
-### Suraj Rawat
-
-Full-Stack Developer · LinkPulse
-
-[GitHub](https://github.com/SurajRawatr07) ·
-[LinkedIn](https://www.linkedin.com/in/suraj-rawat-30513b340/) ·
-[Live Project](https://linkpulse2026.vercel.app/)
-
-</div>
+- GitHub: [@SurajRawatr07](https://github.com/SurajRawatr07)
+- LinkedIn: [Suraj Rawat](https://www.linkedin.com/in/suraj-rawat-30513b340/)
+- Live Project: [LinkPulse](https://linkpulse2026.vercel.app/)
 
 ---
 
@@ -815,7 +719,7 @@ Full-Stack Developer · LinkPulse
 
 **Create smarter links. Understand every click.**
 
-[Explore the Live Demo](https://linkpulse2026.vercel.app/) ·
-[View Source Code](https://github.com/SurajRawatr07/LinkPulse)
+[Live Demo](https://linkpulse2026.vercel.app/) ·
+[GitHub Repository](https://github.com/SurajRawatr07/LinkPulse)
 
 </div>
