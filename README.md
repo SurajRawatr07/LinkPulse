@@ -131,27 +131,6 @@ manage its lifecycle and learn from the traffic it receives.
 
 ---
 
-## 🖥️ Screenshots & Preview
-
-Explore the live application:
-
-**[Open LinkPulse →](https://linkpulse2026.vercel.app/)**
-
-Add real screenshots from your project in `docs/screenshots/`.
-
-| Dashboard | Link Management |
-|---|---|
-| ![Dashboard](docs/screenshots/dashboard.png) | ![Link Management](docs/screenshots/links.png) |
-
-| Analytics | Campaigns |
-|---|---|
-| ![Analytics](docs/screenshots/analytics.png) | ![Campaigns](docs/screenshots/campaigns.png) |
-
-> Replace these example paths with actual screenshots committed to your
-> repository. Remove any image reference for which no screenshot exists.
-
----
-
 ## 🏗️ System Architecture
 
 The following diagram explains how the main parts of LinkPulse connect.
