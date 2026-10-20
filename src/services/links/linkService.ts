@@ -11,11 +11,23 @@ export const linkService = {
     page?: number;
     limit?: number;
   }): Promise<Link[]> {
-    return db.getLinks(params);
+    const dbStatus =
+      params?.status === 'expiring'
+        ? 'active'
+        : params?.status === 'all'
+          ? 'all'
+          : params?.status;
+
+    return db.getLinks({
+      userId: params?.userId,
+      campaignId: params?.campaignId,
+      status: dbStatus,
+      search: params?.search,
+    });
   },
 
   async getLink(id: string): Promise<Link> {
-    const link = await db.getLink(id);
+    const link = await db.getLinkById(id);
     if (!link) throw new Error('Link not found');
     return link;
   },
@@ -33,7 +45,13 @@ export const linkService = {
     tags?: string[];
     rules?: any;
   }): Promise<Link> {
-    return db.createLink(data);
+    const shortCode = data.shortCode || Math.random().toString(36).substring(2, 8);
+    const title = data.title || 'Untitled Link';
+    return db.createLink({
+      ...data,
+      shortCode,
+      title,
+    });
   },
 
   async updateLink(id: string, updates: Partial<Link>): Promise<Link> {
@@ -41,7 +59,7 @@ export const linkService = {
   },
 
   async deleteLink(id: string): Promise<void> {
-    return db.deleteLink(id);
+    await db.deleteLink(id);
   },
 
   async bulkDeleteLinks(ids: string[]): Promise<void> {

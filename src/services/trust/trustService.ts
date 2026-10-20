@@ -29,8 +29,8 @@ export const trustService = {
     return db.getBlocklist();
   },
 
-  async addBlocklistEntry(domain: string, reason: string): Promise<BlocklistEntry> {
-    return db.addToBlocklist(domain, reason, 'Admin Console');
+  async addBlocklistEntry(domain: string, reason: string, addedBy?: string): Promise<BlocklistEntry> {
+    return db.addToBlocklist(domain, reason, addedBy || 'Admin Console');
   },
 
   async removeBlocklistEntry(id: string): Promise<void> {

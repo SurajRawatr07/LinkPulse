@@ -1,9 +1,9 @@
-import { DashboardAnalytics, AnalyticsSummary } from '../../types';
+import { DashboardAnalytics, AnalyticsSummary, TimeRange, ClickEvent } from '../../types';
 import { db } from '../../lib/api/mockDb';
 
 export const analyticsService = {
   async getDashboardAnalytics(params: {
-    range: string;
+    range: TimeRange;
     campaignId?: string;
     userId?: string;
     isAdmin?: boolean;
@@ -11,11 +11,20 @@ export const analyticsService = {
     return db.getDashboardAnalytics(params);
   },
 
-  async getLinkClicks(linkId: string, range?: string): Promise<AnalyticsSummary> {
-    return db.getAnalytics({ range, linkId });
+  async getAnalytics(options: { range?: string; linkId?: string; userId?: string }): Promise<AnalyticsSummary> {
+    return db.getAnalytics(options);
   },
 
-  async recordClick(linkId: string, details?: any): Promise<void> {
-    await db.recordClick(linkId, details || {});
+  async getLinkClicks(linkId: string, limit = 50): Promise<ClickEvent[]> {
+    return db.getLinkClicks(linkId, limit);
+  },
+
+  async recordClick(params: {
+    linkId: string;
+    referrer?: string;
+    userAgent?: string;
+    source?: 'direct' | 'qr';
+  }): Promise<void> {
+    await db.recordClick(params);
   },
 };

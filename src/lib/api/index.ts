@@ -57,9 +57,12 @@ export const linksApi = {
   getLink: (id: string) => linkService.getLink(id),
   getLinkById: (id: string) => linkService.getLink(id),
   getLinkByCode: (code: string) => linkService.getLinkByCode(code),
-  checkAliasAvailable: async (code: string): Promise<boolean> => {
+  checkAliasAvailable: async (code: string): Promise<{ available: boolean; error?: string }> => {
     const existing = await linkService.getLinkByCode(code);
-    return !existing;
+    return {
+      available: !existing,
+      error: existing ? 'Alias already in use' : undefined,
+    };
   },
   createLink: (data: {
     userId: string;
@@ -80,15 +83,16 @@ export const linksApi = {
 // 3. Clicks & Analytics API
 export const clicksApi = {
   getDashboardAnalytics: (params: {
-    range: string;
+    range: any;
     campaignId?: string;
     userId?: string;
     isAdmin?: boolean;
   }) => analyticsService.getDashboardAnalytics(params),
   getAnalytics: (options: { range?: string; linkId?: string; userId?: string }) =>
     db.getAnalytics(options),
-  getLinkClicks: (linkId: string, range?: string) => analyticsService.getLinkClicks(linkId, range),
-  recordClick: (linkId: string, details?: any) => analyticsService.recordClick(linkId, details),
+  getLinkClicks: (linkId: string, limit = 50) => analyticsService.getLinkClicks(linkId, limit),
+  recordClick: (params: { linkId: string; referrer?: string; userAgent?: string; source?: 'direct' | 'qr' }) =>
+    analyticsService.recordClick(params),
 };
 
 // 4. Campaigns API
@@ -113,8 +117,10 @@ export const tagsApi = {
 // 6. Admin API
 export const adminApi = {
   getBlocklist: () => trustService.getBlocklist(),
-  addToBlocklist: (domain: string, reason: string) => trustService.addBlocklistEntry(domain, reason),
-  addBlocklistEntry: (domain: string, reason: string) => trustService.addBlocklistEntry(domain, reason),
+  addToBlocklist: (domain: string, reason: string, addedBy?: string) =>
+    trustService.addBlocklistEntry(domain, reason, addedBy),
+  addBlocklistEntry: (domain: string, reason: string, addedBy?: string) =>
+    trustService.addBlocklistEntry(domain, reason, addedBy),
   removeFromBlocklist: (id: string) => trustService.removeBlocklistEntry(id),
   removeBlocklistEntry: (id: string) => trustService.removeBlocklistEntry(id),
   checkDomain: (url: string) => trustService.checkDomain(url),

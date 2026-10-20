@@ -956,6 +956,59 @@ class MockDb {
       await this.resetUserData(curUser.id);
     }
   }
+
+  // Role management
+  public async updateUserRole(userId: string, role: 'admin' | 'user'): Promise<void> {
+    const user = this.users.find((u) => u.id === userId);
+    if (user) {
+      user.role = role;
+      this.save();
+    }
+  }
+
+  // Domain safety checking
+  public async checkDomain(url: string): Promise<{ isBlocked: boolean; entry?: BlocklistEntry; reason?: string }> {
+    try {
+      const parsed = new URL(url.startsWith('http') ? url : `https://${url}`);
+      const hostname = parsed.hostname.toLowerCase();
+      const entry = this.blocklist.find(
+        (b) => hostname === b.domain.toLowerCase() || hostname.endsWith('.' + b.domain.toLowerCase())
+      );
+      return { isBlocked: !!entry, entry, reason: entry?.reason };
+    } catch {
+      return { isBlocked: false };
+    }
+  }
+
+  // Abuse reporting
+  public async reportAbuse(data: {
+    linkId?: string;
+    shortCode?: string;
+    originalUrl?: string;
+    reason: string;
+    reporterEmail?: string;
+  }): Promise<{ success: boolean; reportId: string }> {
+    const reportId = `rep_${Date.now()}`;
+    const report: AbuseReport = {
+      id: reportId,
+      linkId: data.linkId || '',
+      shortCode: data.shortCode || '',
+      originalUrl: data.originalUrl || '',
+      reason: data.reason,
+      reporterEmail: data.reporterEmail,
+      status: 'pending',
+      reportedAt: new Date().toISOString(),
+    };
+    this.abuseReports.unshift(report);
+    return { success: true, reportId };
+  }
+
+  // Password verification
+  public async verifyPassword(id: string, passwordPlain: string): Promise<boolean> {
+    const link = this.links.find((l) => l.id === id);
+    if (!link || !link.rules?.password) return true;
+    return link.rules.password === passwordPlain;
+  }
 }
 
 export const db = new MockDb();
